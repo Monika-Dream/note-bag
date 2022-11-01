@@ -1,0 +1,63 @@
+Django 框架
+-------------------------------------------------------------- Start
+
+ - 1.创建虚拟环境
+python -m venv 项目名称
+
+ - 4.开启虚拟
+Script/activate.bat
+powershell 命令行，脚本换成 Activate.ps1
+
+ - 5.关闭虚拟
+Script/deactivate.bat
+
+ - 6.下载 Django 库
+pip install django
+
+ - 7.创建 Django 项目
+django-admin startproject 项目名字
+
+ - 8.创建子应用(可选)
+python manager.py startapp name
+
+-------------------------------------------------------------- Django 文件刨析
+
+settings.py - 项目的整体设置
+
+urls.py 	- 进行路由匹配
+
+wsgi.py 	- 项目与 WSGI 兼容的 Web 服务器入口
+
+manage.py 	- 项目管理文件
+
+-------------------------------------------------------------- Django 运行
+
+ - 只能运行 manage.py 文件(需要在虚拟环境中)( 默认 127.0.0.1 )
+ 	 - python manage.py runserver
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
