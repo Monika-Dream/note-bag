@@ -5,7 +5,8 @@ git - 源代码管理
 	工作区							  版本库				
 						    暂存区			     仓库区
 
-
+ - git init 之后一定要先看好放在哪
+  - git pull --rebase origin master 与 远程服务器上的同步
 
 
  - git add 文件名/目录名/.(所有)							文件添加到缓存区
@@ -54,9 +55,62 @@ git - 源代码管理
  git reflog			查看所有记录(包括回退之前)
  git reset --hard 3c59285(前面的号码)
 
--------------------------------------------------------------- git 远程操作
+-------------------------------------------------------------- git 远程操作(执行第一行情况下使用)
 
 git clone https://github.com/Monika-Dream/Dear_Monika.git			将 GitHub 上的文件远程克隆下来(需要联网)
 	 - 不用再次执行 git init
 
 git push															将文件放入到 GitHub 需要 (文件为仓库区域位置)
+
+-------------------------------------------------------------- git 远程操作
+
+
+git remote add origin https://gitee.com/literary_club/note-bag.git
+ - git clone xxx 命令，可以看做是一个复合命令，它做了两件事
+     - 第一，下载文件
+     - 第二，执行 git remote add origin xxx
+
+git push -u origin "master"
+
+-------------------------------------------------------------- git 远程操作切换 push 位置
+
+1.git 删除远程地址
+git remote rm origin
+
+2.git 更换远程地址
+git remote add origin http://10.00.3.260:10080/xxxxxx/sxxxy.git/
+
+3.把当前分支与远程分支进行关联(branchname要改成你的当前分支名称)
+git push --set-upstream origin branchname
+
+-------------------------------------------------------------- git 命令分支操作
+
+ - 新建一个分支
+git branch 分支名  
+ - 检查分支是否创建成功
+git branch 
+ - 会有如下提示（前面的*代表的是当前你所在的工作分支）
+
+ - 切换新分支
+git checkout newbranch
+ - 如果不放心，还可以 git branch确认下
+
+ - 然后将你的改动提交到新分支上
+git add . 
+git commit -m "18.03.01"
+ - 然后git status检查是否成功
+
+ - 然后切换到主分支
+git checkout master 
+ - 然后将新分支提交的改动合并到主分支上
+git merge newbranch  
+ - 然后就可以push代码了
+git push -u origin master
+ - 最后还可以删除这个分支
+git branch -D newbranch
+
+
+-------------------------------------------------------------- git 注意
+error: failed to push some refs to 'https://gitee.com/literary_club/note-bag.git'
+ - 远程库文件与本地文件不一致, 需要同步
+    git pull --rebase 仓库名 master
