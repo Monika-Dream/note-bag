@@ -4,21 +4,21 @@ Django 框架
  - 1.创建虚拟环境
 python -m venv 项目名称
 
- - 4.开启虚拟
+ - 2.开启虚拟
 Script/activate.bat
 powershell 命令行，脚本换成 Activate.ps1
 
- - 5.关闭虚拟
+ - 3.关闭虚拟
 Script/deactivate.bat
 
- - 6.下载 Django 库
+ - 4.下载 Django 库
 pip install django
 
- - 7.创建 Django 项目
+ - 5.创建 Django 项目
 django-admin startproject 项目名字
 
- - 8.创建子应用(可选)
-python manager.py startapp name
+ - 6.创建子应用(可选)
+python manage.py startapp name
 
 -------------------------------------------------------------- Django 文件刨析
 
@@ -35,26 +35,99 @@ manage.py 	- 项目管理文件
  - 只能运行 manage.py 文件(需要在虚拟环境中)( 默认 127.0.0.1 )
  	 - python manage.py runserver
 
+-------------------------------------------------------------- Django 创建子应用
 
+ - 需要在 manage.py 目录下执行命令
+python manage.py startapp name
 
+-------------------------------------------------------------- Django 子文件刨析
 
+ - admin.py 		文件跟网站的后台管理配置相关
 
+ - apps.py 			文件用于配置当前子应用的相关信息
 
+ - migrations 		目录用于存放数据库迁移历史文件
 
+ - models.py 		文件用户保存数据库模型类
 
+ - tests.py 		文件用于开发测试用例, 编写单元测试
 
+ - views.py 		文件用于编写 Web 应用视图
 
+-------------------------------------------------------------- Django 注意实现
 
+ - 可以选择将指针放到准确目录上, 将python 解释器路径从新设置
+ 	 - 至 Script 目录下
+ 	 - 执行 Activate.ps1/activate.bat 直到命令行前面出现 绿色(文件夹名称) 标识
+ 	 	 - 即为成功进入虚拟环境
 
+-------------------------------------------------------------- 主文件注册子目录
 
+ - 主settings文件
+ 	 - 创建 子应用 而不注册会出错
 
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'MonikaAPP'
+]
 
+-------------------------------------------------------------- ORM 是什么
 
+ - 一套面向对象的语法格式
+ - Django 以使用
+ - 调用方法即可使用不同的数据库, 一套语法解决多个数据库语言不同步问题
 
+		ORM								DB
+		 类 				<->			  数据表
+		对象 			<->			  数据行
+		属性				<->			   字段
 
+-------------------------------------------------------------- ORM 使用
 
+ - 已忽略文件的自动导入代码
+ - 转到 子app 中的 models.py 文件中写入类
+1.我们的模型类需要继承自 models.Model
+2.系统会自动为我们添加一个逐渐 - id
+3.字段
+	- 字段名=model.类型(选项)
+		 - 字段名实则就是数据表的字段名
+		 - 字段名不要使用 Mysql Python 等关键字
+4.关于本章可以参考 Mysql 笔记
 
+class Book(models.Model):
+	# 系统会自动为我们添加一个逐渐 - id
+	name = models.CharField( Max_length=10 )		===      			varchar(10)
 
+class Person(models.Model):
+	# 系统会自动为我们添加一个逐渐 - id
+	name = models.CharField( Max_length=10 )		===      			varchar(10)
+	gender = models.BooleanField()					=== 				布尔值	
+	book = models.ForeignKey(BookInfo,on_delete = model.CASCADE) === 	外键
+
+-------------------------------------------------------------- ORM 模型迁移
+
+1.根据你所写入的内容形成对应的 SQL 语句
+ - 生成对应的迁移文件
+ 	- python manage.py makemigrations
+ - 执行迁移 (执行文件)
+	- python manage.py migrate
+
+2.检测不到变化请移步至子文件导入
+
+3.执行文件成功后表在哪?
+ - 移步至 setting.py 文件
+ 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 
 
