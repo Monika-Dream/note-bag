@@ -1,0 +1,561 @@
+ ----------------------- TypeScript	>>/And - JustMonika
+ - 下载 TypeScript ( 只需要一次 )
+	 - npm i -g typescript 
+ - 编译 TypeScript 于 JS 
+	 - tsc 文件路径.ts
+-_-______________________________________________________________第一课 基本语法
+
+
+ - let 变量: 类型
+ - let 变量: 类型 = 值
+ - function fn(参数: 类型, 参数:类型):类型{        ......        }
+
+
+-_-______________________________________________________________第二课 可使用类型
+
+
+ - number		1,2,33,5
+ - string		"hi"
+ - boolean		true/false
+ - symbol		Symbol( )
+ - 字面量		其本身, 限制变量的值就是该字面量的值
+ - any		任意类型
+ - unknown	类型安全的 any
+ - void		没有值或 undefined
+ - never		不能是任何值
+ - object		任意的 Js 对象
+ - array		任意的 Js 数组				
+ - tuple		元素, 固定长度数组				[4,5]
+ - enum		枚举					enum(A,B)
+
+
+-_-______________________________________________________________第三课 Ts常用类型
+
+
+ - 从左到右匹配
+ - 数组类型的两种写法, 推荐第一种
+let numbers: number[ ] = [1,2,3,4,5]
+let string: Array<string> = [1,2,3,4,5]
+
+——————————
+
+ - 既有 number 又有 string 情况
+let arr:(number|string)[ ]=["1",2,"3",4,"5"]
+
+——————————
+
+ - 不添加小括号, 表示 arr 既可以是 number 类型, 又可以是 string[]
+let arr: number|string[ ]= ["1","2","3","4","5"]
+arr=1
+
+
+-_-______________________________________________________________第四课 Ts类型别名
+
+
+ - 将你所要做的限制给存起来, 每次用的时候就不会那么麻烦了
+type MyReg = (number|string)[]
+let arr: MyReg = ["1","2","3","4","5"]
+
+
+-_-______________________________________________________________第五课 Ts函数类型
+
+
+ - 括号后面表示 限制返回值类型		单独指定参数和返回值类型
+function fun(num1:number,num2:number):number{
+  return num1 + num2
+}
+const add = (num1:number,num2:number):number=>{
+  return num1 + num2
+}
+
+——————————
+
+ - : 后面表示函数整体的限制		同时指定参数和返回值类型
+ - 这种形式只适用于函数表达式
+const adds :(num1:number,num2:number) => number = (num1,num2) =>{
+  return num1 + num2
+}
+辅助理解
+type MyREgs = (num1:number,num2:number) => number 
+const adds:MyREgs = (num1,num2) =>{
+  return num1 + num2
+}
+
+——————————
+
+ - 如果这个函数中没有返回值, 那么 function fun():void{}
+
+——————————
+
+ - 函数的可选参数
+ - 可选参数只能出现在参数列表的最后,, 也就是说可选参数后面不能出现必选参数
+function num1 (val1?:number,val2?:number):void{}
+
+
+-_-______________________________________________________________第六课 Ts对象类型
+
+
+ - 请使用 ; 来分割
+ - 换行写可以不用分号或逗号
+ - 方法的类型也可以是箭头函数形式 sayHi:()=>void
+let obj:{num:number; name:string; sayhi():void; age?:number} = {
+  num:12456,
+  name:"Monika",
+  sayhi(){
+    return 456
+  }
+}
+
+——————————
+
+当一个对象类型被使用多次时, 一般会使用接口 ( interface ) 来描述对象的类型
+interface MyObjReg {num:number; name:string; sayhi:()=>void}
+或者 type MyObjReg = {num:number; name:string; sayhi:()=>void}
+let obj:MyObjReg|{age:number} = {num:1,name:"M",sayhi(){},age:1}
+
+
+-_-______________________________________________________________第七课 Ts接口继承
+
+
+ - 接口才可以实现继承
+ - 接口可以继承 type
+interface obj1{ name: string }
+interface obj2 extends obj1{ age: number }
+
+
+-_-______________________________________________________________第八课 Ts元组
+
+
+ - 限制类型
+ - 限制长度
+let number:[number,number] = [114514,1919810]
+
+
+-_-______________________________________________________________第九课 Ts类型推论
+
+
+ - 理解成 Ts 的一个预判 let age = 18 的时候, Ts 会认为 let age:number = 18
+ - 两种常见场景
+	 - 声明变量并且初始化时
+	 - 决定函数返回值时
+ - 总结: 能省略的地方就省略
+
+
+-_-______________________________________________________________第十课 Ts类型断言
+
+
+ - 有时候你会比 Ts 更加明确一个值的类型, 此时可以用类型断言来指定类型
+ - 比如获取一个 a 标签, TS 会认为他是 HTMLElement 类型, 由于这个类型太广泛了
+	 - 所以我们获取不到 a 标签其身上的 href 属性
+	 - 此时就需要用到类型断言了
+ - 使用 as 来进行断言
+ - const a = document.querySelector("a") as HTMLAnchorElement
+	 -  HTMLAnchorElement 是 HTMLElement 子类型, 更加具体
+	 - 此时就可以获取到 a 标签其身上的 href 属性了
+ - 怎么知道 a 链接的具体属性?
+	 - 使用 console.log.dir() 就可以
+
+
+-_-______________________________________________________________第十一课 Ts字面量类型
+
+
+let age:"123" = "123"
+实际上就相当于 const age = "123s"
+
+
+-_-______________________________________________________________第十二课 Ts枚举类型
+
+
+ - 使用 enum 来定义枚举
+ - 枚举中的值以大写字母开头			       11     12   13      14
+ - 初始化 enum 成员值的方法	enum myEnum {Up=10,Down,Left,Right,Name}
+ - 如果你想 字符串 枚举, 那么你的每个枚举成员都得自己写初始值
+ - 如果写成函数的话好像只能返回数字
+ - 目前搞不清楚这有个锤子用
+enum myEnum {Up,Down,Left,Right,Name}
+function fun1(consoles:myEnum){
+    console.log('123',consoles)
+}
+
+fun1(myEnum.Down)
+
+
+-_-______________________________________________________________第十三课 Ts typeof
+
+
+ - typeof 出现在类型注解的位置 ( 参数名称的冒号后面 ), 所处的环境就在类型上下文
+ - typeof 只能用来查询变量或属性的类型, 无法查询其他属性的类型 ( 比如函数调用的类型 )  
+let p = { a:1, b:2 }
+function num (numAll:typeof p){}
+num(p)
+
+let p = { a:1, b:2 }
+function num (numAll:{ num1: number, num2: number } ){ }
+num(p)
+
+
+-_-______________________________________________________________第十四课 Ts 高级类型
+
+
+ - class 类
+ - 类型兼容性
+ - 交叉类型
+ - 泛型 和 keyof
+ - 索引签名类型 和 索引查询类型
+ - 映射类型
+
+
+-_-______________________________________________________________第十五课 Ts 类继承
+
+
+interface Singable {
+  age:number,
+  Monika():void
+}
+class Person implements Singable{
+   age = 123 
+   number:number = 18
+   Monika(){
+    console.log("继承自 Singable 的起了作用") 
+   }
+}
+
+
+-_-______________________________________________________________第十六课 Ts 类属性是否可见
+
+
+ - 可见修饰符包括
+	 - public 		公有的	默认, 可以省略
+	 - protected 	受保护的	仅在其声明所在的类和子类中可见
+	 - private		私有的	只在当前类中可见, 实例对象, 子类不可见
+	 - readonly	只读的	用来防止在构造函数之外对属性进行赋值
+		 - 只可以设置初始值或者在 constructor 中进行赋值		1
+		 - 接口或者是 [] 表示的对象类型, 也可以使用 readonly		2
+1.class Person {
+    readonly age: number = 18
+    constructor(age:number){
+        this.age = age
+    }
+}
+
+2.interface myObj {
+  readonly name:string
+}
+let objs:myObj = {
+   name:"Monika"
+}
+
+
+-_-______________________________________________________________第十七课 Ts 类型兼容性
+
+
+ - 成员多的可以赋值给成员少的
+——————————
+
+ - 参数少的可以赋值给参数多的
+
+——————————
+
+ - 相同位置的参数类型要相同 ( 原始类型 ) 或兼容 ( 对象类型 )
+
+——————————
+
+ - 将对象拆开, 把每个属性看作一个个参数, 则, 参数少的可以赋值给参数多的  
+interface point2D {x:number;y:number}
+interface point3D {x:number;y:number;z:number}
+type F2 = (p:point2D) => void
+type F3 = (p:point3D) => void
+let f2s:F2 = ()=>{}
+let f3s:F3 = ()=>{}
+f3s = f2s
+
+——————————
+
+ - 返回值类型, 只关注返回值类型本身即可
+
+
+-_-______________________________________________________________第十八课 Ts 交叉类型
+
+
+ - 功能类似于接口继承, 用于组合多个类型为一个类型
+interface person1 {name:string}
+interface personAdd {age:number}
+type PersonAll = person1 & personAdd
+let objmm:PersonAll = {
+  name:"monika",
+  age:18
+}
+
+
+-_-______________________________________________________________第十九课 Ts 交叉类型与接口继承对比
+
+ - 接口继承
+ - 接口类型报错, 类型不兼容
+interface A {
+    fn: (value:number)=>string
+}
+interface B extends A{
+    fn: (value:string)=>string
+}
+
+——————————
+
+ - 交叉类型
+ - 没有报错
+interface A {
+    fn: (value:number)=>string
+}
+interface B{
+    fn: (value:string)=>string
+}
+type c = A & B	===	fn:(value: number|string ) => string
+
+
+-_-______________________________________________________________第二十课 Ts 泛型
+
+
+ - 函数名称后面添加尖括号, 尖括号中添加类型变量, 比如此处的 Type
+ - 类型处理变量 Type 是一种特殊类型的变量, 它处理类型而不是值
+ - 相当于一个类型容器, 能够捕获用户提供的类型
+ - 应为 Type 是类型,  因此可以将其作为函数参数, 返回值类型, 表示参数和返回值具有相同的类型
+ - 可以是任意合法的变量名称
+function sum<Type>(value:Type,num:Type):Type{
+  console.log(num)
+  return value
+}
+
+console.log("sum",sum<object|string>({"123":123},"4456"))
+
+
+-_-______________________________________________________________第二十一课 Ts 简化泛型调用
+
+
+ - 类型参数推断机制立大功
+ - 根据传入的是实参判断 Type 的类型
+ - 当无法推断时, 则需要自己写
+
+
+-_-______________________________________________________________第二十二课 Ts 泛型约束
+
+
+ - 默认情况下, 泛型函数的类型变量 Type 可以代表多个类型, 这导致无法访问任何属性
+ - 此时就需要为 泛型 添加约束来 收缩类型 ( 缩窄类型取值范围 ) 
+ - 添加泛型约束类型, 主要有以下两种方式 
+	 - 指定更加具体的类型		1
+	 - 添加约束			2
+ - 1
+function sum<Type>(value:Type[]){
+  console.log(value.length)
+  return value
+}
+
+console.log("sum",sum<string>(["123456","789456"]))
+
+——————————
+
+ - 2
+interface Ilength {length:number}
+function sum<Type extends Ilength>(value:Type){
+  console.log(value.length)
+  return value
+}
+console.log("sum",sum<(string|number)[]>(["123456","789456",123]))
+
+
+-_-______________________________________________________________第二十三课 Ts 多个泛型变量的情况
+
+
+function myGrop<Type,keys extends keyof Type>(key:Type,value:keys){
+  return key[value]
+}
+let persoon = {name:"Monika",age:18}
+myGrop(persoon,"age")
+
+
+-_-______________________________________________________________第二十四课 Ts 泛型接口
+
+
+ - 泛型接口: 接口也可以配合泛型来用, 以增加其灵活性, 增强其复用性
+ - 使用泛型接口时, 需要自己添加约束
+interface IdFunc<type>{
+  id:(value:type)=> type,
+  ids:() => type[]
+}
+let objssss:IdFunc<number> = {
+  id:(value)=> value,
+  ids:()=> [1,2,3,4,5]
+}
+objssss.id(456)
+
+
+-_-______________________________________________________________第二十五课 Ts 数组泛型接口
+
+
+class Numberf<Type>{
+  Value:Type
+  add:(value:Type)=>Type
+}
+const myNum = new Numberf<number>()
+
+ - 类型推断需要写 constructor
+
+
+-_-______________________________________________________________第二十六课 Ts 泛型工具类型
+
+
+ - 来简化 TS 中一些常见操作
+ - 内置的
+
+1.Partial < Type >
+2.Readonly < Type >
+3.Pick < Type, keys >
+4.Record < Keys, Type >
+
+
+-_-______________________________________________________________第二十七课 Ts 工具类型 Partial
+
+
+ - Partial < Type > 用来创建一个类型, 将 Type 的所有属性值设置为可选
+ - 构造出来的新类型 PartialProps 结构和 Props 一致, 但所有属性都成为可选的
+ - 就是说, Props 里面的属性可以没有, 但不能多
+interface Props {
+    id:string,
+    children:number[]
+}
+type PartialProps = Partial<Props>
+
+
+-_-______________________________________________________________第二十八课 Ts 工具类型 readonly
+
+
+ - Readonly < Type > 用来创建一个类型, 将 Type 的所有属性值设置为只读
+interface zxcv{
+  id:number,
+  name:string
+}
+type zxcv1 = Readonly<zxcv>
+let zxcv2:zxcv1 = {
+  id:3,
+  name:"123",
+}
+zxcv2.id=58	//报错
+
+
+-_-______________________________________________________________第二十九课 Ts 工具类型 Pick
+
+
+ - Pick 工具类型有两个类型变量
+	 - 1. 表示选择谁的属性
+	 - 2. 表示选择哪几个属性
+ - 其中第二个类型变量, 如果只选择一个传入属性名即可
+ - 第二个类型变量传入的属性只能是第一个类型变量中存在的属性
+ - 构造出来的新类型 PickProps 只有 id 和 title 两个属性类型
+ - 简单理解就是将一个大规则进行拆分, 需要哪个拆哪个
+interface zxcv{
+  id:number,
+  name:string,
+  children:number[]
+}
+type zxcv1 = Pick<zxcv,'id'|'name'>
+let zxcv2:zxcv1 = {
+  id:3,
+  name:"123",
+}
+zxcv2.id=58
+
+
+-_-______________________________________________________________第三十课 Ts 工具类型 Record
+
+
+ - Record<Keys,Type> 构造一个对象类型, 属性键为 Key  属性类型为 Type
+ - 两个类型变量
+	 - 表示对象有哪些属性
+	 - 表示对象属性的类型
+type Orange = Record<'a'|'b'|'c',string[]>
+let objr:Orange = {
+  a:["1"],
+  b:["2"],
+  c:["3"]
+}
+
+
+-_-______________________________________________________________第三十一课 Ts 索引签名类型
+
+
+ - 当无法确定对象中有哪些属性, 此时, 就用到索引签名类型了
+ - 对于整体对象的一个约束
+interface mzxcv {
+  [key:string]:number
+}
+
+let guf:mzxcv = {
+  abc:2,
+  abcx:1,
+}
+
+
+-_-______________________________________________________________第三十二课 Ts 映射类型
+
+
+ - 映射类型只能在类型别名中使用, 不能在接口中使用
+type Propsss = "x"|"y"|"z"
+type one = {[k in Propsss]:number}
+
+
+-_-______________________________________________________________第三十三课 Ts 映射类型( key of )
+
+
+ - 首先 in name:number,age:string,gender:Array<String>
+ - 然后 keyof name,age,gender
+ - 再 name:number,age:number,gender:number
+type Natsukissssaa = {name:number,age:string,gender:Array<String>}
+type yurissssaa = {[key in keyof Natsukissssaa]:number}
+
+
+-_-______________________________________________________________第三十四课 Ts Partial的实现
+
+
+ - type[o] 语法, 再 TS 中称为 索引查询类型
+ - 用来查询属性的类型
+ - type[o] 表示类型查询 type 中属性 o 对应的类型
+type mmmmmonika<type> = {
+  [o in keyof type]?:type[o]
+}
+type sdfghuio = {a:number,b:string,c:boolean}
+type sdnjfh = mmmmmonika<sdfghuio>
+
+
+-_-______________________________________________________________第三十五课 Ts 索引查询类型
+
+
+ - 同时查询多个索引的类型
+type sdsf = {a:number,b:string,c:Boolean}
+type orangesss = sdsf[keyof sdsf]	type orangesss = sdsf["a","b"]
+
+
+-_-______________________________________________________________第三十六课 Ts 创建类型声明文件
+
+
+ - 创建 index.t.ts 文件
+ - 创建需要共享的类型, 并使用 export 导出, 
+ - 在需要使用时, 通过 import 导入即可, ( .d.ts 后缀导入时, 直接省略 ) 
+
+
+-_-______________________________________________________________第三十七课 Ts 创建类型声明文件2
+
+
+ - 在导入 .js 文件时, TS 会自动加载与 .js 同名的 .d.ts 文件
+ - declare 关键字, 用于类型声明, 为其他地方, ( 比如 .js 文件 ) 已存在的变量声明类型, 而不是创建一个变量
+ - 对于 type 与 interface 这些明确就是 Ts 类型的可以省略 declare 关键字
+ - 对于 let, function 等具有双重含义的 ( js, ts ) 都可以用, 应该使用 declare 关键字, 明确此处用于类型声明 
+ 
+
+
+
+
+
+
+
+
+
+

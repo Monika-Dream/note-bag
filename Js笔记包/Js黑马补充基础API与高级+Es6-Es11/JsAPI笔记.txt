@@ -1,0 +1,391 @@
+Js黑马教程-对于之前笔记的改写体会与扩展重练
+————————————————————————
+WEB API
+1.获取指定父元素下的子元素
+var ol = getElementById("ol")
+console.log(ol.getElementsByTagName("li"))
+————————————————————————————————————————————
+2.选择器
+var qu=document.querySelector(".box")
+- 需要一个选择器的字符串作为参数，可以根据一个css选择器来查询一个元素节点对象
+- 该方法总会返回唯一的一个元素，如果满足条件的元素有多个，则会返回第一个
+————————————————————————————————————————————
+3.选择器(ALL)
+var qu=document.querySelectorAll(".box")
+- 该方法和 querySelector(  ) 用法一致，不同的是它会将符合条件的封装到数组中返回
+- 数组返回
+————————————————————————————————————————————
+4.获取 body 元素
+var body = document.body;
+————————————————————————————————————————————
+5.获取 html 元素
+var html = document.documentElement;
+————————————————————————————————————————————
+6.innerText 与 innerHTML 的区别
+1. innerText 不识别 HTML 标签
+1. innerHTML 识别 HTML 标签
+- 除了修改，他们还可以读取
+2.p.innerText		123 456
+2.p.innerHTML		123 
+			<span>456</span>
+————————————————————————————————————————————
+7.某个元素被禁用，不能再点击
+btn.disabled = true;
+设置或返回 checkbox 是否应被禁用
+true 则元素禁用
+false 则元素不禁用
+————————————————————————————————————————————
+8.关于 JS 操作样式
+- style
+- 一定要在样式那加双引号
+div.onclick = function(){
+    this.style.backgroundColor="pink"
+    }
+
+give_me("div",function(){
+                this.style.backgroundColor = "pink";
+            })
+————————————————————————————————————————————
+9.获得与失去焦点
+1.onfocus	()	获得焦点				 - 鼠标事件
+2.onblur()	失去焦点				 - 鼠标事件
+————————————————————————————————————————————
+10.className 修改样式属性
+.change{
+    xxx				-Css
+}
+
+<div><div>			-HTML
+
+text = document.querySelector("div")
+text.onclick = function(){
+    this.className="change"		-Js
+}
+————————————————————————————————————————————
+11.排他思想
+- 首先先排除其他人，然后才设置自己的样式 这种排除其他人的思想我们成为排他思想
+var btns = document.getElementsByTagName('button');
+        // btns得到的是伪数组  里面的每一个元素 btns[i]
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].onclick = function() {
+                // (1) 我们先把所有的按钮背景颜色去掉  干掉所有人
+                for (var i = 0; i < btns.length; i++) {
+                    btns[i].style.backgroundColor = '';
+                }
+                // (2) 然后才让当前的元素背景颜色为pink 留下我自己
+                this.style.backgroundColor = 'pink';
+
+            }
+        }
+————————————————————————————————————————————
+12.鼠标时间
+鼠标经过:onmouseover ( 有冒泡特性 )			 - 鼠标事件
+鼠标经过:onmouseenter ( 只有经过自身盒子才会触发 )		 - 鼠标事件
+鼠标离开:onmouseout ( 有冒泡特性 )			 - 鼠标事件
+鼠标离开:onmouseleave ( 只有经过自身盒子才会触发 )		 - 鼠标事件
+————————————————————————————————————————————
+13.获取自定义属性值
+element.getAttribute('属性')
+————————————————————————————————————————————
+14.设置自定义属性
+element.setAttribute('属性','值')
+————————————————————————————————————————————
+15.移除自定义属性
+element.removeAttribute('属性')
+————————————————————————————————————————————
+16.自定义属性的使用
+ - data-开头
+i++
+li[i].setAttribute("data-zxcv",i)
+ - 为每个 li 添加索引
+var zxcv = this.getAttribute("data-zxcv")
+ - 获取 li 索引
+————————————————————————————————————————————
+17.H5新增自定义属性的使用
+ - data-开头
+<div data-index-zxcv >123</div>
+console.log(div.dataset)	 	 - 返回所有以 data 开头的自定义元素列表
+console.log(div.dataset.indexZxcv)	 - 取值
+————————————————————————————————————————————
+18.节点层级
+node.parentNode			 - 父节点(就近原则)
+parentNode.children		 - 子节点(返回列表)
+ - firstElementChild/lastElementChild
+node.nextElementSibling		 - 下一个兄弟节点
+node.previousElementSibling		 - 上一个兄弟节点
+————————————————————————————————————————————
+19.节点创建
+var name = document.createElement("tagname")
+————————————————————————————————————————————
+20.添加节点
+node.appendChild(name)			 - 添加节点(最后)
+node.insertBefore(childName, ul.children[0])	 - 添加节点(指定位置)
+————————————————————————————————————————————
+21.删除节点
+node.removeChild(ul.children[0])		 - 删除子节点
+————————————————————————————————————————————
+22.阻止跳转链接 <a>
+<a herf="javascript:;"></a>
+————————————————————————————————————————————
+23.复制节点( 克隆节点 )
+node.cloneNode(false/true)			 - 克隆节点
+- false:浅拷贝不复制标签内容
+- true:深拷贝复制标签内容
+————————————————————————————————————————————
+24.监听注册方式
+btns.addEventListener("click" , function(event){  } , false )	 - 监听
+1.事件的字符串，不要 on
+2.回调函数，当事件被触发时该函数会被调用
+3.是否在捕获阶段触发事件，需要一个布尔值，一般都传 false
+4.使用 addEventListener（ ）可以同时为一个元素绑定多个响应函数
+5.这样当事件被触发时，响应函数将会按照函数的绑定顺序执行
+————————————————————————————————————————————
+25.删除事件
+- eventTarget.onclick = null;			 - 传统
+- eventTarget.removeEventListener( type,listener[,useCapture] )
+例子:
+Event.addEventListener("click" , fn)
+function fn(event){
+    alert("666")
+    Event.removeEventListener('click',fn)		 - 移除
+}
+————————————————————————————————————————————
+26.事件对象常见属性与方法( 我去你妈的IE,兼容你妈 )
+- event.target				 - 返回触发事件对象
+- event.type				 - 返回事件类型
+- event.preventDefault( )			 - 阻止事件默认行为
+	- return false                    也行
+- event.stopPropagation( )			 - 阻止事件冒泡
+————————————————————————————————————————————
+27.禁止复制
+- contextmenu	(右键菜单)
+document.addEventListener("contextmenu",function(event){
+	event.preventDefault( )
+},false)
+
+- selectstart
+document.addEventListener("selectstart",function(event){
+	event.preventDefault()
+},false)
+————————————————————————————————————————————
+28.获取鼠标位置
+clientX
+- 返当事件被触发时，鼠标指针的水平坐标
+- 可见位置 x与y 
+clientY
+- 返当事件被触发时，鼠标指针的垂直坐标
+- 可见位置 x与y 
+pageX
+- 返当事件被触发时，鼠标指针的水平坐标
+- 整个页面
+pageY
+- 返当事件被触发时，鼠标指针的水平坐标
+- 整个页面
+screenX
+- 鼠标相对于电脑屏幕的 X 坐标
+screenY
+- 鼠标相对于电脑屏幕的 Y 坐标
+————————————————————————————————————————————
+29.常用的键盘事件
+onkeyup				 		- 键盘事件
+- 某个键盘松开时触发
+onkeydown				 	- 键盘事件
+- 某个键盘按下时触发
+onkeypress				 	- 键盘事件
+- 某个键盘按下时触发		( 不认识功能键 )
+————————————————————————————————————————————
+30.键盘事件对象
+.key				 		- 键盘事件
+- 用户按下的键( 区分大小写 )
+document.addEventListener('keyup', function(e) {
+           console.log(e.key)
+ })
+————————————————————————————————————————————
+31.BOM对象( 事件加载 )
+onload
+- 事件会在整个页面加载完成后触发
+DOMContentLoaded
+- 仅在 DOM 加载完成,不包括样式表,图片,flash等等
+————————————————————————————————————————————
+32.BOM对象( 窗口大小事件 )
+onresize
+- 调整浏览器窗口大小加载事件
+window.innerWidth
+- 当前屏幕的宽度
+————————————————————————————————————————————
+33.定时器
+- setTimeout(调用函数,延时时间)
+- setInterval(调用函数,延时时间)
+————————————————————————————————————————————
+34.清除定时器
+- clearTimeout( timeout ID )
+- clearInterval( timeout ID )
+————————————————————————————————————————————
+35.location对象
+protocol://host[:port]/path/[?query]#fragment
+protocol		通讯协议 http/ftp/maito
+host		域名
+port		端口号
+path		路径
+query		参数
+fragment		片段( 链接/锚点 )
+————————————————————————————————————————————
+36.location对象属性
+location.href	获取或者设置整个 URL
+location.host	返回主机( 域名 )
+location.port	返回端口号 如果未写返回空字符串
+location.pathname	返回路径
+location.search	返回参数
+location.hash	返回片段
+————————————————————————————————————————————
+37.location常见方法
+location.assign( )	跳转页面，与 href 相似( 重定向页面 )
+location.replace( )	替换当前页面，无法后退页面
+location.reload( )	重新加载页面，如果参数为 true 则强制刷新
+————————————————————————————————————————————
+38.navigator
+- 对象包含浏览器的相关信息
+<script>
+if ((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+window.location.href = "../H5/index.html"; //手机
+}
+</script>
+- 以上代码是判断用户为手机查看页面或电脑
+————————————————————————————————————————————
+39.history
+- 与浏览器历史记录进行交互
+back( )		可以后退功能
+forward( )		前进功能
+go( 参数 )		前进后退功能 1 为前进，-1 为后退
+————————————————————————————————————————————
+40.常见网页特效
+offsetParent
+- 返回元素的偏移容器
+- 会获取到离当前元素最近的开启了定位的祖先元素
+如果所有的祖先元素都没有开启定位，则返回body
+
+offsetTop
+- 当前元素相对于其定位父元素的垂直偏移量 
+
+offsetLeft
+- 当前元素相对于其定位父元素的水平偏移量
+
+offsetWidth
+- 返回元素宽度( 包括padding,边框,内容区宽度 )		- 不带单位
+
+offsetHeight
+- 返回元素高度( 包括padding,边框,内容区高度 )		- 不带单位
+
+clientHeight					- 不带单位
+- 返回元素可见高度
+clientWidth					- 不带单位
+- 返回元素可见宽度
+
+- 这两个属性可以获取元素的可见高度和宽度
+- 这些属性都是不带 px 的，返回都是一个数字，可以直接进行计算
+- 会获取元素宽度和高度，包括内容区和内边距
+- 与 offsetWidth 区别就是不计算边框 border
+- 这些属性都是只读的，不能修改
+————————————————————————————————————————————
+41.元素滚动事件
+scroll
+- 该事件会在元素的滚动条滚动时触发			 - 鼠标滚动条事件
+scrollHeight
+- 返回元素整体高度
+scrollWidth
+- 返回元素整体宽度
+scrollLeft
+- 可以获取水平滚动条滚动的距离
+scrollTop
+- 可以获取垂直滚动条滚动的距离
+例子：
+当满足scrollHeight - scrollTop == clientHeight
+说明垂直滚动条滚动到底了
+当满足scrollWidth - scrollLeft == clientWidth
+说明水平滚动条滚动到底
+alert(box4.scrollHeight - box4.scrollTop); // 600
+————————————————————————————————————————————
+42.页面被卷去的部分
+window.pageYOffset
+- 页面被卷去的头部
+window.pageXOffset
+- 页面被卷去的左侧
+————————————————————————————————————————————
+43.移动端 touch 触摸事件
+touchstart
+- 手指触摸到 DOM 元素时触发
+touchmove
+- 手指在 DOM 元素滑动时触发
+touchend
+- 手指在 DOM 元素移开时触发
+————————————————————————————————————————————
+44.触摸事件对象
+touches
+- 正在触摸手指的一个列表
+targetTouches
+- 正在触摸当前 DOM 元素的手指的一个列表
+changedTouches
+- 手指状态发生了改变的一个列表，从无到有，从有到无的一个变化
+
+- 手指离开屏幕时，没有了 touches  ，targetTouches
+	- 有 changedTouches
+————————————————————————————————————————————
+45.侦测 CSS3 过度动画完成
+transitionend
+- 在过渡完成时调用
+element.addEventListener("transitionend",function( ){ }
+————————————————————————————————————————————
+46.返回元素类名
+classList
+- 用于在元素中添加 , 移除 , 切换 CSS 类
+
+element.classList.add('类名')
+- 添加类,不会覆盖
+
+element.classList.remove('类名')
+- 删除类,不会覆盖
+
+element.classList.toggle('类名')
+- 切换类,存在就去掉，没有就添加
+————————————————————————————————————————————
+47.click 延时解决方案( 移动端 )
+<meta name="viewport" content="user-scalable=no">
+- 禁用缩放
+
+- 使用插件
+————————————————————————————————————————————
+48.本地存储之 window.sessionStorage
+sessionStorage.setltem(key,value)		- 存储数据于浏览器
+- 生命周期为关闭浏览器窗口
+- 在同一个窗口( 页面 )下数据共享
+- 以键值对的形式存储使用
+- 相同键名会覆盖原先内容
+
+sessionStorage.getltem(key)			- 获取数据于浏览器
+sessionStorage.removeltem(key)		- 删除数据于浏览器
+sessionStorage.clear()			- 删除所有数据于浏览器
+————————————————————————————————————————————
+49.本地存储之 window.localStorage
+localStorage.setltem(key,value)		- 存储数据于浏览器
+- 生命周期永久生效，除非手动删除，否则关闭页面也会存在
+- 可以多窗口共享( 同一浏览器可以共享 )
+- 以键值对形式存储使用
+
+localStorage.getltem(key)			- 获取数据于浏览器
+localStorage.removeltem(key)			- 删除数据于浏览器
+localStorage.clear()				- 删除所有数据于浏览器
+————————————————————————————————————————————
+50.change事件
+- 复选框变换时触发
+checkbox.addEventListener("change",function(){
+})
+
+e.target.checked		 - 获取状态
+
+
+
+
+
+
+
+

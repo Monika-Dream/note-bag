@@ -1,0 +1,1375 @@
+Vue框架笔记
+ - Please Just Her					Monika
+ - vue-cli下载		vue -V			npm install -g @vue/cli
+ - 文件路径提示插件					Path Autocomplete 插件
+ - 一个插件						vue3-snippets 插件
+ - HTML自动补全插件					Auto Close Tag 插件
+ - ESLint 相关工具1					ESLint 插件
+ - ESLint 相关工具2					prettier 插件
+ - vue-router					npm i vue-router
+ - Vant2组件库					npm i vant@latest-v2 -S
+ - 消息订阅与发布					npm i pubsub-js
+——————————————————————————————————————
+——————>第一课				vue的新特性
+ - 数据驱动视图		
+	 - 数据的变化会驱动视图自动更新
+ - 双向数据绑定
+	 - js 数据的变化，会被自动渲染到页面上
+	 - 页面上表单数据的采集发生变化时，会被 vue 自动获取到，并更新到 js 数据中 
+——————————————————————————————————————
+——————>第二课				vue的初次
+1.导入 vue 框架			
+<body>
+    <script src="./lib/vue-2.6.12.js"></script>
+    <script>
+<div id="app">{{username}}</div>
+const vm = new Vue({
+//el 属性是固定写法,表示告诉 vue 要控制哪个区域，接受的值是一个选择器
+        el:"#app",
+//data 对象就是要渲染到页面上的数据
+        data:{
+            username:"Monika"
+        }
+//定义事件的处理函数
+        methods:{
+
+        }
+    })
+    </script>
+</body>
+——————————————————————————————————————
+——————>第三课				vue的指令概念
+ - 在模板语法中可以写 js 运算语法
+ - 为开发者提供的模板语法
+	1.内容渲染指令
+	2.属性绑定指令
+	3.事件绑定指令
+	4.双向绑定指令
+	5.条件渲染指令
+	6.列表渲染指令
+——————————————————————————————————————
+——————>第四课				vue的内容渲染指令
+1.常用的有如下三个
+ - v-text			<p v-text="username"></p>	会覆盖标签内部原本内容
+ - {{  }}			<p>name:{{ "username" }}</p> 不会覆盖原有内容
+ - v-html	如果要将包含 HTML 标签的字符串渲染为页面的 HTML 元素
+ - 插值表达式只能用在元素的内容节点中，不能用在元素的属性节点中
+——————————————————————————————————————
+——————>第五课				vue的内容绑定指令
+ - v-bind	<input type="" v-bind:placeholder="tips">	为属性绑定内容
+语法糖:	<input type="" :placeholder="tips">		
+——————————————————————————————————————
+——————>第六课				vue的事件绑定指令
+ - 这是单向绑定
+ - v-on     <button v-on:click="add"></button>为属性绑定事件
+语法糖:	<button @click="add"></button>	
+
+const vm = new Vue({
+      methods:{
+	add(){
+	    console.log("ok")
+	}
+    }
+})
+——————————————————————————————————————
+——————>第七课				事件绑定与访问数据源数据
+ - 使用 this 就会指向 vm ，你所加的值都会添加到 vm 里面 
+<p @click="add(1)">{{ const }}</p>			 - 传参方法
+const vm = new Vue({
+      el:"#app",
+      data:{
+      const:0
+},
+      method:{
+	add(n){
+	   this.const++
+	}
+         }
+})
+
+ - 这样的传参会让我们无法访问到 原生的事件对象 event
+ - Vue给我们提供了内置变量 $event ,他就是原生的事件对象 e
+
+<p @click="add(1,$event)">{{ const }}</p>		 - 传参方法
+const vm = new Vue({
+      el:"#app",
+      data:{
+      const:0
+},
+      method:{
+	add(n,event){
+	   this.const++
+	}
+         }
+})
+——————————————————————————————————————
+——————>第八课				事件绑定 - 事件修饰符
+<a href="http://www.4399.com" @click.prevent="show">
+	 - 即事件绑定触发条件，也阻止了默认行为 
+.prevent	 				 - 阻止事件默认行为
+.stop					 - 禁止冒泡
+.once					 - 事件只触发一次
+.canture					 - 使用事件的捕获模式
+.self					 - 只有 event.target 是当前操作的元素时才触发
+.passive					 - 事件的默认行为立即执行, 无需等待事件回调执行完毕
+——————————————————————————————————————
+——————>第九课				事件绑定 - 按键修饰符
+<input type="text" @keyup.esc = "clean_value">
+——————————————————————————————————————
+——————>第十课				双向事件绑定
+1.vue提供了 v-model 双向数据绑定指令,能在不操作 Dom 的情况下
+	 - 快速获取表单的数据
+2.双向数据绑定就是假设 input 的值发生了变化,然后 v-model 指向一个变量
+	 - 那么 input 的值就会通过 v-model 的值指向那个变量
+	 - 使用那个变量的数据也就会发生改变
+	 - 反之同理
+3.v-model 使用在 div 上是没有意义的
+例子:
+ <p>用户的名字是 {{ username }}</p>
+<input type="text" v-model="username">	 - 双向绑定
+——————————————————————————————————————
+——————>第十一课				v-model 修饰符
+ - .number				 - 自动将用户输入的值转为数值类型
+ - .trim					 - 自动过滤用户输入的首位空白字符
+ - .lazy					 - 在 "change" 而非 input 时更新
+	 - 可以理解为 防抖 ,在失去焦点时才会去更新数据
+——————————————————————————————————————
+——————>第十二课				vue的条件渲染指令
+1.按需控制 Dom 元素的显示与隐藏
+ - v-if		当后面的数值为 true 的时候,就可以看到对应的标签, 反之同理
+			 - 如果值为 false 的时候,那么他将暂时删除该标签
+ - v-show		当后面的数值为 true 的时候,就可以看到对应的标签, 反之同理
+			 - 如果值为 false 的时候,他不会暂时删除该标签
+——————————————————————————————————————
+——————>第十三课				v-if 配套的指令
+1.v-else-if 指令必须配合 v-if 指令一起使用,否则它将不会被识别
+ - 注意你所要判断的类型是否一致
+<div v-if="type === A">优秀</div>
+<div v-else-if="type === B">良好</div>
+<div v-else-if="type === C">蚌埠住了</div>
+<div v-else>赶紧 remake 去吧</div>
+——————————————————————————————————————
+——————>第十四课				vue的列表渲染指令
+ - v-for , 用来辅助开发者基于一个数组来循环渲染一个列表结构
+	 - v-for 指令需要使用 item in items 形式的特殊语法
+	 - items 是待循环的数组
+	 - item 是被循环的每一项
+	 - 还支持第二个参数，就是当前项的索引,(item,index) in items
+	 - 官方建议:只要用到了 v-for 指令,那么一定要绑定一个 :key 属性
+	 	 - 而且,尽量把 id 作为 key 的值
+		 - 官方对于 key 的值类型,只能用字符串或者数字类型
+		 - key 的值千万不能一致
+		 - (item,index) in list :key="item.id"
+<li v-for="item in list" :key="item.id">My name is {{ item.name }}</li>
+const vm = new Vue({
+            el:"#app",
+            data:{
+                list:[
+                    {id:1,name:"Monika"},
+                    {id:2,name:"Sayori"}
+                ]
+            }
+        })
+——————————————————————————————————————
+——————> 后记	 				vue v-cloak
+ - 直接在 HTML 标签上写入即可 <h1 v-cloak/>
+ - 用来处理在 Vue 接管之前因为耗时任务导致的页面{{ name }}/闪现
+ - 在 Vue 接管只会会自动删除 v-cloak 属性
+ - 需要配合 Css 使用
+[v-clock]{			<- 属性选择器
+    display:none
+}
+——————————————————————————————————————
+——————> 后记	 				vue v-once
+ - 将数据停止在初始化状态
+<h1 v-once >{{ n }}</h1>			1
+<h2 @click="n++">{{ n }}</h2>		1,2,3,4,5,......
+data(){
+    return {
+        n:0
+    }
+}
+——————————————————————————————————————
+——————> 后记	 				vue v-pre
+ - 跳过所在节点的编译过程
+ - 会加快编译
+<h1 v-pre>12345</h1>
+——————————————————————————————————————
+——————>第十五课				过滤器
+ - 本功能在 vue3 消失,所以只学习基本用法
+1.常用于文本格式化
+2.常用于 v-bind 与 插值表达式
+3.添加在 js 表达式的尾部,由 管道符 进行调用
+4.新增节点 filters 
+5.过滤器中一定要有返回值
+6.以过滤器的返回值为准
+7.过滤器中的形参可以接受到
+
+<p>{{ value|new_value }}</p>
+<div v-bind:id="value|new_value"></div>
+el:{},
+data:{},
+filters:{
+   new_return_text(old_text_value要显示的值){
+	对值进行处理
+	return 处理结果
+    }
+}
+	参数接收,切记 return
+	         |
+<p>{{ old_text|new_return_text }}</p>
+          |________|
+                值
+——————————————————————————————————————
+——————>第十六课				私有过滤器与全局过滤器
+1.定义到 Vue 实例下 filters 节点下的叫做私有过滤器
+2.全局过滤器:
+Vue.filter('全局过滤器的名字',(str)=>{
+    全局过滤器的处理函数
+})
+3.遵循就近原则
+——————————————————————————————————————
+——————>第十七课				过滤器其他用法
+1.可以连续调用多个过滤器
+2.过滤器中可以传参
+	 - 第一个参数永远都是前一个的待处理值
+	 - 
+<p>{{ message|filterA(arg1,arg2) }}</p>
+Vue.filter("filterA",(mas,arg1,arg2)=>{})
+——————————————————————————————————————
+——————>第十八课				侦听器
+1.侦听器允许侦听数据变化，从而对数据的变化做特定的操作
+2.新增 watch 节点
+3.移除了Herobrine
+el:{},
+data:{username=""},
+watch:{
+username(newData,oldData){
+        - 监听 username 值的变化
+        - newData 是变化之后的新值
+        - oldData 是变化前的旧值
+        console.log(newData,oldData)
+    }
+}
+——————————————————————————————————————
+——————>第十九课				立即执行侦听器的格式
+1.首先不能像之前成为一个函数
+2.定成对象
+ - 可以通过 immediate 选项,让侦听器自动触发
+ - 新增 handler 子函数
+ - 在侦察到 username 的值发生变化时会自动触发 handler 子函数
+
+data:{
+    username:""
+},
+watch:{
+    username:{
+        handler:function(newValue,oldValue){		=== handler(){}
+            console.log(......)
+        },
+    immediate:true/false				立即执行/默认不执行
+
+    }
+
+}
+——————————————————————————————————————
+——————>第二十课				两者优缺点与deep选项
+1.事件侦听的方法格式
+缺 - 无法在刚进入页面时,自动触发
+缺 - 监听为对象时,无法侦听内部属性变化
+
+2.事件侦听的对象格式
+优 - 通过 immediate 选项,可以在刚进入页面时,自动触发
+优 - 通过 deep 选项,让侦听器监听对象中每个属性的变化
+
+data:{
+    info:{
+        username:"Monika"
+    }
+},
+watch:{
+    username:{
+        handler:function(newValue,oldValue){		=== handler(){}
+            console.log(......)
+        },
+    immediate:true/false,				立即执行/默认不执行
+    deep:true					监听对象每个值
+    }
+
+}
+
+3.事件侦听的函数确切写法
+
+data:{
+    info:{
+        username:"Monika"
+    }
+},
+watch:{
+    'info.username'(newValue,oldValue){}			必须使用单引号
+}
+
+——————————————————————————————————————
+——————>第二十一课				计算属性
+ - 任何一个值变化,它都会重新计算
+1.新增 computed 节点
+el:{},
+data:{
+    r:"0",
+    g:"0",
+    b:"0"
+},
+computed:{
+    //定义函数,返回方法生成好的字符串
+    rgb(){
+    return `rgb( ${ this.r }, ${ this.g }, ${ this.b }, )`
+    //返回的东西会指向 data 里, 就是说 data 现在有这个方法, 可以直接调用 
+    }
+}
+——————————————————————————————————————
+——————>第二十二课				vue-cli安装方式
+1.检查是否下载成功	vue -V
+2.确定项目创建位置并 vue create 项目名称
+3.第三个选项代表手动选择哪个模块去安装到项目中( 目前推荐 )
+	 - 按空格去选择
+ - babel		 - 解决 JS 兼容问题
+ - CSS Pre-p...	 - CSS 预处理器 ( 也就是 less )
+ - Where do you prefer placing config for Babel, ESLint, etc.?
+	 - 你的第三方库 创建在哪？
+	 - In dedicated config files	《-- 选择,每个文件只做自己的事
+	 - In package.json		《-- 杂糅在一起了
+ - Save this as a preset for future projects? (y/N)
+	 - 是否将上述选择创建为预设?
+	 - Y/N 皆可
+ - Save preset as:
+	 - 填写预设名字
+ - Installing CLI plugins. This might take a while...
+	 - 正在下载依赖包
+ - 请不要在命令框上随意乱晃鼠标,会冻结窗口
+ - 请将鼠标移至命令行上方，点击以下并 ctrl+c
+——————————————————————————————————————
+——————>第二十三课				vue-cli使用方式
+1.先 cd 到文件夹目录下,详细到名字文件夹
+2.输入 npm run serve
+ - Local:			本机访问地址
+ - Network:		局域网访问地址
+——————————————————————————————————————
+——————>第二十四课				解读
+ - assets 文件夹, 存放项目中用到的静态资源文件, 例如 css 样式表,图片资源
+ - components 文件夹, 封装的, 可复用的组件, 都要放到 components 文件夹中
+ - main.js 项目的入口文件, 一启动就执行
+ - app.vue 是项目的根组件
+ - .$mount('#app') === el:"#app"
+——————————————————————————————————————
+——————>第二十五课				vue组件
+1.每个 vue 组件都由三部分构成,分别是
+<template></template>		模板结构,在 JS 文件中写 HTML 代码
+script				组件的 JS 行为
+style				组件的样式
+
+推荐 template > script > style
+
+2.在定义 script 时，默认语法:
+<script>
+export default{
+    data(){
+        return {
+            username:"Monika"
+        }
+    },
+    methods:{
+        changeName(){
+            this.username = "Sayori"
+        }
+    }
+}
+</script>
+
+2.注意，vue 组件中的 data 不能再指向对象，应当是一个函数
+3.只有 data 才需要这么写
+4.只允许有一个根节点 <template> 下只允许存在一个标签
+——————————————————————————————————————
+——————>第二十六课				使用 less 方式
+<style lang="less"></style>
+——————————————————————————————————————
+——————>第二十七课				使用组件三个步骤
+1.使用 import 语法导入需要的组件(@ 表示当前目录)
+	<script>
+	import Left from '@/components/Left.vue'
+2.使用 components 节点注册组件
+	<script>
+	components:{
+    	    Left			<===  "Left":Left
+  	}
+3.以标签的形式去使用组件
+	<div class="box">
+      	<!-- 渲染 Left 组件和 Right 组件 -->
+      	<left></left>
+    	</div>
+  	</div>
+——————————————————————————————————————
+——————>第二十八课				Path Autocomplete 配置
+文件 - 首选项 - 设置 - settings.json
+{
+//导入文件时是否带扩展名
+"path-autocomplete.extensionOnImport": true,
+//配置 @ 的路径提示
+    "path-autocomplete.pathMappings": {
+        "@":"${folder}/src"
+    },
+......
+}
+——————————————————————————————————————
+——————>第二十九课				components 节点解释
+1.注册的都是私有子节点
+——————————————————————————————————————
+——————>第三十课				全局节点注册
+1.在 main.js 中进行注册
+2.import 导入要注册的			import Monika from "@/..."
+3.使用 Vue.component("起的别名",原先名字) 进行注册 Vue.component("Monika",Monika)
+——————————————————————————————————————
+——————>第三十一课				新式写法
+<div>
+    <h5>center 组件</h5>
+    <h5>当前数值为:{{ value }}</h5>
+    <button @click="value+=1">点击值增加一</button>
+  </div>
+——————————————————————————————————————
+——————>第三十二课				自定义属性 props
+1.需求:我们需要在公共组件的情况下对于某些特定使用组件元素的设置默认值
+2.需要在组件中进行设置
+3.props 是只读的
+4.可以理解为初始化属性,不可直接修改本身
+语法:
+export default{
+    props:["自定义属性A","自定义属性..."],
+    data(){
+        return { }
+    },
+}
+
+禁止:
+props:["Monika","自定义属性..."],
+<h5>当前数值为:{{ Monika }}</h5>
+<button @click="Monika+=1">点击值增加一</button>
+
+应当:
+<h1>当前数值为{{ count }}</h1>
+<button @click="count += 1"></button>
+ - 首先 props:["init"]				中间件文件中
+ - <center init="6"></center>			中间件
+ - data(){return{count:this.init}}		继承初始值
+——————————————————————————————————————
+——————>第三十三课				props 的 default 默认值
+ - 对于 props 来说, 假设将他变成列表, 虽说可用, 但是无法进行更加精细的操作 
+ - 所以应当将他变成 对象
+export default:{
+    data( ){ return { } },
+    props:{
+        init:{
+            default:0				 - 默认传零
+        }
+    } 
+}
+——————————————————————————————————————
+——————>第三十四课				props 的 type 值类型
+ - 在声明自定义类型时，可以通过 type 来定义属性的值类型
+ - 如果传递过来的值不符合此类型,则会在终端报错
+export default:{
+    data( ){ return { } },
+    props:{
+        init:{
+            default:0,				 - 默认传零
+            type:Number
+        }
+    } 
+}
+——————————————————————————————————————
+——————>第三十五课				props 的 required 必填项
+ - 表示这个组件为必填项, 假设不填就会报错
+ - 就算有默认值也会报错
+export default:{
+    data( ){ return { } },
+    props:{
+        init:{
+            default:0,				 - 默认传零
+            type:Number,
+            required:true
+        }
+    } 
+}
+——————————————————————————————————————
+——————>第三十六课				组件之间的样式冲突问题
+ - 在单页面应用程序中,所有组件的 DOM 结构, 都是基于
+	 - 唯一的 index.html 页面进行呈现的
+ - 每个组件中的样式,都会影响整个 index.html 页面中的 DOM 元素 
+ - 原理
+	 - 自动添加并成为了 属性选择器
+ - 解决方案:
+	 - <style lang="less" scoped></style>
+——————————————————————————————————————
+——————>第三十七课				/deep/ 样式穿透
+ - 在 父组件 中去修改 子组件 中的样式
+ - 在 组件 中有时候我们像修改 子组件 中的内容
+ - 但是我们在 上面 添加了 scoped 项
+ - 所以 当 我们想在子组件中修改内容时，需要添加 /deep/ h5{}
+ - 这种方法只修改当前组件中的
+——————————————————————————————————————
+——————>第三十八课				vue 组件的实例对象
+ - 一个被使用的子组件, 当你去当标签去使用的时候, 可以理解为使用实例对象
+ - 而文件内容本身可以理解为一个实例
+——————————————————————————————————————
+——————>第三十九课				生命周期阶段
+1.生命周期的第一个阶段
+ - setup 
+ - beforeCreate		 - 在创建之前调用		 - 创建
+ - created			 - 在创建时调用		 - 创建
+ - beforeMount		 - 在渲染之前调用		 - 渲染
+ - Mounted		 - 在渲染时调用		 - 渲染
+
+2.生命周期的第二个阶段
+ - 组件与用户之间产生了交互行为
+ - beforeUpdate		 - 在运行更新之前时调用	 - 运行
+ - updated		 - 在运行更新时调用		 - 运行
+
+3.生命周期的第三个阶段
+ - beforeDestroy		 -  在组件销毁之前		 - 销毁
+ - Destroyed		 - 在组件销毁之时		 - 销毁
+——————————————————————————————————————
+4.2：setup 包含的生命周期
+ - 使用前需要从 vue 中引入  		import { onMounted } from "vue"
+onBeforeMount——挂载开始前调用
+onMounted——挂载后调用
+onBeforeUpdate——当响应数据改变，且重新渲染前调用
+onUpdated——重新渲染后调用
+onBeforeUnmount——Vue实例销毁前调用
+onUnmounted——实例销毁后调用
+onActivated——当keep-alive组件被激活时调用
+onDeactivated——当keep-alive组件取消激活时调用
+onErrorCaptured——从子组件中捕获错误时调用
+——————————————————————————————————————
+——————>第四十课				了解过程用法
+ - beforeCreate		 - 在创建之前调用（创建）
+	 - 了解, 没啥用
+ - created			 - 在创建时调用（创建）
+	 - 一般在这个阶段发起 AJAX 请求
+	 - 当前阶段的 UI 结构 ( HTML/CSS ) 未生成
+ - beforeMount		 - 在渲染之前调用（渲染）
+	 - 了解, 没啥用
+	 - 已经把 HTML 编译入了内存, 但是还没有当前组件的 DOM 结构
+	 - 无法操作 DOM 结构
+	 - 可以选择在这里发送 AJAX 请求, 但推荐在 created 阶段发送
+ - Mounted		 - 在渲染时调用（渲染）
+	 - 把内存中的 HTML 结构成功渲染到了页面上
+	 - 浏览器已将包含当前的 DOM 结构
+	 - 能够操作 DOM 的最早过程
+ - beforeUpdate		 - 在运行更新之前时调用（运行）
+	 - 当修改数据时触发
+	 - 在渲染之前触发
+	 - 数据是最新状态, 但是 UI 结构还未变化
+ - updated		 - 在运行更新时调用（运行）
+	 - UI 结构渲染完成
+	 - 操作最新 DOM 处
+ - beforeDestroy		 -  在组件销毁之前（销毁）
+	 - 极少用
+	 - 将要销毁此组件, 但组件还处于工作状态
+ - Destroyed		 - 在组件销毁之时（销毁）
+	 - 极少用
+	 - 组件已被销毁, 此组件对应的 DOM 在浏览器中已被完全移除
+——————————————————————————————————————
+——————>第四十一课				过程用法格式
+<script>
+export default {
+    data(){
+        return{}
+    },
+    created(){
+        此处写对应阶段的业务逻辑
+    }
+}
+</script>
+——————————————————————————————————————
+——————>第四十二课				组件之间的数据共享( 父子 )
+1.组件之间最常见的关系分为两种
+ - 父子关系
+ - 兄弟关系
+2.数据共享方式
+ - 使用 props 自定义进行传输
+	 - 子组件提供位置, 父组件向子组件传值, 问题再于不推荐改值 
+	 - 父向子传值
+ - 通过 this.$emit("自定义事件", 要传的值) 向父组件传值
+	 - <Son @自定义事件="自定义触发函数"></Son>				
+	 countFromSon:0				 - data 父组件
+	 - methods:{
+	自定义触发函数( val ){
+	        this.countFromSon = val	
+	    }	
+	}
+	 - 子向父传值
+ - 通过 this.$off(['自定义事件名',...]) 解绑事件
+	 - 在哪 this.$emit, 就在哪 this.$off
+	 - this.$off() 解绑所有事件
+——————————————————————————————————————
+——————>第四十三课				组件之间的数据共享( 兄弟 )
+1.在 vue2 中, 兄弟之间数据共享方案是 EventBus
+ - 借助 EventBus 中向外暴露 Vue 实例以达成数据的传输
+ - 无论发送/接受方, 都必须导入 import bas from "@/eventBas.js"
+2.兄弟组件 A
+import bas from "@/eventBas.js"
+export default {
+data(){
+        return {
+            msg:"Hello World"
+        }
+    },
+    methods:{
+        sendMsg(){
+            bas.$emit("share",this.msg)
+        }
+    }
+}
+3.兄弟组件 B
+import bas from "@/eventBas.js"
+export default {
+data(){
+        return {
+            msgFromA:""
+        }
+    },
+    methods:{
+        bus.$on("share",val =>{		 - 一般绑定在 created() 阶段中
+            this.msgFromA = val
+        })
+    }
+}
+
+ - 数据发送方:bts.$emit("事件名称",要发送的数据)
+ - 数据接受方:bts:$on("事件名称",事件处理的函数)
+ - 以 eventBus.js 模块为桥梁,桥梁应当建立两头
+ - 桥梁实际上就是向外暴露了一个 vue 实例对象
+——————————————————————————————————————
+——————>第四十四课				ref 引用
+ - vue 内部提供的一个获取 dom 元素的 方法
+<p ref="Please_Just_Her">Just Monika</p>
+ - 此时在 vue 实例对象身上会有 $refs 属性,并有此 dom 对象
+ - this.$refs.Please_Just_Her
+——————————————————————————————————————
+——————>第四十五课				ref 引用扩展
+ - ref 除了引用我们的 DOM 元素, 还可以引用我们的组件
+ - 父组件操作子组件的时候就是这么用的
+	 - 父元素在使用子组件的时候写入 ref="this_name"
+	 - 父组件在使用 this.$refs.this_name 就可以获取到子组件的 Vue 实例
+——————————————————————————————————————
+——————>扩展					mixins
+ - 当两个组件的功能出现重复时
+ - 例如 两个组件中 methods 是一样的时
+ - 单开一个文件, 将重复的代码写入
+ - 然后 一个新的 与 data 平级元素 mixins
+export const hunhe = {
+    methods:{
+        showName(){
+	alert("666")
+        }
+    }
+}
+
+mixins[hunhe]	局部
+Vue.mixin(xxx)	全局
+——————————————————————————————————————
+——————>扩展					插件
+ - 向 Vue 原型上定义方法, 或创建全局属性
+ - 新创建 plugins.js 文件
+ - 在 mian.js 中 createApp(App).use(plugins).mount('#app')
+export default {
+    install(Vue){
+        Vue.config.globalProperties.$axios = axios
+        Vue.全局自定义指令
+        Vue.全局混入
+    }
+}
+——————————————————————————————————————
+——————>第四十六课				this.$nextTick( callback )
+ - this.$nextTick( callback )
+ - 将函数里面的代码, 延时执行
+ - 在 Dom 于数据更新完成之后再去调用
+ - 保证 callback 可以操作到最新的元素
+——————————————————————————————————————
+——————>第四十七课				components 标签用法
+ - 由 component 转变为 components
+ - 指的是动态切换组件的显示与隐藏
+ - < components > 组件, 专门用来实现动态组件的渲染
+显示组件方式 ( 基本使用 )
+	<components is="Left"></components>
+		 - 如果想 v-bind 则必须在 data 中有此值
+
+<components :is="comName"></components>
+<script>
+import Left from "@/components/Left.vue"
+import Right from "@/components/Right.vue"
+export default {
+  data(){
+    return {
+      comName:"Left"
+    }
+  },
+  components:{
+    Left,
+    Right
+  }
+}
+</script>
+——————————————————————————————————————
+——————>第四十七课				标签问题与 keep - alive 保持状态
+ - components 标签会在切换标签时销毁与创建标签, 无法保存数据
+ - 解决方式: 用 keep-alive 标签包裹起来
+<keep-alive>
+	<components is:"Left"></components>
+	<components is:"Right"></components>
+</keep-alive>
+——————————————————————————————————————
+——————>第四十八课				keep - alive 标签生命周期
+ - deactivated		当组件被缓存时
+ - activated		当组件被激活时
+——————————————————————————————————————
+——————>第四十九课				keep - alive 的 include 属性
+ - 指定缓存组件
+	 - 只有名称匹配的组件会被缓存, 多个组件名之间使用 英文逗号分割 ( 组件的注册名称 )
+	 - 名字是 标签名 也就是  name 属性
+<keep-alive :include="[Left, Right]">
+      <router-view></router-view>
+      <components :is="comName"></components>
+</keep-alive>
+——————————————————————————————————————
+——————>第五十课				keep - alive 的 exclude 属性
+ - 排除项
+ - 与上方用法一致
+ - 无法与 include 同时使用
+——————————————————————————————————————
+——————>第五十一课				注册组件名称
+ - 在对应组件中, data节点下写入 name:"Monika"
+ - 当提供了 name 之后, 组件就以 name 名称为主
+ - 当起了名称时,他就不会因初始名称的变化而变化
+ - keep-alive exclude="Right !== MyRight"
+ - 可以理解为起别名吧
+ - 如果没写的话, 默认为注册时的名字
+——————————————————————————————————————
+——————>第五十二课				插槽
+ - 是 vue 为组件封装者提供的能力, 允许开发者在封装组件时, 把不确定的
+	 - 希望用户指定的部分定义为插槽
+ - 有了插槽之后可以<Left><p>这是一段文本内容</p></Left>
+ - 在对应组件中与相应位置写入插槽
+ - 每个插槽都要有 name 名称, 默认为 default
+ - 当一个插槽有自己的名称时, 就是一个具名插槽
+<slot name="Monika"></slot>	 - 声明一个插槽区域
+——————————————————————————————————————
+——————>第五十三课				v-slot 指令
+ - 简写为 #
+ - 指名道姓的渲染进哪个插槽时, 需要在节点上包裹 template 标签
+ - 不能直接用在元素身上
+	 - 无法直接使用
+<Left>
+	<template #default>
+		<p>这是一段内容, 即将放入 default 名称插槽中</p>
+	</template>
+</Left>
+——————————————————————————————————————
+——————>第五十四课				作用域插槽传值
+<template #content="obj">
+    <div>
+        <p>123456</p>
+        <p>123456</p>
+        <p>123456</p>
+        <p>{{ obj }}</p>
+    </div>
+</template>
+——————————
+<slot name="content" msg="这里的值会以对象新式作为参数"></slot>
+————— 输出 —————
+{msg:"这里的值会以对象新式作为参数"}
+——————————————————————————————————————
+——————>第五十五课				作用域插槽解构赋值
+<template #content="{msg, user}>	- 具名插槽的情况下
+<template v-slot="{msg, user}">	- 默认插槽的情况下( 没简写 )
+<template #="{msg, user}">		- 默认插槽的情况下( 简写 )
+    <div>
+        <p>123456</p>
+        <p>123456</p>
+        <p>{{ user.name }}</p>
+        <p>{{ msg }}</p>
+    </div>
+</template>
+——————————
+<slot name="content" msg="这里的值会以对象新式作为参数" :user="userinfo"></slot>
+data(){
+    return{
+        userinfo:{
+            name:"Monika",
+            age:18,
+        }
+    }
+}
+————— 输出 —————
+{msg:"这里的值会以对象新式作为参数"}
+——————————————————————————————————————
+——————>第五十六课				自定义指令 - bind
+ - 私有自定义指令
+	 - 跟着组件走的
+	 - 可以在 directives 节点下声明 私有自定义指令（ 新增节点 ）
+	 - 当绑定成功之后, 会立即触发 bind 方法
+	 - 形参中的 el 指的是当前指令所绑的 DOM 对象
+	 - 传字面量的话要加一层 双/单引号, 不加就是找变量
+	 - expression 是表达式
+	 - bind 只会触发一次( 绑定的时候 )
+<p v-color="Monika" v-color="'yellow'">改变颜色</p>
+data(){
+    return{
+        Monika:"pink"
+    }
+},
+directives:{
+    color:{				 - 自定义名字: { 配置文件 }
+        bind(el, binding){		 - 固定写法形参el, 推荐叫 binding, 返回对象
+            el.style.color = binding.value
+        }
+    }
+}
+——————————————————————————————————————
+——————>第五十七课				自定义指令 - update
+ - 只是保障更新时修改数据, 无法开局调用
+ - update 函数会在每次 DOM 更新的时候被调用
+ - 和 bind 写法一致, 可以理解为再写一遍
+directives:{
+    color:{				 - 自定义名字: { 配置文件 }
+        bind(el, binding){		 - 固定写法形参el, 推荐叫 binding, 返回对象
+            el.style.color = binding.value
+        },
+        update(el, binding){		 - 固定写法形参el, 推荐叫 binding, 返回对象
+            el.style.color = "yellow"
+        }
+    }
+}
+——————————————————————————————————————
+——————>第五十八课				函数简写
+ - 如果 bind 与 update 逻辑完全相同, 则对象格式的自定义指令
+	 - 可以简写为函数格式
+color:{				color(el,binding){
+bind(el,binding){},			    el.style.color = binding.value
+update(el,binding){},
+}				}
+——————————————————————————————————————
+——————>第五十九课				全局自定义指令
+通过 Vue.directive() 进行声明
+Vue.directive("color",function(el,binding){
+    el.style.color = binding.value
+})
+——————————————
+Vue.directive("color",{
+    bind(el,binding){ 绑定时启用 },
+    update(el binding){ 修改时启用 },
+})
+——————————————————————————————————————
+——————>第六十课				了解 eslint
+ - 代码格式约束工具
+ - 具体的报错或者问题请去官网上查找
+ - 配置文件及路径放在了工具包中
+ - 出现自动加逗号的情况下
+	"editor.formatOnSave": true,  《--- 注释
+
+settings.json 中设置
+//ESList 插件与 prettier 插件的设置
+    "prettier.configPath": "C:\\Users\\Lenovo\\.prettierrc",
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true
+    },
+    "eslint.alwaysShowStatus": true,
+    "prettier.trailingComma": "none",
+    "prettier.semi": false,
+    "prettier.printWidth": 300,
+    "prettier.singleQuote": true,
+    "prettier.arrowParens": "avoid",
+    "vetur.format.defaultFormatter.html": "js-beautify-html",
+    "vetur.ignoreProjectWarning": true,
+    "vetur.format.defaultFormatterOptions": {
+        "prettier": {
+            "trailingComma":"none",
+            "semi": false,
+            "singleQuote": true,
+            "arrowParens": "avoid",
+            "printWidth":300
+        },
+        "js-beautify-html": {
+            "wrap_attributes": "false"
+        }
+    }
+——————————————————————————————————————
+——————>第六十一课				挂载 axios 与 配置基础路径
+ - 每个 vue 文件都要去导入 axios 会很麻烦
+ - 每个 vue 文件实际上都是 vue 的实例
+ - 在 main.js 文件中导入 axios
+ - Vue.prototype.axios = axios
+ - 后续使用 axios 就可以 this.axios.get()
+
+ - axios.defaults.baseURL = "http://www.liulongbin.top:3006"
+——————————————————————————————————————
+——————>第六十二课				了解前端路由的概念与工作方式
+1.概念: Hash 地址与组件之间的对应关系
+2.工作方式: 
+ - 用户点击了页面上的路由链接
+ - 导致了 URL 地址栏中的 Hash 值发生了变化
+ - 前端路由监听到了 Hash 地址的变化
+ - 前端路由把当前 Hash 地址对应的组件渲染到浏览器中
+——————————————————————————————————————
+——————>第六十三课				vue-router 使用
+ - 只能结合 vue 项目进行使用
+ - 安装 vue-router 包				npm i vue-router@3.5.2 -S
+ - 创建路由模块
+ - 导入并挂载路由模块
+ - 声明路由链接和占位符
+ - src/router/index.js
+	 - 就是当前项目的路由模块 ( 自己创建 )
+格式:
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)			 - 用来安装插件的
+const router = new VueRouter()
+export default router
+——————————————————————————————————————
+——————>第六十四课				vue-router 基本使用
+ - 路由模块概念 /router/index.js 文件
+ - 在想要切换的地方加入 <router-view></router-view> 节点
+ - 在 main.js 导入 router 文件
+ - 于 main.js 在 new Vue 下写入 router
+new Vue({
+  render: h => h(App),
+  router
+}).$mount('#app')
+ - 路由模块 导入要根据 Hash 而切换的文件
+const router = new VueRouter({
+  routes:[
+    {path:'/home',component:Home},
+    {path:'/Movie',component:Movie},
+    {path:'/About',component:About}
+  ]
+})
+——————————————————————————————————————
+——————>补充					vue-router name 属性
+  {
+      path: '/home',
+      name: 'Home',
+      title: '首页',
+      component: () => import('../components/Home.vue')
+  }
+
+<router-link :to="{
+    name:'Home'
+    query:{
+        id:num
+        title:Monika  
+    }}">
+</router-link>
+<router-link :to={name:"Home"}></router-link>
+——————————————————————————————————————
+——————>补充					vue-router meta 属性
+ - 请往 它 身上放置东西
+  {
+      meta:{isAuth:true}
+      path: '/home',
+      name: 'Home',
+      title: '首页',
+      component: () => import('../components/Home.vue')
+  }
+——————————————————————————————————————
+——————>补充					vue-router replace 属性
+ - 见名知意,
+<router-link replace :to={name:"Home"}></router-link>
+——————————————————————————————————————
+——————>第六十五课				替换 a 标签
+<router-link></router-link>	==   <a></a> 
+<router-link to="/home"></router-link>    ==   <a href="#/home"></a> 
+ - router-link 身上有 active-class="类名" 属性
+	 - 意思就是, 激活时即用 类名 样式 
+——————————————————————————————————————
+——————>第六十六课				redirect 重定向
+ - 在用户访问地址 A 的时候, 强制用户跳转到地址 C
+ - 通过 redirect 进行重定向
+{path:"/",redirect:'/home'},
+——————————————————————————————————————
+——————>第六十七课				嵌套路由
+ - 俄罗斯套娃
+ - 通过 children 属性声明子路由规则
+ - 子路由规则不要用 / 开头
+<template>
+  <div class="about-container">
+    <h3>About 组件</h3>
+    <router-link to="/about/tab1">tab1</router-link>
+    <router-link to="/about/tab2">tab2</router-link>
+    <hr>
+    <router-view></router-view>
+  </div>
+</template>
+
+{
+      path: '/about',
+      component: About,
+      children: [
+        { path: 'tab1', component: Tab1 },
+        { path: 'tab2', component: Tab2 }
+      ]
+    }
+——————————————————————————————————————
+——————>第六十八课				默认子路由
+1.重定向路由方法显示初始
+{
+      path: '/about',
+      component: About,
+      redirect: "/about/tab1",
+      children: [
+        { path: 'tab1', component: Tab1 },
+        { path: 'tab2', component: Tab2 }
+      ]
+    }
+
+1.默认子路由方法显示初始
+<template>
+  <div class="about-container">
+    <h3>About 组件</h3>
+    <router-link to="/about">tab1</router-link>
+    <router-link to="/about/tab2">tab2</router-link>
+    <hr>
+    <router-view></router-view>
+  </div>
+</template>
+
+{
+      path: '/about',
+      component: About,
+      redirect: "/about/tab1",
+      children: [
+        { path: '', component: Tab1 },
+        { path: 'tab2', component: Tab2 }
+      ]
+    }
+——————————————————————————————————————
+——————>第六十八课				动态路由 params 传递参数
+ - 把 Hash 地址中可变的部分定义为参数项, 从而提高路由规则
+	 - 的复用
+ - 使用 : 来定义路由的参数项	/movie/:id
+ - 对应组件中 this.$route.params.mid 会有当前的 index.js的 /:mid 值
+ - this.$route 路由的参数对象
+
+<router-link :to="'/home/document/photo/${name}/18'"></router-link>
+<router-link :to="{
+    name:'Home'		//如果携带的不是 query 而是 params 则必须是 name
+    params:{
+        id:num
+        title:Monika  
+    }}">
+</router-link>
+
+
+
+children: [
+   { path: '', component: Tab1 },
+   { path: 'photo/:name/:age', component: Photo }
+]
+
+
+——————————————————————————————————————
+——————>第六十九课				为路由规则开启 props 传参
+ - 对应组件开启 props 参数节点
+export default:{
+    data(){return {}},
+    props:["id"]			<—— 自定义名字, 不一定就叫 id 
+}
+ - 路由模块中 index.js
+{ path: 'movie', component:Movie, props:{a:1,b:2} } props 中所有值都会传递给 component 组件
+{ path: 'movie/:id', component:Movie, props:true } 会将接收到的所有 params 参数以 props 形式传递给 component 组件
+{ path: 'movie/:id', component:Movie, props:($route)/props:({query:{id}}){      返回值必须为对象
+    return {
+        id:$route.query.id/id
+    }
+} } 
+——————————————————————————————————————
+——————>第七十课				query 与 fullPach
+<router-link :to="`/home/acg?id=${num}&title=${Monika}`"></router-link>
+<router-link :to="{
+    path:'/home/acg'
+    query:{
+        id:num
+        title:Monika  
+    }}">
+</router-link>
+ - 查询参数 this.$route.query
+{id:'666'&title:'Monika'}
+
+ - 完整路径 this.$route.fullPach
+/home/acg?id=666&title=Monika"
+
+ - 路径 this.$route.Pach
+/home/acg				
+——————————————————————————————————————
+——————>第七十一课				编程式导航概念
+ - 在浏览器中, 点击链接实现导航的方式, 叫做声明式导航
+	 - 普通页面中点击 a 链接, vue 中点击 router-link 都属于声明式导航
+ - 在浏览器中, 调用 API 方法实现导航的方式, 叫做编程式导航.
+	 - 调用 location.href 跳转页面, 属于编程式导航
+——————————————————————————————————————
+——————>第七十二课				vue-router 中编程式 API
+ - this.$router.push( 'hash 地址' )
+	 - 跳转到指定的 hash 地址, 并增加一条历史记录
+ - this.$router.replace( 'hash 地址' )
+	 - 跳转到指定的 hash 地址, 替换当前的历史记录
+ - this.$router.go( 数值n  )
+	 - 在浏览历史中进行前进与后退 -16/5
+	 - $router.back()		后退一次页面
+	 - $router.forward()		前进一次页面
+——————————————————————————————————————
+——————>第七十三课				前置路由导航守卫
+ - 控制路由的访问权限
+	 - 全局前置守卫
+ - 建议根据 路由上自行配置的 meta 进行 权限判断
+	 - to.meta.isAuth
+1.全局前置守卫
+ - 只要发生了路由的跳转, 必然会触发 beforeEach 指定的回调函数
+ - 回调函数中接受三个形参	to, from, next
+	 - to	将要访问的路由的信息对象	将要到那里去
+	 - from 	将要离开路由的信息对象	从哪儿来
+	 - next	是个函数, 调用 next() 表示放行, 允许这次路由导航 
+const router = new VueRouter({})
+router.beforeEach(function(to,from,next){})
+——————————————————————————————————————
+——————>补充					后置路由导航守卫
+ - 控制路由的访问权限
+	 - 全局后置守卫
+ - 建议根据 路由上自行配置的 meta 进行 权限判断
+	 - to.meta.isAuth
+1.全局后置守卫
+ - 在发生了路由的跳转之后, 必然会触发 afterEach 指定的回调函数
+ - 回调函数中接受三个形参	to, from
+	 - to	将要访问的路由的信息对象	将要到那里去
+	 - from 	将要离开路由的信息对象	从哪儿来
+const router = new VueRouter({})
+router.afterEach(function(to,from){})
+——————————————————————————————————————
+——————>补充					独享路由守卫
+ - 同上
+  {
+      meta:{isAuth:true}
+      path: '/home',
+      name: 'Home',
+      title: '首页',
+      component: () => import('../components/Home.vue'),
+      beforeEnter:(to,from,next)=>{}
+  }
+——————————————————————————————————————
+——————>补充					组件内路由守卫
+ - 在组件中写入, 跟生命周期一样
+ - 1. 通过路由规则, 进入该组件时调用
+	 - beforeRouteEnter( to, from, next ){  }
+ - 2. 通过路由规则, 离开该组件时调用
+	 - beforeRouteLeave( to, from, next ){  }
+——————————————————————————————————————
+——————>第七十四课				next 函数的三种调用方式
+ - 直接放行			next()
+ - 在无权限后跳转页面		next('/login')
+ - 在无权限后停止在当前页面	next(false)
+1.前端检测/获取 token 
+	 - localStorage.getItem( 'token' )
+——————————————————————————————————————
+——————>第七十五课				Vant2组件库
+1.网址 https://vant-contrib.gitee.io/vant/v2/#/zh-CN/
+——————————————————————————————————————
+——————>第七十六课				props 限制
+cover:{
+      type:Object,
+      default:function(){
+        return {cover:0}
+      }
+    }
+——————————————————————————————————————
+——————>第七十八课				定制 vant 样式
+ - 在 main 中导入 index.less 样式
+ - 查阅官方文档
+
+如果 vue-cli 搭建的项目，可以在 vue.config.js 中进行配置。
+
+// vue.config.js
+module.exports = {
+  css: {
+    loaderOptions: {
+      less: {
+        // 若 less-loader 版本小于 6.0，请移除 lessOptions 这一级，直接配置选项。
+        lessOptions: {
+          modifyVars: {
+            // 直接覆盖变量
+            'text-color': '#111',
+            'border-color': '#eee',
+            // 或者可以通过 less 文件覆盖（文件路径为绝对路径）
+            hack: `true; @import "your-less-file-path.less";`,
+          },
+        },
+      },
+    },
+  },
+};
+
+在 .less 结尾的地方写入 
+@blues: pink;				 - 请参考文档
+@nav-bar-background-color:@blues;		 - 请参考文档
+——————————————————————————————————————
+——————>第七十八课				打包上线的本地查阅
+ - 详情查看去 Vue-cli 官方文档 配置参考 publicPath
+——————————————————————————————————————
+——————>补充					消息订阅与发布
+ - npm i pubsub-js
+ - import pubsub from "pubsub-js"
+ - 订阅消息
+this.pubId = pubsub.subscribe('订阅的消息', (消息名,数据) => { })	订阅消息
+pubsub.unsubscribe( this.pubId )				取消订阅
+ - 发布消息
+pubsub.publish('订阅的消息',数据)
+——————————————————————————————————————
+——————>补充					动画效果
+ - <transition> <transition/> 标签, 只能控制一个组件 / 节点
+ - <transition-group> <transition-group/>标签, 可以控制多个组件 / 节点
+	 - 里面节点的标签属性需要有 :key="number"
+ - 内置可选标签属性:
+	 - name = "hello" 		给标签起名字
+	 - appear 			页面一上来就加载动画
+	 - mode="out-in/in-out"	确保同一位置动画不会重叠
+ - 包裹在 需要动画效果的组件/显示与隐藏的标签上
+ - 可以只选择两个 active 然后去写 Css3 动画样式
+v-enter-from	：定义进入过渡的开始状态。
+v-enter-active	：定义进入过渡时，这个过程生效的状态。定义一些曲线、延迟等。
+v-enter-to		：定义进入过渡的结束状态。
+v-leave-from	：定义离开过渡的开始状态。
+v-leave-active	：定义离开过渡时，这个过程生效的状态。
+v-leave-to		：离开过渡的结束状态。
+——————————————————————————————————————
+——————>补充					vite 配置 代理服务器
+ - 暂时解决前端跨域问题
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [vue()],
+  server: { //主要是加上这段代码
+    proxy: {
+      '/api': {	以 /api 开头则代理
+        target: 'http://127.0.0.1:8888',	//实际请求地址
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      },
+     '/monika': {	以 /monika 开头则代理
+        target: 'http://127.0.0.1:8885',	//实际请求地址
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      },
+    }
+  }
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

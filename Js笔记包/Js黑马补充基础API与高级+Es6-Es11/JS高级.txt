@@ -1,0 +1,1336 @@
+面向对象--ES6
+———————————————————————————————————————————
+创建类class
+class Name{
+   constructor(uname){			__init__(self,uname):
+	this.uname = uname		self.uname = uname
+
+	}
+   sing(){
+	console.log("Monika is very beautiful")
+	}			
+}
+
+var name = new Name(Monika)
+———————————————————————————————————————————
+继承
+class father{ }
+class son extends father{
+    super(1,2)
+}			
+———————————————————————————————————————————
+element.insertAdjacentHTML( position , text )
+- 与 appendchild 差不多 ， 但他支持写入字符串形式的内容
+	少个 innerHTML = ""
+- position : 位置,地点
+	- beforebegin	- 元素自身的前面
+	- afterbegin	- 插入元素内部的第一个子节点之前
+	- beforeend	- 插入元素内部的第一个子节点之后
+	- afterend		- 元素自身的后面
+- text
+追加谁？
+———————————————————————————————————————————
+双击时禁止选中文字
+window.getSelection ?
+            window.getSelection().removeAllRanges() :
+            document.selection.empty();
+———————————————————————————————————————————
+构造函数和原型导读
+prototype
+- 构造函数原型
+———————————————————————————————————————————
+constructor
+- 如果我们修改了原来的原型对象，给原型对象赋值的是一个对象，则必须手动的利用
+	constructor 指回原来的构造函数
+———————————————————————————————————————————
+call( )
+- 调用函数，并且修改函数运行时的 this 指向
+fun.call( thisArg , arg1 , arg2 )
+- thisArg = 当前调用函数 this 的指向对象
+- arg1 , arg2 = 传递的其他参数
+
+———————————————————————————————————————————
+__propt__ 的陨落
+Object.getPrototypeOf(son) 目前代替了 __propt__
+console.log(Object.getPrototypeOf( 对象 ))
+
+———————————————————————————————————————————
+关于构造函数之 继承 父类属性以及继承原型对象理论
+代码：
+function Father() {
+            this.run = function() {
+                console.log('父亲喜欢跑步');
+            }
+        }
+        Father.prototype.work = function() {
+            console.log('父亲要工作');
+        }
+        function Son() {
+        }
+        // 错误方式，该代码会导致子原型对象指向父原型对象的地址，如果更改子原型对象，则实际更改的是父原型对象。
+        // Son.prototype = Father.prototype
+        // 使子原型对象指向一个父实例对象，便拥有了父构造函数的方法以及父构造函数的原型对象上的方法
+        Son.prototype = new Father();
+        // 小问题：上述直接通过对象覆盖了子原型对象，导致了constructor指向的构造函数的改变，需要单独为其赋值
+        // console.log(Son.prototype.constructor);
+        Son.prototype.constructor = Son
+        Son.prototype.exam = function() {
+            console.log('孩子要考试');
+        }
+        var xiaoming = new Son()
+        console.log(xiaoming);
+        // 打印父原型对象，正确的结果不应该包含子原型对象的方法
+        console.log(Father.prototype);
+        // 验证是否实现了继承
+        xiaoming.work()
+        xiaoming.run()
+———————————————————————————————————————————
+个人观点:
+
+首先创建了 Father 构造对象
+Father 类里面有个 run 方法 与 父类的原型对象
+
+function Father() {
+            this.run = function() {
+                console.log('父亲喜欢跑步');
+            }
+        }
+Father.prototype.work = function() {
+            console.log('父亲要工作');
+        }
+
+- 然后创建了 Son 构造对象
+function Son() {    }
+
+- Son 的父类 prototype 变成了父类的实例化对象，也就是说 Son.prototype 可以访问
+	到父类的方法 this.run( ) 与  prototype.work( )
+Son.prototype = new Father();
+
+- 但同样的,父类是个对象上文同样的将 Son 的 constructor 指向了 Father,所以需要重新定义
+Son.prototype.constructor = Son
+
+- 现在子类添加 原型对象 exam 不会影响到 父类的 原型对象
+Son.prototype.exam = function() {
+           console.log('孩子要考试');
+       }
+
+- 实例化子类
+var xiaoming = new Son()
+
+- 实例化的子类现在就拥有了父类的属性及方法,与原型对象
+console.log(xiaoming);
+
+- 父类现在的原型链也不包含子类的新增方法
+console.log(Father.prototype);
+
+整个过程的描述：
+1.先在xiaoming对象上找work()和run()
+2.若找不到则在xiaoming的__proto__,即父实例对象身上找work()和run()
+3.若还是找不到则在父构造函数的原型对象上找，最终找到了work()和run()
+	通过构造函数和原型对象实现继承的原理：（充分利用了原型链）
+1.子对象在找不到方法时会去原型对象上找方法，
+2.让子构造函数的原型对象指向父实例对象，则相当于子对象会去父实例对象上找方法。
+3.若在父实例对象上找不到方法，则会去父构造函数的原型对象上找这个方法，只要找到了方法则说明继承了父方法。
+———————————————————————————————————————————
+新增数组方法 - 1
+forEach() - 相当于 for 循环 
+array.forEach(function(currentvalue , index , arr))
+currentvalue:数组当前的值
+index:数组当前项的索引
+arr:数组对象本身
+在里面写 return 不起不到退出作用
+———————————————————————————————————————————
+新增数组方法 - 2
+filter() - 筛选数组
+array.filter(function(currentvalue , index , arr))
+- 主要用于筛选数组
+- 返回一个新的数组
+currentvalue:数组当前的值
+index:数组当前项的索引
+arr:数组对象本身
+
+arr = [11,22,33]
+var newArr = arr.filter(function(遍历的每个值 , 遍历的每个值的索引 , 当前数组中的所有值){
+	return value>=20
+})
+[22,33]
+———————————————————————————————————————————
+新增数组方法 - 3
+some() - 查询数组中满足条件的元素
+array.some(function(value , index , arr))
+- 查找数组中是否有满足条件的元素
+- 返回值是布尔值，如果查到了，就返回 true
+- 如果找到了第一个满足条件的元素，则终止循环
+
+arr = [11,22,33]
+var newArr = arr.some(function(遍历的每个值 , 遍历的每个值的索引 , 当前数组中的所有值){
+	return value>=20
+})
+true
+———————————————————————————————————————————
+新增数组方法 - 4 
+every() - 查询数组中满足条件的是否全是
+array.every(function(value , index , arr))
+- 查找数组中是否有满足条件的元素
+- 返回值是布尔值，如果查到了，就返回 true
+
+arr = [
+    {status:true},
+    {status:true},
+    {status:true},
+]
+var newArr = arr.some(function(values , 遍历的每个值的索引 , 当前数组中的所有值){
+	return values.status === true			 - === true 可以简写
+})
+true
+———————————————————————————————————————————
+新增数组方法 - 5
+reduce() - 累加器, 把每一次的结果累加起来
+语法:	reduce((累加的结果, 当前循环项)=>{}, 初始值)
+ - 当没有数值的时候, reduce 会将数值返回回来  result 
+let result = arr.filter(item => item.status).reduce((amt,item)=>{
+    return amt += item.price * item.count
+},0)
+———————————————————————————————————————————
+字符串方法
+trim( ) - 字符串的两端删除空白字符
+str.trim()
+- 返回一个新的字符串
+
+var str = "      Monika      "
+var str1 = str.trim()
+console.log(str1)
+———————————————————————————————————————————
+Object.keys()
+- 获取对象自身的所有属性
+- 返回数组
+var bbb = {
+name: 'monika'
+}
+
+Object.key(bbb)
+———————————————————————————————————————————
+Object.defineProperty()	 - 对象权限
+- 定义新属性或修改原有的属性
+Object.defineProperty(操作的对象, 操作的属性, {
+    enumerable   :目标属性是否可以被枚举,true|flase,默认flase
+    configurable   :目标属性是否可以被删除或是否可以再次被修改特性,true|flase,默认flase
+    writable   :值是否可以重写,true|flase,默认flase
+    value	:属性值，默认为 undefined 
+    get(){}	:访问属性时会触发 get() 函数
+    set(){}	:在属性值被修改时会触发 set() 函数
+})
+———————————————————————————————————————————
+改变函数内部的 this 指向 - call()
+call( this指向的地方 , 传参......)
+var o = {
+    name : "monika"
+}
+function fn(){
+console.log(this)
+}
+
+fn.call(o,参数1,参数2)
+
+1.调用函数
+2.改变 this 指向问题 
+3.主要作用就是实现继承ES5
+———————————————————————————————————————————
+改变函数内部的 this 指向 - apply( )
+fun.apply(thisArg,[argsArray])
+1.调用函数
+2.改变 this 指向
+3.传递的值必须包括在数组里面
+4.apply 主要应用是针对数组的
+arr = [0,88,66,99,22]
+Math.max.apply( Math , arr )
+———————————————————————————————————————————
+改变函数内部的 this 指向 - bind()
+fun.bind(thisArg , 参数1，参数2)
+1.不会调用函数
+2.改变 this 指向问题
+3.返回原函数改变 this 指向之后的新函数
+
+var btn = document.querySelector('button')
+btn.addEventListener('click',function(){
+	this.disabled = true
+	setTimeout(function(){
+	       this.disabled = false
+
+
+    }.bind(this),3000)
+})
+———————————————————————————————————————————
+严格模式的启用
+<script>
+"use strict"					开启严格模式
+</script>
+
+function fun(){
+    "use strict"					单独函数的严格模式
+
+}
+———————————————————————————————————————————
+严格模式的特性
+1.不可未声明而直接赋值
+num = 10    	X
+
+2.不可随意剔除已经声明好的变量
+var num = 10
+delete num	X
+
+3.普通函数中 this 将指向 undefined 而不是 window
+
+4.构造函数中不加 new ,里面的 this 将会报错
+function Star(){
+    this.name = name		this 将指向 undefined
+}
+Star()	X
+
+5.定时器中的 this 将还是指向 window
+
+6.函数中的参数将不可重名
+
+7.不可将函数声明在非函数的代码块内
+———————————————————————————————————————————
+高阶函数
+1.参数作为函数
+2.返回函数 return fuction(){}
+- 那么其先前的函数将成为高阶函数
+———————————————————————————————————————————
+递归阶乘
+function fn(n){
+            if(n == 1){
+                return 1 
+            }
+            return n*fn(n-1)
+        }
+        console.log(fn(3))
+执行流程 
+return 3 * fn( 2 )
+return 3 * ( 2 * fn( 1 ) )
+return 3 * ( 2 * 1 )
+———————————————————————————————————————————
+递归 - 斐波那契数列
+function fn(n) {
+            if(n ==1 || n == 2 ){
+                return 1
+            }
+            return fn(n-1) + fn(n-2)
+        }
+        console.log(fn(3))
+———————————————————————————————————————————
+递归 - 树型查找
+function getDataById(data, id) {
+            var o = {}
+            data.some(function(item) {
+                if (item.id === id) {
+                    o = item;
+                    return true;
+                    // 关键点1：当在外层找不到id时，先判断是否存在children属性，若存在，再递归调用查询
+                } else if (item.children && item.children.length > 0) {
+                    // 关键点2：此处必须把再次调用的函数的返回值赋值给o，否则你无法接受到再次调用函数时返回的结果
+                    o = getDataById(item.children, id)
+                }
+            })
+            return o
+        }
+———————————————————————————————————————————
+浅拷贝与深拷贝
+Object.assign(拷贝给谁？,  拷贝哪个对象？)		Es6+浅拷贝
+深拷贝没有语法糖......
+
+深拷贝:
+// 以下为通过函数递归的方式实现深拷贝
+      function deepCopy(newObj, oldObj) {
+        for (k in oldObj) {
+          // 判断是不是数组
+          if (oldObj[k] instanceof Array) {
+            newObj[k] = [];
+            deepCopy(newObj[k], oldObj[k]);
+            // 判断是不是对象
+            // ❤ 注意：需要先判断是不是数组，再判断是不是对象，因为数组也属于对象
+          } else if (oldObj[k] instanceof Object) {
+            newObj[k] = {};
+            deepCopy(newObj[k], oldObj[k]);
+          } else {
+            newObj[k] = oldObj[k];
+          }
+        }
+      }
+示范:
+      var obj2 = {};
+      deepCopy(obj2, obj);
+      console.log(obj2);
+      obj2.color[0] = "yellow"; //深拷贝，不会改变原来的值
+      console.log(obj.color); //["white", "black"]
+———————————————————————————————————————————
+正则表达式
+去看 Js笔记
+———————————————————————————————————————————
+解构赋值
+- 列表结构赋值
+const F4 = ["大哥","二哥","三哥","四哥"];
+let [a,b,c,d] = F4;
+
+- 对象结构赋值			键与解构值必须一致
+1.解构赋值的时候,使用 : 进行重命名
+const school = {
+            name: "Monika",
+            age: 18,
+            gender: function () {
+                console.log("女")
+            }
+        }
+
+        let {name,age,gender} = school
+        gender()
+———————————————————————————————————————————
+模板字符串
+let str = `<ul><li>123</li>
+                    <li>123</li>
+                    <li>123</li>
+                    </ul>`
+
+let belief = "我最喜欢"
+        let name = `${belief}莫妮卡`
+        console.log(name)
+- 必须使用单引号
+———————————————————————————————————————————
+对象的简化写法
+let name = "666";
+        let change = function () {
+            console.log("活着就是为了改变世界！");
+        }
+        //创建对象
+        const school = {
+            name,
+            change,
+            say() {
+                console.log("言行一致！");
+            }
+        }
+        school.change();
+        school.say();
+———————————————————————————————————————————
+箭头函数
+- 内部 this 属于静态，始终指向函数声明时所在作用域下的this的值；
+- 不会因为 call,apply,bind 改变 this 指向
+- 箭头函数不能作为构造函数实例化对象
+- 无法使用 arguments 变量
+- 当形参有且只有一个的时候，可以不加括号
+- 当函数体只有一行代码的时候,花括号可以省略,如有 return 则必须删除 return
+let fun = (参数1,参数2)=>{ console.log("666") }
+fun()
+
+let fun = 参数1=>{ return 参数1+参数1 }
+fun()
+
+let fun = 参数1=>参数1*参数1
+fun()
+
+//需求-2 从数组中返回偶数的元素
+const arr = [1, 6, 9, 10, 100, 25]
+const result = arr.filter(item => item % 2 === 0);
+console.log(result)
+———————————————————————————————————————————
+函数参数的默认值设置
+function connect({host="127.0.0.1", username,password, port}){
+console.log(host)
+console.log(username)
+console.log(password)
+console.log(port)
+}
+connect({
+host: 'atguigu.com',
+username: 'root',
+password: 'root',
+port: 3306
+})
+———————————————————————————————————————————
+rest 参数
+- ES6 引入 rest 参数，用于获取函数的实参，用来代替 arguments；
+function name(...args){
+console.log(args)
+}
+name("1",2,555)
+args = ["1",2,555]
+———————————————————————————————————————————
+扩展运算符
+- ... 扩展运算符能将数组转换为逗号分隔的参数序列；
+- 扩展运算符（spread）也是三个点（...）。它好比 rest 参数的逆运算
+	将一个数组转为用逗号分隔的参数序列，对数组进行解包；
+
+let Club = ["Monika", "Sayori", "Yuri", "Natsuki"]
+        function split(){
+            console.log(arguments)
+        }
+        split(...Club)
+———————————————————————————————————————————
+扩展运算符的应用
+let Club1 = ["Monika", "Sayori"]
+        let Club2 = ["Yuri", "Natsuki"]
+        let person = [...Club1,...Club2]
+        console.log(person)
+['Monika', 'Sayori', 'Yuri', 'Natsuki']
+- 相当于 concat 数组连接
+
+let Club1 = ["Monika", "Sayori"]
+        let Club2 = ["Yuri", "Natsuki"]
+        let person = [...Club1,...Club2]
+        let [a,b,...args] = person
+        console.log(args)
+['Yuri', 'Natsuki']
+
+- 也可以进行数组的克隆 ( 浅拷贝 )
+let s = [1,2,3]
+let a = [...s]
+console.log(a)
+[1,2,3]
+
+- 将伪数组转化为真正的数组
+const divs = document.querySelectorAll('div');
+const divArr = [...divs];
+console.log(divArr);
+———————————————————————————————————————————
+Symbol
+- ES6 引入了一种新的原始数据类型 Symbol，表示独一无二的值。它是
+JavaScript 语言的第七种数据类型
+
+- 用来解决命名冲突的问题，即使参数相同
+
+- Symbol 值不能与其他数据进行运算
+
+- Symbol 定义的对象属性不参与 for…in/of 遍历，但是可以使用
+
+- Reflect.ownKeys / Object.getOwnPropertySymbols() 来获取对象的所有键名
+
+- Symbol函数前不能使用new命令，否则会报错
+
+- Symbol函数可以接受一个字符串作为参数，表示对 Symbol 实例的描述
+
+- 如果 Symbol 的参数是一个对象，就会调用该对象的toString方法，
+	将其转为字符串，然后才生成一个 Symbol 值。
+
+- Symbol 值可以显式转为字符串了
+
+- Symbol 值也可以转为布尔值，但是不能转为数值。
+
+———————————————————————————————————————————
+Symbol 的方法
+let sym = Symbol('My symbol');
+console.log(sym.description)
+输出：My symbol
+
+
+———————————————————————————————————————————
+Symbol 理解？
+
+1.Symbol是一个动态的东西
+2.使用场景是在我们不知道对象原有属性且为对象添加属性的时候，及快速又安全的一个写法
+
+let game = {
+       up:"我会飞",
+       down:"我落地",
+        }
+- 原先的定义,假设东西太多，想要加东西，怕重名导致覆盖问题
+        
+        let mychange = {
+            up:Symbol("自定义的up属性,用于..."),
+            down:Symbol()
+        }
+- 定义 mychange 对象，用于自定义添加，值的方式使用 Symbol 方法,后面的括号是解释
+
+        game[mychange.up] = function(){
+            console.log("666")
+        }
+- 在 game 里引用 mychange 对象中的 up 属性，并给他一个方法的赋值
+
+        game[mychange.up]()
+- 调用自定义的方法
+
+———————————————————————————————————————————
+Symbol - 捕获检测类型
+ - instanceof = 检测前面对象是否是后面对象的实例
+ class Person {
+            static [Symbol.hasInstance](param) {	//检测对象是否使用了类型检测
+                console.log(param);		// 这里的param可以理解为形参,检测前面的值会
+                console.log("我被用来检测类型了");		传递过来
+                return false;			//自定义返回内容
+            }
+        }
+
+        let o = {zxcv:123}
+        console.log(o instanceof Person)		//即是检测,也是调用
+
+- 相当于就是说你去检测我,但是主权在我这里,我想返回什么就是什么,甚至还可以去
+	把你的一些可以利用的价值进行压榨
+———————————————————————————————————————————
+Symbol - 数组(列表)连接权限
+const arr = [1,2,3];
+const arr2 = [4,5,6];
+// 合并数组：false数组不可展开，true可展开
+arr2[Symbol.isConcatSpreadable] = false;
+console.log(arr.concat(arr2));
+[1,2,3,Array(3)]
+———————————————————————————————————————————
+迭代器
+- 关于 for in 于 for of 的区别
+arr = ["Monika","Sayori","Yuri","Natsuki"]
+        for(v in arr){
+            console.log(v)
+        }
+0，1，2，3
+
+arr = ["Monika","Sayori","Yuri","Natsuki"]
+        for(v of arr){
+            console.log(v)
+        }
+Monika,Sayori,Yuri,Natsuki
+———————————————————————————————————————————
+迭代器详解
+[Symbol.iterator](){				//当对象被遍历时自动调用
+                let index = 0			//定义初始化 下标
+                let self = this			//拿到 this 值，指向开头
+                return {				//返回对象
+                    next:function(){			//迭代器自动调用next方法
+                        if(index<self.person.length){	//当下标小于开头的需要遍历对象的长度时
+                            const result = {value:self.person[index],done:false}
+                            index++			//字典内容为固定的 value 与 done
+                            return result		//返回当前下标值于下标自增和未遍历完成
+                        }else{			//如果下标达到了最大值,下标以越界时
+                            return {value:undefined,done:true}
+                        }				//返回undefined 于遍历完成标号
+                    }
+                }
+            }
+        }
+———————————————————————————————————————————
+迭代器使用
+let obj = {
+            name: "class",
+            person: [
+                'Monika',
+                'Sayori',
+                'Yuri',
+                'Natsuki'
+            ],
+            [Symbol.iterator](){
+                let index = 0
+                let self = this
+                return {
+                    next:function(){
+                        if(index<self.person.length){
+                            const result = {value:self.person[index],done:false}
+                            index++
+                            return result
+                        }else{
+                            return {value:undefined,done:true}
+                        }
+                    }
+                }
+            }
+        }
+        for(let i of obj){
+            console.log(i)
+        }
+———————————————————————————————————————————
+生成器使用方法
+function * fun(){
+            console.log("666")
+            yield "begin"
+            console.log("777")
+            yield "begin1"
+            console.log("888")
+            yield "begin2"
+            console.log("999")
+        }
+        functions = fun()
+        console.log(functions.next())
+        console.log(functions.next())
+        console.log(functions.next())
+        console.log(functions.next())
+———————————————————————————————————————————
+生成器理
+yield 只是把一个函数去进行地域的划分,每次去调用函数时，就会按顺序输出部分
+	yield 后面跟的值,他目前会保存到 迭代器里面的 value 值里面
+
+functions = fun()
+console.log(functions.next())
+当想去调用生成器的时候,需要将函数地址传给一个变量，然后去打印 函数地址变量的next方法
+	生成器它本身就内置了迭代属性,所以可以 next
+
+console.log(functions.next())
+next(参数1) 它里面可以传值,并且是差错开的，第二个 next 的参数将作为 第一个 yield 的返回值
+————————————————————
+function * fun(){
+            console.log("666")
+            let number = yield "begin"
+            console.log(number)
+            console.log("777")
+            yield "begin1"
+            console.log("888")
+            yield "begin2"
+            console.log("999")
+        }
+        functions = fun()
+        console.log(functions.next())
+        console.log(functions.next("123456"))
+        console.log(functions.next())
+        console.log(functions.next())
+———————————————————————————————————————————
+Promise 异步编程解决语法
+
+const p = new Promise(function (resolve, reject) {
+      setTimeout(function () {
+        data = "失败"
+        reject(data)
+      }, 1000)
+    })
+
+    p.then(function (value) {
+      console.log(value)
+    }, function (reason) {
+      console.log(reason)
+    })
+———————————————————————————————————————————
+Promise 的 then 方法理解
+- 内部决定外部
+- 内部返回如果不是 promise , 那么then就为成功,你的返回值也将成为成功值
+- 内部返回是 promise 对象,那么它将根据你的内部promise调用的是否为 resolve 而更改 成功与否
+- 如果抛出错误,那么 promise 状态也将错误	错误值将为抛出值 就会调用 then 的第二个
+- 错误会导致后续的 then 无法执行, 直到结束或捕获( catch )异常
+- 所以可以将 catch 往前提, 在异常之后不去理会, 异常返回 undefined
+p.then(function (value) {
+      console.log(value)
+    }, function (reason) {
+      console.log(reason)
+    })
+———————————————————————————————————————————
+Promise 的 catch 方法理解
+ - 捕获异常
+ - 捕获上面 then 的所有异常
+ - Promise 的异常会往后面传递
+ - 相当于 try catch 
+ - 错误会导致后续的 then 无法执行, 直到结束或捕获( catch )异常
+ - 所以可以将 catch 往前提, 在异常之后不去理会, 异常返回 undefined
+a.then(()=>{return Promise()=>{}})
+    .then  ...
+    .then  ...
+    .catch(( err )=>{ console.log( err.message ) })
+    .then  ...
+———————————————————————————————————————————
+Promise 的 all 方法理解
+ - 发起并行的 Promise 异步操作, 等所有异步操作结束后才会执行下一步的 .then 操作
+ - 读取的顺序就是结果的顺序
+
+function re_pm(){
+    return Promise(()=>{})
+}
+
+const Promise_List = [
+    re_pm()		1
+    re_pm() 		2
+    re_pm()		3
+]
+
+Promise.all( Promise_List ).then(result=>{
+
+    },reject=>{
+
+    }
+)
+
+1 2 3
+———————————————————————————————————————————
+Promise 的 race 方法理解
+ - 发起并行的 Promise 异步操作, 只要任何一个异步操作完成, 就立即执行下一步的 .then 操作
+	 - ( 赛跑机制 )
+ - 几个异步操作, 谁执行的快谁活下来执行 .then 操作
+
+function re_pm(){
+    return Promise(()=>{})
+}
+
+const Promise_List = [
+    re_pm()		1
+    re_pm() 		2
+    re_pm()		3
+]
+
+Promise.rase( Promise_List ).then(result=>{
+
+    },reject=>{
+
+    }
+)
+
+1 或者 2 或者 3 			只会出现一个数
+———————————————————————————————————————————
+Promise 的 链式调用
+// 1、引入 fs 模块
+    const fs = require("fs");
+    // 2、调用方法，读取文件
+    // fs.readFile("resources/text.txt",(err,data1)=>{
+    // fs.readFile("resources/test1.txt",(err,data2)=>{
+    // fs.readFile("resources/test2.txt",(err,data3)=>{
+    // let result = data1 + data2 + data3;
+    // console.log(result);
+    // });
+    // });
+    // });
+    // 3、使用Promise实现
+    const p = new Promise((resolve, reject) => {
+      fs.readFile("resources/text.txt", (err, data) => {
+        resolve(data);
+      });
+    });
+    p.then(value => {
+      return new Promise((resolve, reject) => {
+        fs.readFile("resources/test1.txt", (err, data) => {
+          resolve([value, data]);
+        });
+      })
+    }).then(value => {
+      return new Promise((resolve, reject) => {
+        fs.readFile("resources/test2.txt", (err, data) => {
+          // 存入数组
+          value.push(data);
+          resolve(value);
+        });
+      })
+    }).then(value => {
+      console.log(value.join("\r\n"));
+    })
+———————————————————————————————————————————
+Promise 的 链式调用理解
+const fs = require("fs");			   //引入模块
+    const p = new Promise((resolve, reject) => {	   //创建 Promise 对象
+      fs.readFile("resources/text.txt", (err, data) => {   //读文件,目前返回结果为真
+        resolve(data);				   //调用 resolve()方法，并将成功的
+      });					   //内容导入到 data
+    });					   //就会使用then的第一个函数
+					   //value 就是 data 的值
+    p.then(value => {				   //当成功时调用
+      return new Promise((resolve, reject) => {	   //返回 Promise 对象,此时 then 的成功
+        fs.readFile("resources/test1.txt", (err, data) => {   //会根据里面的 promise 而改变,然后由于返回的是 promise 对象,也就代表 p 可以继续用 then
+          resolve([value, data]);			   //成功后会将第一个文件的值与第二个文件
+        });					   //的值压入一个列表并且传递给下一个
+      })					   //链条上的 value 对象
+    }).then(value => {				   //此时 value 是上面两个文件的所有值
+      return new Promise((resolve, reject) => {	   //返回 Promise 对象,此时 then 的成功
+        fs.readFile("resources/test2.txt", (err, data) => {   //会根据里面的 promise 而改变
+          // 存入数组				   //此时 data 是第三个文件的所有内容
+          value.push(data);			   //将第三个内容放入到前两个文件形成的列表	
+          resolve(value);			   //返回为真且相当于 return [1，2，3]
+        });
+      })
+    }).then(value => {				  //此时 value 为前三个文件的列表 [1,2,3] 
+      console.log(value.join("\r\n"));		  //打印出来
+    })
+//之后的实践:不管 then 是否改变,照常写,照常输出 
+p.then[value=value, data]
+p.then.then[value=value, data, data]
+p.then.then.then=console.log(value.join("\r\n"));
+———————————————————————————————————————————
+Set集合
+- 会自动帮我们去重
+- 一般传的是列表
+- 可以 for of 来遍历
+let s = new Set([1,1,2,3,5,4,8,5,8,4]);
+console.log(s)
+{size: 6, 1, 2, 3, 5, 4, …}
+
+- 查找元素个数( 去重 )
+s.size
+
+- 添加元素( 空也会传，重复的不会传入 )
+s.add( 9 )
+
+- 删除元素( 不会因为上面的 add 传入一样的值而不删 )
+s.delete("jack")
+
+- 检查元素( 返回布尔值 )
+s.has( 9 )
+
+- 清空
+s.clear()
+
+
+案例:
+let arr = [1, 8, 2, 4, 5, 1, 8, 12, 9, 1, 81, 8, 1, 5, 3]
+        let arr1 = [1, 8, 0, 6, 2, 9, 5, 8, 5, 2, 1, 4, 5, 8, 7, 81, 9, 6]
+        //数组去重
+        //let justone = [...new Set([...arr, ...arr1])]
+        //console.log(justone)
+
+        //交集
+        // let togeter = [...new Set(arr)].filter(item => new Set(arr1).has(item))
+        // console.log(togeter)
+
+        // 并集
+        //let justone = [...new Set([...arr, ...arr1])]
+        //console.log(justone)
+
+        //差集
+        // let togeter = [...new Set(arr)].filter(item => !(new Set(arr1).has(item)))
+        // console.log(togeter)
+———————————————————————————————————————————
+Map
+- 可以使用扩展运算符...,for of 遍历
+- 键的范围不限制于字符串,各种类型的值都可以当作键	
+- size		返回 Map 元素个数			console.log(m.size)
+- set		添加一个新元素,返回当前 Map		m.set("name","Monika")
+- delete		删除某个键值对			m.delete("键名")
+- get		返回键名对象的键值			m.set("name2",fun)
+- has		检测是否包含某个值,返回 布尔值		m.has("name")
+- clear		清空集合返回 undefined		m.clear()
+———————————————————————————————————————————
+class - 静态方法
+- static 静态方法,就是类方法,实例化对象无法调用,必须通过类名调用	
+class Phone {
+            // 静态属性
+            static names = "手机";
+            static change() {
+                console.log("我可以改变世界！");
+            }
+        }
+        let nokia = new Phone();
+        console.log(Phone.names);
+        Phone.change();
+———————————————————————————————————————————
+class - 继承
+- extends 类继承
+- super    属性的继承			super.类名()	对于父方法的扩展
+———————————————————————————————————————————
+class - getter 于 setter
+- 根据 所对函数的不同使用而自动调用不同的方法
+class Phone{
+get price(){			在去读取值的时候执行该函数
+console.log("价格属性被读取了！");
+// 返回值
+return 123;			
+}
+set price(value){			当属性被修改时调用该函数( 必须有一个形参 )
+console.log("价格属性被修改了！");
+}
+}
+// 实例化对象
+let s = new Phone();
+console.log(s.price); // 返回值
+s.price = 2999;
+———————————————————————————————————————————
+Es6 数值扩展
+Number.EPSILON()	 - JS 中表示的最小精度
+
+Number.isFinite()	 - JS 中检测数值是否为有限数
+
+Number.isNaN()	 - JS 中检测数值是否为NaN
+
+Number.parseInt()	 - JS 中截取数字
+
+Number.parseFloat() - JS 中截取数字于第一个小数点之后的数字
+
+Number.isIntger()	  -  JS 中检测数值是否为整数
+
+Math.trunc()	 - 将数字的小数部分抹掉
+
+Math.sign()	 - 判断一个数是否为 正1 零0 负-1
+———————————————————————————————————————————
+Es6 对象方法扩展
+Object.is()	 - 判断两个值是否完全相等
+
+Object.assign(模板对象,新对象)	 - 对象的合并 同名则会后面覆盖前面
+
+Object.setPrototypeof(对象,原型对象) - 设置对象的原型(不建议)
+
+Object.getPrototypeof()	 - 获取原型对象
+———————————————————————————————————————————
+Es6 模块化
+模块语法： 	import 与 export
+export 	用于规定模块的对外接口
+import 	用于输入其他模块提供的功能
+———————————————————————————————————————————
+Es6 模块化引入方式
+<script type="module">
+// 引入m.js模块内容
+import * as m from "路径";
+console.log(m);
+console.log(m.JS文件内容
+</script>
+
+//默认暴露导入方式
+console.log(模块文件名.default.要导入的东西);
+模块文件名.default.要导入的东西();
+
+//结构赋值导入方式
+导入名称不可重名，重名可以用  OldName as NewName
+import {被导入1名称,被导入2名称} from "./js/m.js"
+console.log(被导入1名称)				- 可以直接使用
+
+//默认暴露导入方式的结构赋值导入方式
+- 导入默认导出的模块，必须使用别名
+import {default as one} from "./js/o.js";
+
+// 简便形式，只支持默认导出
+import oh from "./js/o.js";
+
+———————————————————————————————————————————
+Es6 模块化暴露语法
+// 分别暴露（导出）
+export let school = "尚硅谷";
+export function teach(){
+console.log("我们可以教你开发技术！");
+
+// 统一暴露（导出）
+let school = "尚硅谷";
+function findJob(){
+console.log("我们可以帮你找到好工作！");
+}
+export {school,findJob}
+
+// 默认暴露（导出）
+export default{
+school : "尚硅谷",
+change : function(){
+console.log("我们可以帮你改变人生！");
+}
+}
+———————————————————————————————————————————
+Es6 使用模块化方式二
+- 单独创建 app.js 文件用来引入
+<script src="引入的文件地址" type="module"></script>
+———————————————————————————————————————————
+ES7 新特性
+1、Array.prototype.includes
+- 判断数组中是否包含某元素，语法：arr.includes(元素值)；
+- 返回布尔值
+- 优于 indexOf
+
+2、指数操作符
+幂运算的简化写法，例如：2的10次方：2**10；
+———————————————————————————————————————————
+ES8 新特性
+1、async 和 await
+- 简化异步函数的写法；
+
+2、对象方法扩展
+- 对象方法扩展；
+
+———————————————————————————————————————————
+ES8 async
+- 返回值为 Promise 对象
+- 只要 return 会将结果返回到
+- 只要 return 返回的不是一个 Promise 类型对象,那么它都将都成功
+- 返回 Promise 会根据此 Promise 的 成功与否 而影响,里面值会返回给 fo
+- 抛出异常会导致失败
+Promise {[[PromiseState]]: 'fulfilled', [[PromiseResult]]: 'Just Monika'}
+
+———————————————————————————————————————————
+ES8 await
+1. await 必须写在 async 函数中；
+2. await 右侧的表达式一般为 promise 对象；
+3. await 返回的是 promise 成功的值；
+4. await 的 promise 失败了, 就会抛出异常, 需要通过 try...catch 捕获处理；
+5. 在 async 函数中, 第一个 await 之前的代码会同步执行, await 之后的代码会异步执行
+
+const p = new Promise((resolve,reject)=>{
+    resolve("成功啦！");
+})
+async function fn(){
+// await 返回的是 promise 成功的值
+let result = await p;
+console.log(result); // 成功啦！
+}
+fn();
+
+5.例子:
+console.log( A )
+console.log( B )
+async function Start(){
+    console.log( C )
+
+    const L1 = await function(){ return Promise(( resole, reject )=>{    })}
+    const L2 = await function(){ return Promise(( resole, reject )=>{    })}
+    const L3 = await function(){ return Promise(( resole, reject )=>{    })}
+
+    console.log( D )
+}
+
+console.log( E )
+console.log( F )
+
+
+
+输出:A  B  C  E  F  Promise输出内容  D
+———————————————————————————————————————————
+ES8 对象方法扩展
+1. Object.values() 方法：返回一个给定对象的所有可枚举属性值的数组；
+const school = {
+             name:"文学社",
+             person:["Monika","Sayori","Yuri","Natsuki"],
+             addperson:["Mc"]
+         }   
+         console.log(Object.keys(school))
+         console.log(Object.values(school))
+
+
+2. Object.entries() 方法：返回一个给定对象自身可遍历属性 [key,value] 的数组；
+console.log(Object.entries(school))		 - 与 Map 进行结合
+const m = new Map(Object.entries(school))
+console.log(m.get("键名"))
+
+3. Object.getOwnPropertyDescriptors() 该方法：返回指定对象所有自身属性的描述对象；
+- 返回与 Object.entries() 相同的内容,以及 Object.defineProperty() 内容
+———————————————————————————————————————————
+ES9 扩展运算符与 rest 参数
+1、Rest 参数与 spread 扩展运算符
+- 在对象中使Rest参数与spread扩展运算符；
+const objecst = {
+name: "Monika"
+}
+const objecst1 = {
+name2: "Sayori"
+}
+const list = {...objecst,...objecst1}
+console.log(list)
+{name: 'Monika', name2: 'Sayori'}
+- 注意键名不要重复
+
+———————————————————————————————————————————
+ES9 正则扩展
+
+- 简化和增强正则匹配；
+let str = '<a href="www.4399.com">Monika</a>'
+const reg = /<a href="(?<url>.+)">(?<text>.+)?<\/a>/;
+let result = reg.exec(str)
+console.log(result.groups.url)
+console.log(result.groups.text)
+
+3.正则 - 正向断言
+let str = '123166841Monika真'
+const reg = /\D+(?=真)/;
+let result = reg.exec(str)
+console.log(result)
+
+4.正则 - 反向断言
+let str = '123166841Monika真'
+const reg = /(?<=\d)\D+(?=真)/;
+let result = reg.exec(str)
+console.log(result)
+- 用前面来获取后面
+
+5.dotAll 模式
+- 正则后面跟一个//s
+- 加了之后 . 可以匹配任意字符
+
+———————————————————————————————————————————
+ES10 对象扩展
+1、Object.fromEntries
+将二维数组或者map转换成对象；
+
+2、trimStart 和 trimEnd
+去除字符串前后的空白字符；
+
+3、Array.prototype.flat 与 flatMap
+将多维数组降维；
+arr = [1,2,3,4,[5,6,[7,8]]]
+console.log(arr.flat( 可以传参,参数为深度 ))
+[1,2,3,4,5,6,[7,8]]
+
+arr = [1,2,3,4,[5,6,[7,8]]]
+console.log(arr.flat( 2 ))
+[1,2,3,4,5,6,7,8]
+
+flatMap 相当于 falt 与 Map
+let arr = [1,2,3,4,5,6]
+let result = arr.flatMap(function(item){
+return [item * 10]
+})
+console.log(result)
+
+4、Symbol.prototype.description
+获取Symbol的字符串描述；
+
+———————————————————————————————————————————
+ES11 新特性
+1、String.prototype.matchAll
+用来得到正则批量匹配的结果；
+2、类的私有属性
+私有属性外部不可访问直接；
+3、Promise.allSettled
+获取多个promise执行的结果集；
+4、可选链操作符
+简化对象存在的判断逻辑；
+5、动态 import 导入
+动态导入模块，什么时候使用什么时候导入；
+6、BigInt
+大整型；
+7、globalThis 对象
+始终指向全局对象window；
+———————————————————————————————————————————
+ES11 私有属性
+1.私有属性
+class Person {
+// 公有属性
+name;
+// 私有属性
+#age;
+#weight;
+// 构造方法
+constructor(name, age, weight) {
+this.name = name;
+this.#age = age;
+this.#weight = weight;
+}
+intro() {
+console.log(this.name);
+console.log(this.#age);
+console.log(this.#weight);
+}
+}
+// 实例化
+const girl = new Person("小兰", 18, "90kg");
+console.log(girl);
+// 公有属性的访问
+console.log(girl.name);
+// 私有属性的访问
+console.log(girl.age); // undefined
+// 报错Private field '#age' must be declared in an enclosing class
+// console.log(girl.#age);
+girl.intro();
+———————————————————————————————————————————
+ES11 Promise.allSettled 方法
+- 他是一个 Promise 对象，他永远都是成功
+- 他用法是获取多个promise执行的结果集；
+const result = Promise.allSettled([第一个,第二个])
+- 还有一个特别相近的，但它会根据里面的成功与否而改变
+const result1 = Promise.all([第一个,第二个])
+———————————————————————————————————————————
+ES11 String.prototype.matchAll 方法
+- 相当于去 while 循环去正则匹配
+- 返回可迭代对象
+const result = str.matchAll(正则对象);
+for(let v of result){
+console.log(v);
+}
+———————————————————————————————————————————
+ES11 可选链操作符
+- 相当于 . 但是也有了判断的意味
+- 相当于 &&
+语法：
+?.
+———————————————————————————————————————————
+ES11 动态 import
+hello.js：
+export function hello(){
+alert('Hello');
+}
+——————————
+app.js：
+// import * as m1 from "./hello.js"; // 传统静态导入
+//获取元素
+const btn = document.getElementById('btn');
+btn.onclick = function(){
+import('./hello.js').then(module => {	//这种 import 返回 promise 对象
+module.hello();
+});
+}
+——————————
+动态import加载.html：
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>动态 import </title>
+</head>
+<body>
+<button id="btn">点击</button>
+<script src="app.js" type="module"></script>
+</body>
+</html>
+———————————————————————————————————————————
+ES11 BigInt 类型
+- 作用就是做大数值运算时用到的
+- 有时 Js 的最大值不足以让我们进行运算
+// BigInt
+// 大整型
+let n = 100n;
+console.log(n,typeof(n));
+// 函数：普通整型转大整型
+let m = 123;
+console.log(BigInt(m))
+// 用于更大数值的运算
+let max = Number.MAX_SAFE_INTEGER;
+console.log(max);
+console.log(max+1);
+console.log(max+2); // 出错了
+console.log(BigInt(max));
+console.log(BigInt(max)+BigInt(1));
+console.log(BigInt(max)+BigInt(2));
+———————————————————————————————————————————
+ES11 globalThis 对象
+- 始终指向全局对象 window；
+———————————————————————————————————————————
+补充 ES6 Proxy 代理
+ - 形似于 Object.defineProperty 优于 Object.defineProperty
+ - 比 上面拦截的 更加底层
+	 - 1.第一个参数选择要实现代理的对象
+	 - 2.第二个参数是可选的, 如果没东西需要用 { } 来占位
+		 - get( 传入的代理对象, 在其身上所读取的属性 ){ 需要返回值 }
+		 - set( 传入的代理对象, 在其身上所修改的属性, 所需要修改的值 ){ }
+		 - deleteProperty(整体内容, 删除的属性){ 需要手动 delete 一下 }
+1.使用方式 
+
+let person = {
+    name:"Monika",
+    age:18,
+    gender:"女"
+}
+
+const p = new Proxy( person, {
+    get(整体内容, 读取的属性){ 需要返回值 },		对于读取的捕获
+    set(整体内容, 修改的属性, 新的值){},		对于改值的捕获, 增值的时候也能捕获
+    deleteProperty(整体内容, 删除的属性){}		对于删值的捕获
+})
+———————————————————————————————————————————
+补充 ES6 Reflect 反射
+ - 可以用它来代替 Object 增/删/改/查  
+ - ECMA 组织 正在把 Object 身上的一些属性 移至到 Reflect 身上
+ - 比如 Reflect.deleteProperty ,与之前 Object. 不同
+	 - 它可以对一个属性多次定义, 然而只会执行第一次的设置
+	 - 具有 返回值 , 为布尔值, 说明这是否成功
+
+Reflect.has(target, propertyKey)
+	 - 判断一个对象是否存在某个属性，和 in 运算符 的功能完全相同。
+	 - 哪个对象, 对象名
+
+Reflect.set(target, propertyKey, value[, receiver])
+	 - 将值分配给属性的函数。返回一个Boolean，如果更新成功，则返回true。
+	 - 哪个对象, 对象名, 属性
+
+Reflect.deleteProperty(target, propertyKey)
+	 - 作为函数的delete操作符，相当于执行 delete target[name]。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

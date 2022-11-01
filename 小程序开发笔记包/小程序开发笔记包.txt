@@ -1,0 +1,593 @@
+_____________________/------------------------------------------	小程序开发
+
+
+ - https://mp.weixin.qq.com/
+
+
+_____________________/------------------------------------------	scroll-view 组件使用
+
+
+ - <scroll-view></scroll-view>
+<scroll-view class="container1" scroll-y>	//需要在对应类名中定义高度
+    <view>1</view>
+    <view>2</view>
+    <view>3</view>
+</scroll-view> 
+
+
+_____________________/------------------------------------------	swiper 与 swiper-item 组件使用
+
+
+ - indicator-dots			切换的小圆点		boolean
+ - indicator-color			小圆点颜色			rgba()
+ - indicator-active-color		当前选中小圆点颜色		#00000
+ - autoplay			是否自动切换		boolean
+ - interval				上面属性的时间间隔		5000
+ - circular				是否采用链接滑动 ( 无限滑动 )	boolean
+
+<swiper class="swiper">
+    <swiper-item>
+        <view class="item">A</view>
+    </swiper-item>
+    <swiper-item>
+        <view class="item">B</view>
+    </swiper-item>
+    <swiper-item>
+        <view class="item">C</view>
+    </swiper-item>
+</swiper>
+
+
+_____________________/------------------------------------------	常用的基础内容组件
+
+
+text 	 		文本组件
+	 - user-select		实现长按选中文本内容效果	
+<text user-select>Just Monika</text>	
+
+-------------------------------------------
+
+rich-text			富文本组件
+	 - nodes			可直接放入 Html 标签
+<rich-text nodes="<h1>123456</h1>"/>
+
+
+_____________________/------------------------------------------	button 与 images 组件基本用法
+
+
+button 			按钮
+	 - open-type 		调用微信提供的各种功能 ( 客服/ 转发/ 获取用户信息 )
+	 - type			指定按钮颜色类型
+	 - size 			指定按钮大小 ( 不是填写数值, 去微信官方文档看 )
+	 - plain			描边按钮
+-------------------------------------------
+
+image			图片
+	 - mode			mode属性, 图片裁剪、缩放的模式, 官网看去
+-------------------------------------------
+
+navigator			页面导航组件
+
+
+_____________________/------------------------------------------	小程序 API 的 三大分类
+
+
+ - 事件监听 API 
+	 - 以 on 开头, 用来监听事件的触发
+
+ - 同步 API
+	 - 以 Sync 结尾的 API 都是同步 API
+
+ - 异步 API
+	 - 记得接收
+
+
+_____________________/------------------------------------------	小程序中的事件
+
+
+   类型			绑定方式			事件描述
+ - tap		bindtap 或 bind:tap 	类似于 HTML 中的 click 事件
+
+ - input		bindinput 或 bind:input	文本框输入事件
+
+ - change		bindchange 或 bind:change	状态改变时触发
+
+ - 当回调函数触发时, 会收到一个事件对象 event 具体官网查
+
+<button bindtap="add" data-info="{{2}}">{{name}}</button>
+console.log(参数.target.dataset.参数)
+
+_____________________/------------------------------------------	小程序中如何修改 data 中的值
+
+
+  add(peiqi){
+    this.setData({
+        name: "Sayori"
+    })
+  },
+
+
+_____________________/------------------------------------------	小程序中 bindtap 使用
+
+
+	                        传参
+<button bindtap="add" data-info="{{2}}">{{name}}</button>
+console.log(e.target.dataset.info)
+
+
+_____________________/------------------------------------------	小程序中 bindinput 使用
+
+
+<input type="text" placeholder="这是一个 input" bindinput="changeText"></input>
+changeText(e){
+    console.log(e.detail.value)
+},
+
+
+_____________________/------------------------------------------	wx:if 条件渲染 与 hidden 隐藏
+
+
+ - wx:if="{{  }}"
+ - wx:elif="{{  }}"
+ - wx:else="{{  }}"
+
+ - hidden="{{  }}"
+
+
+_____________________/------------------------------------------	包裹标签的使用
+
+
+ - block 仅作包裹使用, 他不会渲染到页面 
+<block>
+    <view></view>
+    <view></view>
+</block>
+
+
+_____________________/------------------------------------------	wx:for 列表渲染
+
+
+ - wx:for={{ 数组 }}
+ - 注意它内部会分化出来两个参数供下面标签使用 
+	 - index
+	 - item
+ - index 与 item 重命名方式
+	 - wx:for-index = "idx"
+	 - wx:for-item = "itemName"
+
+<view wx:for="{{clubPerson}}" wx:key="index">我们文学社有 {{item}}</view>
+
+
+_____________________/------------------------------------------	wxss 和 css 的关系
+
+
+ - wxss 相较于 css 扩展了
+	 - rpx 尺寸单位
+	 - @import 样式导入
+
+ - @import '相对路径'
+
+
+_____________________/------------------------------------------	设置全局样式
+
+
+ - 去官网上查, 在 app.json 中设置
+navigationBarTitleText = "JustMonika"
+
+
+
+_____________________/------------------------------------------	设置 tabBar
+
+
+https://www.jianshu.com/p/91cd8db69739
+
+
+_____________________/------------------------------------------	微信小程序发送网络请求
+
+
+ - 先去后台进行配置
+
+
+wx.request({
+    url:'https://www.escook.cn/api/get',
+    methods:'GET',
+    data:{
+        name:' Monika ',
+        age:20
+    },
+    success:( res )=>{				//成功之后的回调函数
+        console.log( res.data )
+    }
+})
+
+
+_____________________/------------------------------------------	声明式导航
+
+
+ - <navigator></navigator>
+	 - url		必须以 / 开头
+	 - open-type	必须为 switchTab
+<navigator url="/pages/..." open-type=" switchTab ">导航到...页面</navigator>
+
+ - <navigator></navigator>
+	 - delta		必须为数字, 标识要后退的层级, 如果不写, 默认退一
+	 - open-type	必须为 navigateBack
+<navigator open-type="navigateBack" delta="1">后退到上一个页面</navigator>
+
+
+_____________________/------------------------------------------	声明式导航
+
+
+ - wx.switchTab( Object )	 - 跳转到 tabBar 页面
+url	string	必选	要跳转到的路径, 不能携带参数, 必须以 / 开头
+success	fun		接口调用成功的回调函数
+fail	fun		接口调用失败的回调函数
+complete	fun		接口调用结束的回调函数, 无论成功失败
+
+ - wx.navigateTo( Object )	 - 跳转到非 tabBar 页面
+url	string	必选	要跳转到的路径, 可以携带路径参数, 必须以 / 开头
+success	fun		接口调用成功的回调函数
+fail	fun		接口调用失败的回调函数
+complete	fun		接口调用结束的回调函数, 无论成功失败
+
+ - wx.navigateBack( Object )	 - 返回上一级页面
+delta	number	默1,可选	返回页面数
+success	fun		接口调用成功的回调函数
+fail	fun		接口调用失败的回调函数
+complete	fun		接口调用结束的回调函数, 无论成功失败
+
+
+_____________________/------------------------------------------	声明式导航传参
+
+
+ - 跟网页的 Search 参数一致
+<navigator url="/pages?name=Monika&age=18" open-type=" switchTab ">导航到...页面</navigator>
+
+
+_____________________/------------------------------------------	编程式导航传参
+
+
+wx.navigateTo({
+    url:'/pages/info/info?name=Monika&age=18'
+})
+
+
+_____________________/------------------------------------------	使用路由传参
+
+
+ - 在 onload 声明周期中接受到
+/*** 生命周期函数--监听页面加载***/
+onLoad(options) {
+    console.log( options )       
+},
+
+
+_____________________/------------------------------------------	下拉刷新
+
+
+ - enablePullDownRefresh = "true"
+ - 通过 onPullDownRefresh(){} 监听用户下拉刷新操作
+ - 通过 wx.stopPullDownRefresh() 停止下拉刷新
+
+
+_____________________/------------------------------------------	上拉触底
+
+
+ - onReachBottomDistance = "默认50"
+ - 通过 onReachBottom(){} 监听用户上拉触底操作
+ - 注意设置节流函数
+
+
+_____________________/------------------------------------------	loading 效果
+
+
+ - wx.showLoading()
+
+
+_____________________/------------------------------------------	生命周期函数
+
+
+ - 后台指的是从小程序中直接退出微信到后台界面
+ - 进入时还会触发 onShow 生命周期函数
+
+
+_____________________/------------------------------------------	动态设置标题内容
+
+
+ - wx.setNavigationBarTitle( Object )		请在 OnReady() 生命周期中进行设置
+
+
+_____________________/------------------------------------------	自定义组件的创建
+
+
+ - 手动新建文件
+ - 右击文件名
+ - 选择 Component
+ - 创建文件 [文件名] 即可, 无需加.js
+
+
+_____________________/------------------------------------------	组件的创建与使用
+
+
+ - 组件分为 局部 与 公共
+ - 1.局部引用组件
+	 - 在页面的 .json 配置文件中引用组件的形式, 叫做 " 局部引入 " 
+//在组件的 .json 文件中使用组件
+{
+    "usingComponents": {
+        "my-Conponent1":"pages/callme/callme"
+    }
+}
+//在页面中使用组件
+<MyConponent1></MyConponent1>
+
+ - 2.全局引用组件
+	 - 在 app.json 中配置文件中引入组件的方式, 叫做全局引入, 和上方的方法一致
+
+
+_____________________/------------------------------------------	自定义组件的样式
+
+
+ - 默认只对当前组件生效
+ - app.wxss 中的全局样式对组件无效
+ - 如果想要外界能够控制组件内部的样式, 可以通过 stylelsolation 修改组件的样式隔离选项
+.json
+{
+    'stylelsolation':'isolated'
+}
+.js
+options:{			在 page 中写
+        styleIsolation:'isolated'
+},
+
+
+_____________________/------------------------------------------	自定义组件的 properties 使用
+
+
+ - 就是 Vue 的 props 接值用的,
+ - 传值也跟 Vue 一样
+properties:{
+    max:{
+        type:Number,
+        value:10		//默认值
+    }
+    max:Number
+}
+
+
+_____________________/------------------------------------------	自定义组件的数据监听器
+
+
+Component({
+    observers:{
+        '字段A, 对象.属性B':function(字段A的新值, 字段B的新值){
+            //do 
+        }
+    }
+})
+
+ - 使用 setData 设置 字段A 触发回调
+ - 使用 setData 设置 对象.属性B 触发回调
+ - 给对象 增/删/改 了值
+
+
+_____________________/------------------------------------------	设置纯数据字段
+
+
+ - 提升页面性能
+ - 当数据仅在当前组件中使用且不参与页面渲染
+
+Component({
+    options:{
+        pureDataPattern:/^_/
+    }
+})
+
+
+_____________________/------------------------------------------	组件的生命周期
+
+
+ - created		无参数		在组件实例刚刚被创建的时候执行		无 setData,只用于添加 this 的自定义字段
+
+ - attached	无参数		在组件实例进入页面节点树时执行		this.data 完毕, 进行初始化业务逻辑地方
+
+ - ready		无参数		在组件在视图层布局完成后执行
+
+ - moved		无参数		在组件实例被移动到节点树另一个位置时执行
+
+ - detached	无参数		在组件实例从页面节点树移除时执行	清理
+
+ - error		Object Error	每当组件方法抛出异常时执行
+
+
+_____________________/------------------------------------------	组件的生命周期使用
+
+
+Component({
+    lifetimes:{
+        attached(){},
+        detached(){}
+    }
+})
+
+
+_____________________/------------------------------------------	组件所在页面的生命周期
+
+
+ - 有时 自定义组件行为 依赖于页面状态变化
+
+ - show		无		组件所在页面被展示时执行
+
+ - hide		无		组件所在页面被隐藏时执行
+
+ - resize		Object Size	组件所在页面尺寸变化时执行	具有参数
+
+Component({
+    pageLifetimes:{
+        show: function(){},
+        hide: function(){},
+        resize:function( size ){}
+    }
+})
+
+
+_____________________/------------------------------------------	自定义组件的单个插槽
+
+
+ - <slot></slot>
+
+组件封装使用者
+<slot></slot>
+
+组件封装定义者
+<component-tag-name>
+    //这部分内容将放入 slot 节点位置
+    <view>Doki Doki Forever</view>
+</component-tag-name>
+
+
+_____________________/------------------------------------------	自定义组件的多个插槽
+
+
+ - 需要启用
+
+Component({
+    options:{
+        multipleSlots:true
+    }
+})
+
+组件封装使用者
+<slot name="before"></slot>
+<slot name="after"></slot>
+
+组件封装定义者
+<component-tag-name>
+    //这部分内容将放入 slot 节点位置
+    <view slot="before" >Doki Doki Forever</view>
+    <view slot="after" >Doki Doki Forever And Just Monika</view>
+</component-tag-name>
+
+
+_____________________/------------------------------------------	父子组件通信
+
+
+ - 1. 属性绑定
+     - 用于父组件向子组件的指定属性设置数据, 进设置 JSON 兼容的数据
+     - 就是 props 传值
+
+ - 2. 事件绑定
+     - 用于子组件向父组件传递数据, 可以传递任意数据
+     - 父组件定义一个函数, 将引用传递给子组件
+     - 在子组件中使用 this.triggerEvent('自定义事件名称', {/'参数对象'/})
+     - 然后父组件函数中 e.detail 中会有子组件传递的数据
+
+ - 3. 获取组件实例
+     - 父组件通过 this.selectComponent(' id 或 class 选择器 ') 获取子组件实例对象
+     - 这样就可以访问子组件身上的任意数据与方法
+     - 子组件身上可以加 class 属性
+     - 获取之后的返回值可以去访问子组件身上的数据或方法
+
+
+_____________________/------------------------------------------	behaviors
+
+
+ - behaviors 类似于 Vue.js 中的 mixins
+ - 只要引入文件, 就会访问到数据
+
+module.exports = Behavior({
+    properties: {},
+    data: {},
+    methods: {}
+})
+
+
+_____________________/------------------------------------------	UI 组件库
+
+
+ - Vant Weapp
+
+
+_____________________/------------------------------------------	实现 API promise 化
+
+
+ - npm i --save miniprogram-api-promise
+ - 微信开发, 工具, 构建 npm ( 注意新下一个包就要全部重新构建 )
+
+import { promisifyAll } from 'miniprogram-api-promise'
+const wxp = wx.p = {}
+promisifyAll( wx,wxp )
+ - 之后就是需要 promise 时调用wx.p身上的方法即可
+
+
+_____________________/------------------------------------------	MobX - 第三种全局共享方式
+
+		@4.13.2		@1.2.1
+ - npm i --save mobx-miniprogram mobx-miniprogram-bindings
+ - 可以用这个, 但我用 vuex
+
+
+_____________________/------------------------------------------	分包的基础概念
+
+
+ - 在 app.json 中的 subpackages 中进行写入
+ - 它会自动生成对应文件
+"subpackages": [		//节点
+    {
+        'root':'packageA',	//第一个分包的根目录
+        'name':"Monika"	//分包的别名
+        'pages':[		//当前分包下, 所有页面的存放路径
+            'pages/cat',
+            'pages/dog',
+        ]
+    },
+  ......
+]
+
+
+_____________________/------------------------------------------	独立分包
+
+
+ - 不依赖主包或其他分包的情况下独立运行, 也就是不能相互引用彼此的资源
+	 - 独立的, 独立的, 独立的
+"subpackages": [		//节点
+    {
+        'root':'packageA',	//第一个分包的根目录
+        'name':"Monika"	//分包的别名
+        'pages':[		//当前分包下, 所有页面的存放路径
+            'pages/cat',
+            'pages/dog',
+        ]
+    'independent':true	//当前为独立分包
+    },
+  ......
+]
+
+
+_____________________/------------------------------------------	分包预下载
+
+
+ - 预判用户下一步可能要点击的分包, 并提前下载
+ - 预下载体积限制为 2M 
+ - 在 aoo.json 设置
+"preloadRule": {			//分包预下载的规则
+    'pages/路径':{			//独立分包预下载的路径
+        'network':'all'/'wifi',		//仅在 wifi 状态下下载, 默认			
+        'packages':["Monika", ...]	//进入上方页面后, 下载哪些分包, 可以使用 name/ root
+    }
+}
+
+
+_____________________/------------------------------------------	分包预下载
+
+
+
+
+
+
+
+
+
+
+
+

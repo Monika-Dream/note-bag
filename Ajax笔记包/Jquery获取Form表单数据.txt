@@ -1,0 +1,11 @@
+js 获取form表单数据				方式一
+导入 jquery
+let data = $("#formid 1").serialize()
+let newdata = decodeURIComponent(data, true)
+console.log(newdata)
+———————————————————————————————————————————
+导入 jquery				方式二
+let data = $("#formid 1").serializeArray()
+console.log(data)
+
+

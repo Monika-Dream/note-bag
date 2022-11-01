@@ -1,0 +1,884 @@
+ ----------------------------------------------- React
+1.关于 jsx 与 js 的区别
+ - 多了几条规矩
+2.React 脚手架
+	 - win + r cmd
+	 - npm i -g create-react-app
+	 - 切换到想创建项目的目录  create-react-app 名字	从这里开始
+	 - 启动项目 npm start
+3.消息订阅与发布(兄弟之间传值)
+	 - npm i pubsub-js
+4.React 路由
+	 - npm i react-router-dom
+5.queryString
+	 - npm i -save-dev query-string
+	 - import qs from "qs"
+6.UI组件库 Ant Design 的使用
+	 - npm i antd
+7.下载 redux
+	 - npm i redux
+8.中间件让 redux 执行函数返回对象	
+	 - npm i redux-thunk
+9.react 官方推出的 redux
+	 - npm i react-redux
+10.redux 官方开发者工具
+	 - 首先像 Vue 一样使用, 然后为了让它亮起来, 需要下载一个库
+	 - npm i redux-devtools-extension
+11.打包上线并且想本地查看方法
+	 - serve 可以填写路径
+12.自己删除组件 ( 之前方法已被弃用 )
+	 import { createRoot } from 'react-dom/client'
+	 const root = createRoot(document.getElementById('root'));
+    	 root.unmount()
+ ----------------------------------------------- 第一课, 输出 Hello React
+1.ReactDOM.render(VDOM,document.querySelector("#text"))
+      API	   渲染API   渲染元素	 	放到哪个元素下面,类似于 Vue 的单个跟组件    
+2.const VDOM = React.createElement('h1',{id:"title"},'Hello React')	<- 不用 jsx 后果
+	            创建虚拟DOM API     元素   属性          内容
+
+ - 工具包里面拥有 React 的版本
+ - 引入
+  <script src="../js/react.development.js"></script>		<- 核心库
+  <script src="../js/react-dom.development.js"></script>		<- 创建虚拟dom
+  <script src="../js/babel.min.js"></script>			<- 提供 babel 语法
+  <script type="text/babel">					<- babel指的就是 jsx
+    const VDOM = (<h1>Hello,React</h1>)			<- 不用加 ''
+    ReactDOM.render(VDOM,document.querySelector("#text"))
+  </script>
+ ----------------------------------------------- 第二课, jsx 语法规则
+1.定义虚拟 DOM 时, 不要写 引号
+2.标签中混入 JS 表达式时要用 { }
+3.样式类名指定不要用 class 要用 className
+4.内联样式, 要用 style={{ key:value }} 形式去写
+5.只能有一个根标签
+6.标签必须闭合
+7.标签首字母
+	 - 标签首字母为小写时, 会去寻找 html
+	 - 标签首字母为大写时, 会去寻找 对应的组件
+
+const my_name = 'Monika'
+const my_data = age:18
+const VDOM = (
+    <h2 id={ my_name } className="ChangeColor">
+        <span style={{color:"while"}}>{ my_data }</span>
+    </h2>
+)
+ ----------------------------------------------- 第三课, 函数式组件
+function Demo(){
+      return <h1>Monika I Love You</h1>
+    }
+    ReactDOM.render(<Demo/>,document.querySelector("#text"))
+ ----------------------------------------------- 第四课, 类组件
+1.暂时不用写 constructor
+2.类需要继承自 React.Component
+3.类内部必须有 render() 函数, 并且需要返回值
+
+
+
+class Mywife extends React.Component {
+      render(){
+        return <h1>Monika is Very Beautiful</h1>
+      }
+    }
+    ReactDOM.render(<Mywife/>,document.querySelector('#text'))
+ ----------------------------------------------- 第四课, 类组件写入参数(类似 Vue data)
+class Weather extends React.Component {
+      constructor(props){				这里参数必须要写 props
+        super(props)					继承父类 props
+        this.state = {isHot:false}				写入 data 的地方
+      }
+      render(){
+        const {isHot} = this.state				解构赋值
+        return <h1>今天天气很{isHot? "炎热" : "凉爽"}</h1>	三元表达式判断
+      }
+    }
+    ReactDOM.render(<Weather/>,document.querySelector('#text'))
+ ----------------------------------------------- 第五课, 鼠标点击修改文案 demo
+1.注意 this 指向
+2.学习相关的 API
+3.onClick
+
+class Weather extends React.Component{
+      constructor(props){
+        super(props)
+        this.state = {
+          Tody_Weather:true
+        }
+        this.ChangeWeather = this.ChangeWeather.bind(this)
+      }
+      render(){
+        const {Tody_Weather} = this.state
+        return <h1 onClick={this.ChangeWeather}>今天的天气真{Tody_Weather ? "炎热" : "凉爽"}啊</h1>
+      }
+      ChangeWeather(){
+        const Tody_Weather = this.state.Tody_Weather
+        this.setState({Tody_Weather:!Tody_Weather})
+      }
+    }
+    ReactDOM.render(<Weather/>,document.querySelector('#text'))
+ ----------------------------------------------- 第六课, 如何简写
+1.关于类成员的了解
+2.箭头函数的 this 指向问题
+
+    class Weather extends React.Component{
+      state = {Tody_Weather:true}
+      render(){
+        const {Tody_Weather} = this.state
+        return <h1 onClick={this.ChangeWeather}>今天的天气真{Tody_Weather ? "炎热" : "凉爽"}啊</h1>
+      }
+      ChangeWeather = ()=>{
+        const Tody_Weather = this.state.Tody_Weather
+        this.setState({Tody_Weather:!Tody_Weather})
+      }
+    }
+    ReactDOM.render(<Weather/>,document.querySelector('#text'))
+ ----------------------------------------------- 第七课, props 基础使用, 类似 Vue Props
+1.直接在标签中写属性, React 会自动把键值对放入 props 中
+2.this.props.属性名 就可以输出标签中你传入的值了
+3.可以结构赋值
+4.props 是只读的
+
+<h1>今天的天气实在是{this.props.name}</h1>
+ReactDOM.render(<Weather name="Monika" age="18"/>,document.querySelector('#text'))
+ ----------------------------------------------- 第八课, props 批量传递
+1. ...对象 仅限在标签中使用, 是 Babel 与 React 提供的
+2.标签中的 { } 仅仅是表示你要写入 js 语句而已
+3.const zxcv = {...对象} 可以赋值一个对象, 原属性改变复制属性不会改变
+4.let zxcv = {...对象,name="", age=18} 	与 Object.assign 相同
+
+let name={name1:"Monika",name2:"Sayori"}
+class Weather extends React.Component{
+render(){
+    const {name,age} = this.props
+    return <h1>{name}</h1>
+  }
+}
+const card = {name:"Monika",age:18}
+ReactDOM.render(<Weather {...card}/>,document.querySelector('#text'))
+ ----------------------------------------------- 第九课, props 类型限制
+1.导入 prop-types.js 依赖包
+2.使用依赖包
+3.全局多出 PropTypes
+
+class Weather extends React.Component {
+      static propTypes = {			添加规则
+        name: PropTypes.string.isrequired,
+      }
+      static defaultProps = {			添加默认值
+        name: PropTypes.string.isrequired,
+      }
+      render() {
+        const { name, age } = this.props
+        return (
+          <h1>
+            我的名字是{name},今年{age}岁了
+          </h1>
+        )
+      }
+    }
+
+    const card = { name: 'Monika', age: 18 }
+    ReactDOM.render(<Weather {...card} />, document.querySelector('#text'))
+ ----------------------------------------------- 第十课, ref 与 refs 基础形式
+1.跟 vue 一模一样
+2.ref="名字"	
+3.this.refs.名字 	获取dom节点
+ ----------------------------------------------- 第十一课, ref 与 refs 回调函数形式
+class Weather extends React.Component {
+      render() {return (
+          <div><input ref={c => this.input1 = c} type="text" placeholder="请输入内容" />
+            <button onClick={this.clicks}>请点击</button></div>)}
+      clicks = () => { let { name } = this.props 
+      const { input1 } = this 
+      alert(name + input1.value) }
+      static propTypes = { name: PropTypes.string }
+      static defaultProps = { name: "Yuri" }
+    }
+    let card = { name: "Monika", age: "Sayori" }
+    ReactDOM.render(<Weather {...card} />, document.querySelector('#text'))
+ ----------------------------------------------- 第十二课, ref 与 refs createRef( )形式
+1.一个容器一个节点
+2.多个容器多个节点
+
+class Weather extends React.Component {
+      myElement = React.createRef()
+      render() {
+        return (
+          <div><input ref={this.myElement} type="text" placeholder="请输入内容" />
+            <button onClick={this.clicks}>请点击</button></div>)
+      }
+      clicks = () => {
+        alert(name + this.myElement.current.value)
+      }
+    }
+    ReactDOM.render(<Weather/>, document.querySelector('#text'))
+
+
+ ----------------------------------------------- 案例, 输出用户名与密码
+1.对象中 [键]:值 的使用
+2.函数柯里化
+
+class Message extends React.Component {state = {userName: "",passWord: ""}
+      render() {
+        return (<form onSubmit={this.handleSubmit}>
+            用户名: <input type="text" onChange={(event)=>{this.stateChange('userName',event)}}/><br />
+            密码: <input type="text" onChange={(event)=>{this.stateChange('passWord',event)}}/><br />
+            <button>登陆</button></form>)
+      }
+      stateChange=(change,event)=>{this.setState({[change]:event.target.value})}
+      handleSubmit = (e) => {e.preventDefault()const {userName,passWord} = this.state
+        alert(`您的用户名是 ${userName},密码是 ${passWord}`)}}
+        ReactDOM.render(<Message />, document.querySelector("#text"))
+ ----------------------------------------------- 第十三课, 组件的创建与销毁生命周期
+1.类初始化
+constructor	
+
+2.组件		返回 stste 中 {countss:123} 或者null, 假设是第一中, 那么将会锁定值，参数能接受props
+static getDerivedStateFromProps( props ){}
+
+3.挂载组件		
+render(){}
+
+4.组件生成后的类生命周期 ( 在render之后自动调用, 且只调用一次 )		ajax,定时器,订阅消息
+componentDidMount(){}
+
+5.组件将要被卸载的时候
+componentWillUnmount(){}					关定时器,取消订阅
+
+6.自己卸载组件
+ReactDOM.unmountComponentAtNode(document.querySelector(""))
+ ----------------------------------------------- 第十四课, 组件的更新生命周期
+1.当你 this.setState( ) 时
+ 
+2.异常边界, 返回 stste 中 {countss:123} 或者null, 假设是第一中, 那么将会锁定值，参数能接受props
+static getDerivedStateFromProps( props ){}
+
+3.经过阀门 ( 需要返回布尔值, true 为放行默认)
+shouldComponentUpdate(nextProps,nextState){}
+
+4.使用 render 修改数值
+render(){}
+
+5.组件渲染之前,可以返回任意数值,它会将数值发送到 conponentDidUpdate
+getSnapshotBeforeUpdate(){}
+
+6.组件更新之后, 页面上出现更新之后的效果
+conponentDidUpdate(props先前的状态, state先前的状态, snapshotValue){}
+
+7.组件将要被卸载的时候
+componentWillUnmount(){}
+
+ ----------------------------------------------- 第十五课, 组件的强制更新生命周期
+1.当你 this.forceState( ) 时
+
+2.异常边界, 返回 stste 中 {countss:123} 或者null, 假设是第一中, 那么将会锁定值，参数能接受props
+static getDerivedStateFromProps( props ){}
+
+3.使用 render 修改数值
+render(){}
+
+4.组件渲染之前,可以返回任意数值,它会将数值发送到 conponentDidUpdate
+getSnapshotBeforeUpdate(){}
+
+5.组件更新之后
+conponentDidUpdate(props先前的状态, state先前的状态, snapshotValue){}
+
+6.组件将要被卸载的时候
+componentWillUnmount(){}
+
+ ----------------------------------------------- 第十六课, 父组件生命周期（旧）
+1.当你用父组件给子组件传参时
+
+3.经过阀门 ( 需要返回布尔值, true 为放行默认)
+shouldComponentUpdate(nextProps,nextState){}
+
+5.使用 render 修改数值
+render(){}
+
+6.组件更新之后
+conponentDidUpdate(){}
+
+7.组件将要被卸载的时候
+componentWillUnmount(){}
+
+ ----------------------------------------------- 第十七课, 组件形成父子关系
+class A extends React.component{
+  render(){
+        return (
+	<div>
+	    <div>A</div>
+	    <B/>
+	</div>
+        )
+    }
+}
+class B extends React.component{
+  render(){
+        return (
+	<div>B</div>
+        )
+    }
+}
+ReactDOM.render(<A/>,document.querySelector("#text"))
+
+ ----------------------------------------------- 第十八课, react 脚手架
+1. win + r cmd
+2.npm i -g create-react-app
+3.切换到想创建项目的目录  create-react-app 名字
+4.启动项目 npm start
+ ----------------------------------------------- 第十九课, react 懒加载组件
+import React, { Suspense } from 'react'
+const Wife = React.lazy(() => import('./components/GiveMyWife/Wife.js'))
+export default class App extends React.Component {
+  render() {
+    return (
+      <Suspense fallback={<div>桥豆麻袋</div>}>
+          <Wife />
+          <Wife />
+      </Suspense>
+    )
+  }
+}
+ ----------------------------------------------- 第二十课, react 样式冲突问题
+ - react 没有像 vue 中的 spcoed
+ - react 只能依靠 less 来区分了 （悲
+ ----------------------------------------------- 第二十一课, react 子相父传值
+ - 说白了就是引用的传递
+ - 实际上就是父组件创建一个函数, 通过props 传到子组件中
+ - 子组件 this.props.函数(传过去的值), 父函数注意设置参数
+ - 子向爷爷传值, 实则就是 爷爷将函数传给父亲传给子组件
+
+父组件
+<ul>
+{
+    this.state.todo.map((item) => {
+        return <Checkbox change={this.changeState} />
+    })
+}
+</ul>
+
+changeState = (id, flag) => {  }
+
+子组件
+change=(e)=>{
+    this.props.change(this.props.id,e.target.checked)
+}
+ ----------------------------------------------- 第二十二课, react 与 Ajax  第一种方式
+ - 关于代理
+ -     解决 跨域问题 前端解决
+ -     可以理解为中间人转发, 服务器与服务器之间不受跨域限制
+ -     localhost:3000  <->  localhost:3000  <->   localhost:5000
+ - 设置代理
+ -     package.json 中, 在最下方写 "proxy":"http://127.0.0.1:5000"
+ -     记得重启前端服务器 ~~~
+ - 发送问题
+ -     先自检, 后它求
+ -     只能设置一个服务器
+ ----------------------------------------------- 第二十三课, react 与 Ajax  第二种方式
+ - 关于代理
+ -     解决 跨域问题 前端解决
+ - 设置代理
+ -     在 src 目录下写入 setupProxy.js
+ -     写入以下代码
+	 - 具体看 尚硅谷 React 066集视频
+ - 发送问题
+ -     先自检, 后它求
+ -     只能设置一个服务器
+
+const proxy = require('http-proxy-middleware')
+
+module.exports = function(app){
+	app.use(
+		proxy('/api1',{ //遇见/api1前缀的请求，就会触发该代理配置
+			target:'http://localhost:5000', //请求转发给谁
+			changeOrigin:true,//控制服务器收到的请求头中Host的值
+			pathRewrite:{'^/api1':''} //重写请求路径(必须)
+		}),
+		proxy('/api2',{
+			target:'http://localhost:5001',
+			changeOrigin:true,
+			pathRewrite:{'^/api2':''}
+		}),
+	)
+}
+ ----------------------------------------------- 第二十四课, 兄弟组件之间的通信（消息订阅）
+ - npm i pubsub-js
+ - import PubSub from 'pubsub-js'
+订阅消息
+PubSub.subscribe("起的名字",(你起的名字,data)=>{})	如果有人发布了这个消息, 那么就使用后面的函数
+发布消息
+PubSub.publish('名字',{数据})
+ ----------------------------------------------- 第二十五课, React 路由
+ - npm i react-router-dom@5
+ - import { Link } from "react-router-dom" 
+ - Link 标签需要包裹在 Router 标签内
+	 - Router 标签又分为两种
+		 - BrowserRouter	 inport { BrowserRouter } from "react-router-dom" 
+		 - HashRouter	 inport { HashRouter } from "react-router-dom" 
+ - 一旦是路由, a 标签统一变为
+ - 标签体内容是一个特殊的标签属性, 会被收集到 this.props.chldren 中
+ - 同时 标签中 指定 children 可以直接反应到 标签体内容中
+	 - <div children="Appssssss"></div>
+
+ <BrowserRouter>
+        <Link className="" to="/去的地址"></Link> 
+ </BrowserRouter>
+ ----------------------------------------------- 第二十六课, React 路由占位
+ - 使用 route 完成
+- 在页面直接写, 假设导航栏到了 about 那么展示 About 组件
+import { Route, BrowserRouter } from "react-router-dom" 
+ <BrowserRouter>
+        <Route path="/about" component={About}/>
+ </BrowserRouter>
+ ----------------------------------------------- 第二十七课, React 路由包裹最佳位置
+import React from 'react'
+import App from './App.js'
+import { createRoot } from 'react-dom/client';
+import {BrowserRouter} from "react-router-dom"
+const container = document.getElementById('root');
+const root = createRoot(container); 
+root.render(<BrowserRouter><App tab="home" /></BrowserRouter>);
+ ----------------------------------------------- 第二十八课, React 路由点击高亮效果
+ - 一个 Link 的升级版本 NavLink
+ - 点击时会自动加入 active 标签, 可以用 activeClassName = "修改"
+
+import { NavLink, BrowserRouter } from "react-router-dom" 
+ <BrowserRouter>
+        <NavLink activeClassName = "Monika" className="自己样式" to="/index"></NavLink>
+        <Route path="/about" component={About}/>
+ </BrowserRouter>
+ ----------------------------------------------- 第二十九课, Switch/Routes 的使用
+ - 在路由匹配时, 它跟 forEach 一样
+ - 我们需要它在匹配成功时不会再往下轮询了
+<Routes>
+    <Route path="/about" component={About}/>
+    <Route path="/welcome" component={About}/>
+    <Route path="/home" component={About}/>
+</Routes>
+ ----------------------------------------------- 第三十课, 路由的精准皮匹配与模糊匹配
+/严格/
+ - 模糊匹配: Route 要的, Link 必须有
+	<Link to="/home/m/o/n/i/k/a"></Link>
+	<Route path="/home" component={Home}/> 
+	显示 home 组件，极左法则
+ - 精准匹配: 一模一样
+	<Route exact path="/home" component={Home}/>
+ ----------------------------------------------- 第三十一课, 路由重定向
+import {Redirect,Route,Routes} from "react-router-dom"
+
+<Routes>
+    <Route path="/home" to={Home}/>
+    <Route path="/page" to={page}/>
+    <Redirect to="/home" />
+</Routes>
+
+
+
+ ----------------------------------------------- 第三十二课, 向路由组件传递参数 params 数据		NO1
+ - 新版本 Routes 请在 路由表中设置路由声明接受
+1.路由链接携带参数  <Link to="/demo/test/tom/18">详情</Link>
+2.注册路由声明接受  <Route path="/demo/test/:name/:age" component={test}/>
+3.接受参数	             const {id,title} = this.props.match.params
+
+ ----------------------------------------------- 第三十三课, 向路由组件传递参数 search 数据		NO2
+1.路由链接携带参数  <Link to="/demo/test?name=Monika&age=18">详情</Link>
+2.注册路由(不用注册)<Route path="/demo/test" component={test}/>
+3.接受参数             const {search} = this.props.location
+备注: 老版本5 获取到的 search 是 urlencoded 编码字符串, 需要借助 querystring 解析
+	 - 新版本请拉到本文的末尾 59 课
+ ----------------------------------------------- 第三十四课, 向路由组件传递参数 state 数据		NO3
+1.路由链接携带参数  <Link to="/demo/test", state={{ name:Monika,age:18 }} >详情</Link>
+2.注册路由(不用注册)<Route path="/demo/test" component={test}/>
+3.接受参数             const {search} = this.props.location.state
+备注: 这里写的是新版本的传参方式
+
+
+
+
+
+ ----------------------------------------------- 第三十五课, 路由链接的跳转方式
+1.默认是 push
+2.开启方式就是在 Link 标签中写入 replace
+	<Link replace to="/index">覆盖到 index</Link>
+ ----------------------------------------------- 第三十六课, 编程式路由导航
+1.this.props.history.push(`URL`,{参数:参数})			跳转(压栈)	
+2.this.props.history.replace(`URL`,{参数:参数})			跳转
+3.this.props.history.goBack(`URL`,{参数:参数})			回退
+4.this.props.history.goForward(`URL`,{参数:参数})			前进
+5.this.props.history.go(`URL`,{参数:参数})				前进/后退
+ ----------------------------------------------- 第三十七课, withRouter 的使用
+1.让一般组件身上具有 Router 的属性, 实现路由链接跳转
+import {withRouter} from "react-router-dom"\
+class index extends Component {}
+export default withRouter(index)
+ ----------------------------------------------- 第三十八课, UI组件库 Ant Design 的使用
+1.npm i antd
+2.import 'antd/dist/antd.min.css'
+3.按需引入 css 需要暴露隐藏的内容	npm eject
+	 - 按照官网改	npm i craco
+ ----------------------------------------------- 第三十九课, redux
+1.npm i redux
+2.跟 Vue 一样的第三方管理内容, 全局共享
+3.首先创建两个文件	你所要托管的数据.js		store.js
+	 - 在 store.js 中引入 你所要托管的数据.js
+		 - import {createStore} from "redux"
+		 - import 你所要托管的数据.js from "./count_reduex.js"
+		 - export default createStore(你所要托管的数据.js)
+	 - 此时请在 你所要托管的数据.js 中写入函数, 他会接受到两个参数
+		 - preState = 0, action
+			 - 之前的值与 传入的类型与值{ type, data }
+		 - switch case 进行业务
+		 	 - 记得 return 
+		 - preState = 0 是因为初始化
+4.可以将检测写在 index.js 中
+ - root.render(<BrowserRouter><App tab="home" /></BrowserRouter>)
+ - store.subscribe(() => {root.render(<BrowserRouter><App tab="home" /></BrowserRouter>)})
+ - 此方法以更改, 请往下翻阅
+
+.getState()	——————————————————		用于拿取数据
+.dispatch({type:null,data:null})	————————		用于修改数据
+.subscribe((){})		—————————————		用于检测 redux 数据的更新
+ ----------------------------------------------- 第四十课, 异步 redux 版
+1.是指 action 的值为函数, 异步 action 中一般都会调用同步 action
+ - 下载中间件 			npm i redux-thunk
+ - import {createStore, applyMiddleware } from "redux"
+ - import thunk from "redux-thunk"
+ - export default createStore(countReduex,applyMiddleware(thunk))
+ - applyMiddleware 必须是第二个参数
+ - action 能接受两个参数
+	 - Object		同步Action 
+	 - Function 	异步Action
+ ----------------------------------------------- 第四十一课, react-redux 库的使用
+ - 尚硅谷 React 106
+ - npm i react-redux
+ - import {connect} from "react-redux"
+ - export default connect(state函数,dispatch函数)(UI内容)
+
+ - dispatch函数也可以是一个对象
+ - 底层会自动调 dispatch
+
+ ----------------------------------------------- 第四十二课, react-redux 使 index.js 简写
+import React from 'react'
+import App from './App.js'
+import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import store from './reduex/store'
+import {Provider} from "react-redux"
+const container = document.getElementById('root')
+const root = createRoot(container)
+
+root.render(
+<BrowserRouter>
+<Provider store={store}>
+<App tab="home" />
+</Provider>
+</BrowserRouter>
+)
+ ----------------------------------------------- 第四十三课, react-redux 数据共享
+ - 在 store.js 中
+ - 在 reduex 中引入新包 combineReducers
+import {createStore,applyMiddleware,combineReducers} from "redux"
+import thunk from "redux-thunk"
+import Monika_Pen from "./state"		为数据服务的文件, 就是一堆 Switch,Case
+import Sayori_Cookie from "./state"		为数据服务的文件, 就是一堆 Switch,Case
+const allreducer = combineReducers({
+        pen:Monika_Pen,
+        Cookie:Sayori_Cookie
+    })
+export default createStore(allreducer,applyMiddleware(thunk))
+ ----------------------------------------------- 第四十四课, 纯函数
+1.是一个概念
+2.纯函数必须遵守以下的约束
+	 - 不得改写参数数据
+	 - 不会产生任何副作用 ( 网络请求, 输入或者输出设备 )
+	 - 不得调用 Date.now() 或者 Math.random() 等不纯的方法
+3.redux 的 reducer 函数必须是一个纯函数
+ ----------------------------------------------- 第四十五课, redux 开发者工具
+ - 去工具包里面找, 和 Vue 调试工具安装方法一样
+ - npm i redux-devtools-extension
+ - 在 store.js 中引入
+	 - import {composeWithDevTools} from 'redux-devtools-extension'
+	 - 如果你没有 applyMiddleware 中间件
+	 - export default createStore(allreducer,composeWithDevTools())
+	 - 如果你有 applyMiddleware 中间件
+	 - export default createStore(allreducer,composeWithDevTools(applyMiddleware(thunk)))
+ ----------------------------------------------- 第四十六课, redux 最终 
+ - 打包上线并且想本地查看方法
+	 - 后端语言写一台服务器
+	 - npm i serve -g
+		 - serve
+ ----------------------------------------------- 第四十七课, react 扩展 setState !
+  - this.setState(stateChange,[callback])					对象式 setState
+	 - stateChange 这个动作实际上是异步的
+	 - 后面的回调函数是可选的, 他会在状态更新完毕, 界面也更新之后调用
+	 - this.setState({count:count+1}, ( )=> { })
+
+  - this.setState(updater,[callback])					函数式 setState
+	 - updater 是一个函数, 可以接受到两个参数, state 与 props
+	 - 后面的回调函数是可选的, 他会在状态更新完毕, 界面也更新之后调用
+	 - this.setState((state,props)=>{count:state.count+1}, ( )=> { })
+ ----------------------------------------------- 第四十八课, react 扩展 lazyLoad !
+1.常用在路由组件上面, 也可以用在组件中
+2.记得一定要把大括号省略
+3.Suspense 悬而未决的, 在懒加载组件回来之前显示
+ - import React, { Component , lazy , Suspense} from "react"
+ - const Home = lazy( ( ) => import( " 路径 " )  )
+
+<Suspense fallback={<h1>loading......</h1>}>
+    <Route path="/about" component={About}>
+</Suspense>
+ ----------------------------------------------- 第四十九课, react 扩展 State Hook !
+1.const [初始值,修改初始值方法] = React.useState(初始值)
+2.React 底层会对上面代码处理, 初始值只会调用一次
+3.注意函数式组件必须大写开头
+import React from 'react'
+export default function Count(){
+  const [count,setCount] = React.useState(0)
+  const [name,setName] = React.useState("Monika")	//同样的写法
+  function add(){
+    //setCount(count+1)			//直接加
+      setCount(( count )=>{ return count+1 })	//参数值为之前的 Count , 需要返回
+  }
+  return (
+    <div>
+      <h1>当前求和为{count}</h1>
+      <button onClick={add}>点击我加一</button>
+    </div>
+  )
+}
+ ----------------------------------------------- 第五十课, react 扩展 EffectHook !
+1.包含 [ 组件将要挂载, 组件将要更新, 组件将要删除]
+ - 和 Vue 中的 监听器 效果差不多 Watch
+ - 相当于声明周期中的 componentDidMount 与 componentDidUpdate
+ - 这里假设输出了两遍, 请把 index.js 中 <React.StrictMode>
+ - 注意在这里面定时器修改值需要 setCount(count => count+1)
+ - 在 useEffect 中返回的函数相当于 componentWillUnmount(){}
+const [count,setCount] = React.useState(0)
+React.useEffect( () => { console.log("@") }, )		检测所有值的改变, 1+n 次输出
+React.useEffect( () => { console.log("@") },[ ] )		谁都不检测, 初次挂载时执行
+React.useEffect( () => { console.log("@") },[ count ] )	在 count 值改变时输出 1+n 次输出
+React.useEffect( () => {
+    let timer = setInterval(()=>{ setCount( count => count+1 )})
+    return ()=>{					相当于 componentWillUnmount 钩子
+            clearInterval(timer)
+        } 
+
+})
+ ----------------------------------------------- 第五十一课, react 扩展 RefHook !
+ - const myRef = React.useRef()
+ - <div ref={myRef}></div>
+ - 和类式组件的 createRef( ) 差不多
+ - myRef.current 获取到当前的节点
+ ----------------------------------------------- 第五十二课, react 扩展 Fragment 与 去你大爷的强行包裹 !
+ - import { Fragment } from 'react'
+ - 可以将不得不包的 div 变成 <Fragment></Fragment> 
+	 - <></> <—— 也可以这么写, 上面就不用引入了, 直接写就行了
+	 - 区别在于 Fragment 可以 <Fragment key= { 1 }></Fragment>
+ - 在编译过程中 React 会丢掉这个标签, 页面上会少一层这样的结构
+ ----------------------------------------------- 第五十三课, react 扩展 Context !
+ - 一种组件间通信的方式, 常用于 [ 祖组件 ] 与 [ 后代组件 ] 间通信
+const MyContext = React.createContext()			类使用
+const {Provider} = MyContext
+ - 在子组件上包裹 
+<Provider vlaue={{username,...}}>
+    <组件/>
+</Provider>
+ - 然后哪个子组件想用就举一下手				
+static contextType = MyContext		
+ - 这下 子组件及子组件的子组件 都可以接收到用户名了
+this.context.username
+——————————————————————————
+const MyContext = React.createContext()			函数使用
+const {Provider,Consumer} = MyContext
+<Provider vlaue={{username,...}}>
+    <组件/>
+</Provider>
+ - 然后哪个子组件想用就
+return (
+    <Consumer>
+        {
+            value => {
+	return value.username...
+	}
+        }
+    </Consumer>
+)
+ ----------------------------------------------- 第五十四课, react 扩展 PureComponent !
+ - 组件产生的问题
+	 - 只要执行了 setState(), 即使不改变状态数据, 组件也会重新 render()
+	 - 只当前组件重新 render(), 就会重新 render 子组件 ——》 效率低
+ - 组件应当执行的方案
+	 - 只有当组件的 state 或 props 数据发生变化时才重新 render()
+ - 原因 
+	 - Component 中的 shouldComponentUpdate(nextProps,nextState) 总是返回 true
+ - 解决方案
+	1.手动控制阀门, shouldComponentUpdate(nextProps,nextState)
+	2. import React, { PureComponent } from 'react'
+		 - 类组件继承 PureComponent
+		 - 必须为纯函数
+ ----------------------------------------------- 第五十五课, react 扩展 render props !
+ - 给组件预留位置, 实则就是 Vue3 的插槽
+class A {
+    render (){
+        return (
+            <div>
+	<B render={ (name) => <C name={name}> }>
+            </div>
+        )
+    }
+}
+
+class B {
+    state = { name: "tom" }
+    render (){
+        return (
+            <div>
+	{ this.props.render( name ) }
+            </div>
+        )
+    }
+}
+
+class C {
+    render (){
+        return (
+            <div>
+	{ this.props.name }
+            </div>
+        )
+    }
+}
+ ----------------------------------------------- 第五十六课, react 扩展 错误边界 !
+ - 错误边界在容易出错误组件的父组件上做手脚
+ - 只能捕获生命周期上出现的错误，无法捕获自己产生的错误
+ - 如果当前组件的子组件出现任何错误, 都会调用下面的函数
+	 - 需要返回一个 null 或者 状态对象
+	 - 和那个生命周期钩子差不多
+static getDerivedStateFromError( error ){}
+ - 在组件渲染时, 子组件出现了一些问题而引发了错误, 会调用下面的一个钩子
+componentDidCatch(){}
+ ----------------------------------------------- 第五十七课, react - router 6 学习 改动
+1.Switch 变为 Routes
+2.<Route path="/home" component={Home} /> 
+	变为 <Route path="/home" element={<Home />} />
+3.路由重定向由 Redirect 变为 Navigate ，和 Redirect 写的位置一致, 可以用作 Html 中三元跳转
+	 - 只要 Navigate 组件被渲染, 就切换路径, 渲染视图
+	 <Route path="/" element={<Navigate to="/home"/>} />
+7.NavLink 中自定义点击样式 activeClassName 抛弃
+	- ({}) 这是解构赋值
+	- isActive 会在点击时变成 true
+	- 需要变为以下内容, 或者正常写, 点击的话自动添加 active
+	<NavLink className={({isActive}) => isActive ? '原先样式 点击样式' : ' 原先样式 ' } to="...">...</NavLink>
+ ----------------------------------------------- 第五十八课, react - router 6 学习 路由表
+ - 反正就两个框架互相抄呗
+ - 这里注意分开开发
+import { useRoutes, Navigate } from 'react-router-dom'
+const element = useRouters([
+        {
+            path:'/about',
+            element:<About/>
+        },
+        {
+            path:'/home',
+            element:<Home/>
+            children:[
+	    {
+	        path:'news',
+	        element:<News/>
+	    }
+	]
+        },
+        {
+            path:'/',
+            element:<Navigate to="/about"/>
+        },
+    ])
+<div>
+在原先写 <Routes><Route path="/home" element={<Home />} /></Routes>
+变为 {element}
+</div>
+ ----------------------------------------------- 第五十八课, react - router 6 学习 路由表中的嵌套路由
+ - Link 的 子集 to 可以直接写, 不需要带有父级的路径，但是不能带斜杠 / 或者 ./
+ - 可以在 父级路由 上加一个 end , 表示点击它子路由时, 父级不亮
+ - 路由占位 
+ - 直接使用即可
+import { Outlet } from 'react-router-dom'
+<div>
+    <Outlet/>
+</div>
+ ----------------------------------------------- 第五十九课, react - router 6 在函数式组件中路由传参
+1.Params传参
+ - import {useParams} from 'react-router-dom'
+ - const a = useParams()
+ - 打印 a 就知道怎么做了
+2.Search传参
+ - import {useSearchParams} from 'react-router-dom'
+ - const [search,setSearch] = useSearchParams()
+ - 想要获取东西需要调用他身上的 API 
+ - console.log(search.get('你传递的参数'))
+ - setSearch 用于更新参数及更新导航栏参数
+ - onclick(()=>setSearch('id=008'&...))
+2.State传参
+ - import {useLocation} from 'react-router-dom'
+ - const a = useLocation()
+ - 打印 a 就知道怎么做了
+ ----------------------------------------------- 第六十课, react - router 6 编程式路由导航
+1.withRouter 被废弃, 普通组件想使用跳转只需要 引入useNavigate 即可
+ - import { useNavigate } from 'react-router-dom'
+ - const navigate = useNavigate()
+ - 使用方式 
+ - navigate( '路径',
+        {
+            replace:true/false	默认 false 所以可以不用写
+            state:{		只能写 state 参数, Search 或 Params 请直接写在路径里面
+	    id:参数.id
+	}
+        } 
+    )
+ - navigate(1/-1)	和 Vue go 一致
+ ----------------------------------------------- 第六十一课, react - router 6 useInRouterContext()
+ - 判断当前组件是否被 BrowserRouter HashRouter 路由组件包裹
+ - 返回布尔值
+ - 没啥用
+ - import { useInRouterContext } from 'react-router-dom'
+ - console.log(useInRouterContext())
+ ----------------------------------------------- 第六十二课, react - router 6 useNavigationType()
+ - 返回当前的导航类型
+ - 返回值 pop，push，replace
+ - pop 是指在浏览器中直接打开了这个路由组件 ( 刷新页面 )
+ - import { useNavigationType } from 'react-router-dom'
+ - console.log(useNavigationType())
+ ----------------------------------------------- 第六十三课, react - router 6 useOutlet()
+ - 用来呈现当前组件中渲染的嵌套路由
+ - 如果嵌套路由还没挂载, 则 result 为 null
+ - 如果嵌套路由已经挂载, 则展示嵌套的路由对象
+ - import { useOutlet } from 'react-router-dom'
+ - console.log(useOutlet())
+ ----------------------------------------------- 第六十四课, react - router 6 useResolvedPath()
+ - 给定一个 URL 值, 解析其中的: path, search, hash 值
+ - import { useResolvedPath } from 'react-router-dom'
+ - console.log(useResolvedPath('/user?id=001&name=tom#qwe'))
+ - 输出 { pathname:'/user', search:'id=001&name=tom', hash:'#qwe' }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

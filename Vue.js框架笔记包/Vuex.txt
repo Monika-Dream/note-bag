@@ -1,0 +1,205 @@
+1.安装 vuex 依赖包				npm i vuex --save
+2.import Vuex from "vuex"
+3.Vue.use(Vuex)
+
+ - 创建 store 数据
+const store = new Vuex.Store({
+    state：{ count: 0 }
+})
+
+ - 挂载到 Vue 实例中
+new Vue({
+    el: '#app',
+    render: h => h(app),
+    router,
+    store
+})
+
+—————————————————————————————————————————————
+state
+ - 提供唯一的公共数据源, 所有的数据都要统一放到 Store 中的 State 中进行存储
+ - 不可直接操作 Store 中的数据, 只能通过 mutation 变更
+ - 访问 State 的方式
+	 - this.$store.state.全局数据名称			1
+	 - import {mapState} from 'vuex'			2
+		 - 定义计算属性
+		 - 直接写入     ...mapState([需要导入的数据名称])
+		 - 可直接使用 数据名称于所需要的地方
+		 - {{ 需要导入的数据名称 }}
+
+
+
+
+export default createStore({
+  state: {
+    count:0
+  },
+  getters: {},
+  mutations: {},
+  actions: {},
+  modules: {},
+})
+—————————————————————————————————————————————
+Mutation
+ - 用于变更 Store 中的数据
+ - 不能写异步的代码( 定时器之类 )
+ - 访问 Mutation 的方式
+	 - this.$store.commit('add')				1
+	 - import { mapMutations } from 'vuex'			2
+		 - 定义 methods 方法
+		 - 直接写入	        ...mapMutations(['add','addn','sub'])
+		 - methods:{
+			   abondon(){
+			      this.sub()
+			   }
+			}
+
+ - 触发 Mutation 时传递参数
+	 - this.$store.commit('addn', 5)
+
+export default createStore({
+  state: {
+    count:0
+  },
+  getters: {},
+  mutations: {
+    add(state){
+      state.count += 1
+    },
+    addn(state,num){
+      state.count += num
+    },
+    sub(state){
+      state.count -= 1
+    }
+  },
+  actions: {},
+  modules: {},
+})
+—————————————————————————————————————————————
+Action
+ - 用于处理异步的操作
+ - 还是要通过触发 Mutation 的方式间接接受变更的数据
+ - 触发方式
+	 - this.$store.dispatch('addAsync')		1
+	 - import {mapActions} from 'vuex'		2
+		- 在 methods 直接写入 
+		- ...mapActions(['addAsync','...'])
+		- methods:{
+			   abondon(){
+			      this.addAsync()
+			   }
+			}
+ - 触发 Action 时携带参数
+	 - this.$store.dispatch('addAsync', 5)
+
+export default createStore({
+  state: {
+    count:0
+  },
+  getters: {},
+  mutations: {
+    add(state){
+      state.count += 1
+    },
+    addn(state,num){
+      state.count += num
+    },
+    sub(state,step){
+      state.count -= step  ——————————————			|
+    }					|
+  },					|
+  actions: {				|
+    addAsync(context){			|
+      setInterval(function(){			|
+        context.commit('add')			|
+      })					|
+    }					|
+    addAsync_more(context,step){		|
+      setInterval(function(){			|
+        context.commit('sub',step)	----------
+      })
+    }
+  },
+  modules: {},
+})
+—————————————————————————————————————————————
+Getter
+ - 用于对 Store 中的数据进行加工处理形成新的数据
+ - 不会修改 Store 中的原数据, 只对数据起到了一种包装的作用
+ - Store 中数据发生变化, Getter 也会跟着发生变化
+ - 使用方式
+	 - this.$store.getters.名称			1
+	 - import { mapGetters } from 'vuex'		2
+		 - 在计算属性中直接写
+		 - ...mapGetters(['showNumber'])
+
+
+
+
+
+export default createStore({
+  state: {
+    count:0
+  },
+  getters: {
+    showNumber(state){
+      return '当前最新的数量是【 '+ state.count +'】'
+    }
+  },
+  mutations: {
+    sub(state){
+      state.count += 1
+    },
+    add2(state){
+      state.count += 5
+    }
+  },
+  actions: {
+    addAsync(context){
+      setInterval(()=>{
+        context.commit('add2')
+      },1000)
+    }
+  },
+  modules: {},
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

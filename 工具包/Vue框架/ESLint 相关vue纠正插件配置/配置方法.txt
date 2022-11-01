@@ -1,0 +1,29 @@
+ - ESLint 相关工具1					ESLint 插件
+ - ESLint 相关工具2					prettier 插件
+1.将文件放到  "C:\\Users\\Lenovo 目录下
+settings.json 中设置
+//ESList 插件与 prettier 插件的设置
+    "prettier.configPath": "C:\\Users\\Lenovo\\.prettierrc",
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true
+    },
+    "eslint.alwaysShowStatus": true,
+    "prettier.trailingComma": "none",
+    "prettier.semi": false,
+    "prettier.printWidth": 300,
+    "prettier.singleQuote": true,
+    "prettier.arrowParens": "avoid",
+    "vetur.format.defaultFormatter.html": "js-beautify-html",
+    "vetur.ignoreProjectWarning": true,
+    "vetur.format.defaultFormatterOptions": {
+        "prettier": {
+            "trailingComma":"none",
+            "semi": false,
+            "singleQuote": true,
+            "arrowParens": "avoid",
+            "printWidth":300
+        },
+        "js-beautify-html": {
+            "wrap_attributes": "false"
+        }
+    }

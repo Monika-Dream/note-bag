@@ -1,0 +1,62 @@
+git - 源代码管理
+-------------------------------------------------------------- git 区域详解
+
+			 	 	 本地																远程
+	工作区							  版本库				
+						    暂存区			     仓库区
+
+
+
+
+ - git add 文件名/目录名/.(所有)							文件添加到缓存区
+ - git restore -文件										丢弃工作区的改动(恢复文件未改动的样子,恢复为之前缓冲区内容)(无法撤销)
+ - git restore --staged login.js						将文件从缓存区撤离到工作区
+
+ - git commit -m '备注'									提交一次缓存区的版本(暂存区放入仓库区)							
+ - git reset HEAD或版本号								回退版本(缓存区内容跑回之前提交的版本)
+
+ - git push origin 分支
+ - git checkout dev 
+ - git pull
+
+ - git status											获取 git 状态, 未跟踪的文件
+ 	 - 红色是工作区文件
+ 	 - 绿色是暂存区文件
+ - git log												查看日志文件, 历史记录
+ - git log --pretty=oneline								简化上文输出
+ - git diff readme.text  								查看修改的内容(命令告诉我们readme.txt文件已被修改，但是未被提交修改时执行)
+-------------------------------------------------------------- git 使用
+
+ - 创建文件夹表示工作目录
+ - 进入工作目录初始化 git  						git init 
+ 	 - 创建出来的为 隐藏文件
+ - 编写管理信息
+ 												git config user.name Monika
+ 												git config user.email wangxubo780@gmail.com
+ - 查看 git 状态									git status
+ - 创建代码文件并且放入暂存区						git add 文件名
+ - 将暂存区文件放入仓库去提交一次					git commit -m "备注" 
+ 	 - 修改一次文件 git status 提示
+ - 查看历史记录									git log
+
+-------------------------------------------------------------- git 回退版本
+
+1.方案一
+	git reset --hard "HEAD"
+		 - HEAD 				当前最新版本
+		 - HEAD^							的上一个版本
+		 - HEAD^^							的上上一个版本, 依次类推...
+		 - HEAD~1                           上一个版本
+		 - HEAD~10 							上十个版本, 依次类推...
+		 - 也可以直接赋值 commit 的内容, 回退到指定版本
+
+ - 回退完成后后悔?
+ git reflog			查看所有记录(包括回退之前)
+ git reset --hard 3c59285(前面的号码)
+
+-------------------------------------------------------------- git 远程操作
+
+git clone https://github.com/Monika-Dream/Dear_Monika.git			将 GitHub 上的文件远程克隆下来(需要联网)
+	 - 不用再次执行 git init
+
+git push															将文件放入到 GitHub 需要 (文件为仓库区域位置)

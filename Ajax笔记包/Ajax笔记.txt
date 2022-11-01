@@ -1,0 +1,319 @@
+AJAX		- 数据请求笔记
+——————————————————————————————————————————
+第一课  资源的请求方式
+readystate - 状态，有五个值
+ - 初始化			0
+ - open方法调用完毕		1
+ - send方法调用完毕		2
+ - 服务端返回了部分结果 	3
+ - 服务端返回了所有的结果 	4
+
+变量1  = new XMLHttpRequest() 
+ - 原生 Ajax 对象
+
+变量1.open()
+ - 初始化设置
+
+变量1.send()
+ - 发送初始化设置于服务器
+
+变量1.onreadystatechange
+ - 在状态发生变化时启用，一共四步
+
+变量1.readyState
+ - 当前在第几步状态
+
+变量1.status
+ - 状态码
+
+变量1.statusText
+ - 状态字符串
+
+变量1.getAllResponseHeaders
+ - 所有的响应头
+
+变量1.response
+ - 所有的响应体
+
+传参方法
+ - xhr.open("GET", 'http://127.0.0.1:8000/server?a=100&b=200')
+ -  xhl.send('a=100&b=200')
+
+下面例子 POST 于 GET　是一样的方式
+——————————————————————
+btn.onclick = function () {
+            const xhr = new XMLHttpRequest()
+            xhr.open("GET", 'http://127.0.0.1:8000/server?a=100&b=200')
+            xhr.send()
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        // console.log(xhr.status)
+                        // console.log(xhr.statusText)
+                        // console.log(xhr.getAllResponseHeaders)
+                        // console.log(xhr.response)
+                        div.innerHTML= xhr.response
+                    } else {
+                    }
+                }
+            }
+        }
+——————————————————————————————————————————
+第二课  设置请求头信息
+open
+ - 参数.setRequestHeader("头的名字","头的参数")
+send
+——————————————————————————————————————————
+第三课  服务端响应 JSON 数据
+ - 需要将内容转换为16进制再传输
+let str = JSON.stringify( 要转换的变量 )
+
+ - 手动转换
+let data = JSON.parse(xhr.response)
+console.log(data)
+result.innerHTML = xhr.response.name
+
+ - 自动转换
+xhr.responseType = "json"
+console.log(xhr.response)
+result.innerHTML = xhr.response.name
+——————————————————————
+app.all('/json-server',(request,response)=>{
+    response.setHeader('Access-Control-Allow-Origin','*')
+    const data={
+        name:"Monika"
+    }
+    let str = JSON.stringify(data)
+    response.send(str)
+})
+——————————————————————————————————————————
+第四课  IE缓存问题解决
+ - xhr.send("请求方式","网址/链接?t="+Date.now(),)
+——————————————————————
+btn.addEventListener('click', function(){
+            const xhr = new XMLHttpRequest()
+            xhr.open('GET', 'http://localhost:8000/ie?t='+Date.now())
+            xhr.send()
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState === 4){
+                    if(xhr.status>=200 && xhr.status<300){
+                        result.innerHTML = xhr.response
+                    }
+                }
+            }
+        })
+——————————————————————————————————————————
+第五课  Ajax请求超时与网络异常处理
+xhr.timeout = 2000;
+ - 当请求超出两秒后将撤销请求
+
+xhr.ontimeout = function(){
+       alert("请求超时")
+}
+ - 当超时响应后执行此回调函数
+
+xhr.onerror = function(){
+       alert("你的网络有问题")
+}
+ - 当网络断连时执行
+——————————————————————————————————————————
+第六课  Ajax取消请求
+let x = new XMLHttpRequest()
+x.abort()
+ - 取消请求
+——————————————————————
+const btns = document.querySelectorAll('button')
+        let xhr = null
+        btns[0].onclick = function(){
+            xhr = new XMLHttpRequest()
+            xhr.open('GET', 'http://localhost:8000/delay')
+            xhr.send();
+        }
+        //取消请求的回调函数 注意需要将xhr放在外侧
+        btns[1].onclick = function(){
+            xhr.abort()
+        }
+——————————————————————————————————————————
+第七课  Ajax请求重复发送问题
+const btns = document.querySelectorAll('button')
+        let xhr = null
+        let isSending = false //是否正在发送Ajax请求
+        btns[0].onclick = function(){
+            if(isSending){ 
+                xhr.abort()  //如果正在发送就取消请求，并创建一个新的请求
+            }
+            xhr = new XMLHttpRequest()
+            isSending = true
+            xhr.open('GET', 'http://localhost:8000/delay')
+            xhr.send();
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState === 4){
+                    isSending = false
+                }
+            }
+        }
+        //取消请求的回调函数 注意需要将xhr放在外侧
+        btns[1].onclick = function(){
+            xhr.abort()
+        }
+——————————————————————————————————————————
+第八课  jQuery发送 Ajax 请求
+ - get/post 方式 
+$.get(" URL地址 ", {传参,以键值对方式a:100}, 回调函数( 响应体 ), 响应体类型)
+$.get("http://127.0.0.1:8000/jquery-server", {a=100;b=200},function(data){
+	console.log( data )
+       },'json')
+
+通用型方法
+$.ajax({
+	url:"地址",
+	data:{a:100,b:200},
+	type:"GET",
+	success:成功的回调
+
+})
+例子:
+$.ajax({
+	url:"地址",
+	data:{a:100,b:200},
+	//响应体结果
+	dataType:"json",
+	//请求类型
+	type:"GET",
+	//成功的回调
+	success:function(data){
+	      console.log(data)
+	}
+	//超时时间
+	timeout:2000
+	//失败的回调
+	error:function(){
+	   console.log("出错了")
+	}
+	//头信息
+	headers:{
+	c:300,
+	d:400
+	}
+})
+——————————————————————————————————————————
+第九课  axios发送 Ajax 请求 get/post
+<script src="https://cdn.bootcdn.net/ajax/libs/axios/0.19.2/axios.js"></script>
+ - 引入资源
+axios.get/post("url地址","请求体","其他配置")
+ - axios语法
+——————————————————————
+btns[0].addEventListener("click", function () {		//绑定事件源
+axios.defaults.baseURL="http://127.0.0.1:8000"		//设置默认地址
+axios.get("/server", {				//以get方式启动
+params: {						//url 参数
+id: 100,						//url 参数
+vil: 7						//url 参数
+},
+headers:{						//请求头信息
+name:Monika,					//请求头信息
+age:						//请求头信息
+}
+}).then((value)=>{					//promise对象
+console.log(value)
+})
+        })
+——————————————————————————————————————————
+第十课  axios发送 Ajax 请求
+ - 返回 promise 对象
+axios({
+//请求方式
+method:"POST",
+//对方地址
+url:"/axios-server",
+//url参数
+params:{
+   vip:10,
+   level:30
+},
+//头信息
+headers:{
+   a:100,
+   b:200
+},
+//请求体参数
+data:{
+   username:"admin",
+   password:"admin"
+}
+})
+——————————————————————————————————————————
+第十课  fetch()发送 Ajax 请求
+ - 返回 promise 对象
+fetch( uel, 可选的配置项 )
+fetch("http:127.0.0.1:8000/fetch-server",{
+method:"POST",					//通讯方式
+body:"username=monika&userage=18"			//参数
+})
+——————————————————————————————————————————
+第十一课  Ajax解决跨域
+利用 script 标签来解决问题
+<script src="http://127.0.0.1:8000/jsonp-server"></script>
+ - 注意返回也应当是JS代码
+
+——————————————————
+jsonp跨域例子
+<script>
+        function handle(data){
+            const res = document.getElementById('res')
+            res.innerHTML = data.name
+        }
+</script>
+<!-- <script src="http://127.0.0.1:5500/express%E6%A1%86%E6%9E%B6/%E8%B7%A8%E5%9F%9F/2-jsonp/app.js"></script> -->
+<script src="http://localhost:8000/jsonp-server"></script>
+——————————————————
+server.js
+app.all('/jsonp-server', (requesr, response) => {
+
+    const data = { name: 'hanser' }
+    //设置响应
+    let str = JSON.stringify(data)
+    // response.send('console.log("hello jsonp")')
+    response.send(`handle(${str})`)
+
+})  
+——————————————————————————————————————————
+第十二课  CORS跨域请求
+ - 设置响应头 设置允许跨域
+response.setHeader('Access-Control-Allow-Origin', '*')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

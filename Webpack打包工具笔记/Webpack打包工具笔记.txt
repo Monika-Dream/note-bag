@@ -1,0 +1,136 @@
+Just Monika By Web 		^v^
+————————————————————————————————————————————
+Vue基础
+ - babel 拥有自己的官网
+1.安装 webpack 相关的两个包		npm install webpack@5.42.1 webpack-cli -D
+2.安装 webpack-dev-server		npm i webpack-dev-server@3.11.2 -D
+3.安装 html-webpack-plugin		npm i html-webpack-plugin@5.3.2 -D
+4.安装 loader 处理Css后缀等文件	npm i style-loader@3.0.0 css-loader@5.2.6 -D
+5.安装 url-loader 处理路径打包		npm i url-loader@4.1.1 file-loader@6.2.0 -D
+6.安装解析 js 高级语法的包		npm i babel-loader@8.2.2 @babel/core@7.14.6 @babel/plugin-proposal-decorators@7.14.5 -D
+7.安装 Webpack 使用插件自动删除dist目录	npm i clean-webpack-plugin@3.0.0 -D
+8.安装 Source Map 报压缩报错的源码位置
+——————————————————————————————————————————
+ - 第一课			Webpack
+1.下载Webpack
+2.在根目录下创建 webpack.config.js 文件
+3.导出当前模式	development:开发阶段/production:上线阶段
+module.exports = {
+    mode:"development"
+}
+4.在 package.json 的 scripts 节点下 , 新增 dev 脚本如下
+"scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev":"webpack"
+  },
+5.在 script 节点下的脚本,可以通过 npm run 执行，例如 npm run dev
+6.如果将 mode 键修改为 （production - 上线阶段） 那么我们的代码就会被压缩
+
+7.默认打包入口文件为 src -> index.js
+8.默认输出文件位置为 dist -> main.js
+注意可以在 webpack.config.js 中修改打包的默认约定
+————————————————————————————————————————————
+ - 第二课			Webpack默认入口的更改
+1.在 webpack.config.js 文件中,通过 entry 节点指定打包的入口.通过 output 节点指定打包的出口
+示范如下
+const path = require("path")
+module.exports = {
+    entry:path.join(__dirname,"./src/index.js"),
+    output:{
+        path:path.join(__dirname,"./dist"),
+        filename:"bundle.js"
+    },
+}
+————————————————————————————————————————————
+ - 第三课			Webpack相关 Vscode 插件使用 - webpack-dev-server
+ - 在保存时自动打包文件
+0.安装 webpack-dev-server
+1.由于在打包完成之后如果修改代码就必须手敲打包,没法看到最新的效果,所以将使用插件
+ - webpack-dev-server	监听源代码变动，自动重新打包
+2.修改 package.json -> script 中的 dev 命令如下
+"scripts": {
+    "dev": "webpack server"
+  },
+3.注意运行在 http 上, 而不是 file 上
+4.就是说放在内存上的,而不是物理磁盘上
+————————————————————————————————————————————
+ - 第四课			Webpack相关 Vscode 插件使用 - html-webpack-plugin
+ - 复制文件到指定的位置(内存中) - 自动注入了打包的 bundle.js 文件
+1.安装 html-webpack-plugin
+const HtmlPlugin = require("html-webpack-plugin")
+const htmlplugin = new HtmlPlugin({
+    template:"./src/index.html",    //指定源文件的存放路径
+    filename:"./index.html"         //指定生成文件的存放路径
+})
+module.exports = {
+    mode:"development",
+    plugins:[htmlplugin]            //通过 plugins 节点,使 htmlplugin 插件生效
+}
+————————————————————————————————————————————
+ - 第五课			Webpack相关 属性讲解
+1.plugins:[htmlplugin]	 - 加载模块
+2.devServer:{
+    open:true,		 - 初次打包会打开浏览器
+    host:"127.0.0.1,
+    port:80
+}
+3.loader			 - 加载器
+ - 下载模块
+ - Webpack 默认只能打包以 .js 后缀名结尾的模块 , 其他的需要调用 loader 加载器才能打包
+	 - 否则会报错
+ - 协助 webpack 打包处理特定的文件模块
+	css-loader	处理 .css 相关的文件
+	less-loader	处理 .less 相关的文件
+	babel-loader	处理 webpack 无法处理的高级 JS 语法
+module:{
+rules:[
+{test:/\.css/,use:['style-loader','css-loader']}
+{test:/\.jpg|png|gifs/,use:"url-loader?limit=22229"}
+]}
+ - test 表示匹配的文件类型 , use 表示对应要调用的 loader
+ - use 数组中指定的 loader 顺序是固定的
+ - 多个 loader 的调用的顺序是从后往前调用
+ - 2.打包处理样式表中与 url 路径相关的文件，limit限制文件大小,大于的话不会去转为 base64
+	 - 字节为单位
+————————————————————————————————————————————
+ - 第六课			Webpack相关 解析高级JS语法
+1.安装第6条指令
+2.添加 loader 规则如下
+{test:/\.js$/,use:"babel-loader,exclude:/node_modules/}
+3.配置 babel-loader 以解析装饰器语法
+	 - 在根目录创建 babel.config.js 文件
+module.exports ={
+//声明 babel 可用的插件
+//在 Webpack 调用 babel.loader 的时候,会先加载 Plugins 插件来使用
+Plugins:[['@babel/plugin-proposal-decorators',{legacy:true}]]
+}
+————————————————————————————————————————————
+ - 第七课			Webpack打包发布
+1.在 package.json 文件的 script 节点下，新增 build 命令如下
+"script"{
+    "dev": "webpack server",
+    "build":"webpack --mode production" //项目发布时 , 运行 build 命令
+}
+ - --model 是一个参数项,用来指定 webpack 的运行模式
+ - production 代表生产环境,会对打包生成的文件进行 代码压缩 和 性能优化 
+ - 注意:通过 --mode 指定的参数项,会覆盖 webpack.config.js 中的 model 选项
+————————————————————————————————————————————
+ - 第八课			Webpack设置打包图片存放路径
+//在配置 url-loader 的时候,多个参数之间使用 & 分割
+{test:/\.jpg|png|gifs/,use:"url-loader?limit=22229&outputPath=images"}
+————————————————————————————————————————————
+ - 第九课			Webpack使用插件自动删除 dist 目录
+1.为了每次打包发布时自动清除 dist 目录中的旧文件,可以配置相关插件
+ - webpack 中配置
+2.const {CleanWebpackPlugin} = require('clean-webpack-plugin')
+3.const cleanPlugin = new CleanWebpackPlugin
+4.plugins:[htmlPlugin,cleanPlugin]			//挂载插件
+————————————————————————————————————————————
+ - 第十课			什么是 Source Map
+1.Source Map 是一个信息文件,里面存储着位置信息，Source Map文件中存储着压缩混淆
+	后的代码,所对应的转换前的位置
+2.出错时,除错工具将直接显示原始代码,而不是转换后的代码
+3.webpack.config.js 下 module.exports 中添加 devtool:"eval-source-map"
+4.开发阶段建议如此设置
+5.上线时建议删除
+6.如果想只暴露行号而不暴露源代码,请 devtool:"nosources-source-map"

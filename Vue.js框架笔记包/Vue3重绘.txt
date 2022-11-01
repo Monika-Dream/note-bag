@@ -1,0 +1,378 @@
+------------------------------------------ /--- Vue 3 ---\ ------------------------------------------
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 一 ] 初识 setup 函数
+ - Vue3 中一个新的配置项, 值为一个函数
+ - setup 配置项值要一个函数, 类似于 data 与 methods 的集合体
+ - 将定义好的变量, 函数 return 出去, 可以在模板中直接使用
+ - 不能用 async 修饰
+ - vue3 setup 优先级高于 vue2 data
+
+export default {
+  setup(){
+    let name="张三"
+    let age = 14
+
+    function sayHi(){
+      console.log(`${name}今年${age}岁了`)
+    }
+    return{
+      name,
+      sayHi
+    }
+  }
+}
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 二 ] ref 函数
+ - 上一节的 setup 函数 去定义变量实则并不是响应式函数
+ - 响应式函数需要借助 vue 提供的 ref 函数
+ - ref 加工之后的变量会变成 对象
+ - 改之需要 变量.value
+ - import { ref } from 'vue'
+
+setup(){
+    let name= ref( "张三" )
+    let age = ref(14 )
+    function Chage(){
+        name.value = "Monika"
+    }
+}
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 三 ] reactive 函数
+ - 定义一个 对象类型 的数据, 基本类型请用 ref 函数
+ - const 代理对象 = reactive( 源对象 ) 接受一个对象或者数组, 返回一个代理对象 ( proxy对象 )
+ - reactive 定义的响应式数据是深层次的
+ - 内部基于 ES6 proxy 实现
+ - import { reactive } from 'vue'
+
+let person = reactive({
+    name:"张三",
+    age:18,
+    gender:"男"
+})
+return {
+    person
+
+}
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 四 ] setup 两个注意点
+ - 1.执行时机
+	- 在 beforeCreate 之前执行一次, this 是 undefined
+ - setup 两个参数
+	- props 值为对象, 组件外部传递过来, 记得先用 props 配置项接
+	- context 上下文对象 
+		- attrs 相似于 this.$attrs 用于捡漏未声明接受的 props
+		- slots 收到的插值内容, 相似于 this.$slots
+		- emit 分发自定义事件的函数, 相当于 this.$emit
+
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 五 ] computed 计算属性
+ - import { reactive, computed } from 'vue'
+setup(){
+
+let person = reactive({
+    name:"Monika",
+    age:18
+})
+
+
+//简写形式的计算属性
+person.fullPersonInfo = computed(()=>{
+    return `${person.name} 今年 ${person.age} 岁了 `
+})
+//计算属性的全部
+person.fullPersonInfo = computed({
+    get(){
+        return `${person.name} 今年 ${person.age} 岁了 `
+    },
+    set(newValue){
+        const nameArr = newValue.split(' 自己想去吧 ')
+        person.name = nameArr[ ]
+        person.age = nameArr[ ]
+    }
+
+})
+
+
+return {
+        fullPersonInfo
+    }
+}
+
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 六 ] Watch 侦听属性
+ - 1. watch(侦听对象, ()=>{}, { 侦听配置 })
+ - import { ref, reactive, watch } from 'vue'
+
+setup(){
+    let count = ref ( 0 )
+    let students = ref ( 0 )
+    let person = reactive({
+        name:"Monika",
+        age:18,
+        a:{
+            b:{
+	  c:0
+            }
+        }
+    })
+
+    //侦听 ref 所绑定的单个数据
+    watch(count,(newSum,oldSum)=> console.log( '数值变化了' ), {immediate:true, deep:true})
+
+    //侦听 ref 所绑定的多个数据 [cN,sN]   [cO,sO]
+    watch([ count, students ],(newSum,oldSum)=> console.log( '数值变化了' ), {immediate:true, deep:true})
+
+    //侦听 reactive 所绑定的数据, 无法侦测出 历史数据 , 属于 Vue 的问题, deep 配置无效, proxy原因
+    watch(person,(newSum,oldSum)=> console.log( '数值变化了' ))
+
+    //侦听 reactive 所绑定的数据中的某个数据
+    watch(()=>person.name, (newSum,oldSum)=> console.log( '数值变化了' ))
+
+    //侦听 reactive 所绑定的数据中的某些数据        [p.nN,p.aN] [p.nO,p.aO]
+    watch( [ ()=>person.name, ()=>person.age ], (newSum,oldSum)=> console.log( '数值变化了' ))
+
+    //侦听 reactive 所绑定的数据中的某个数据, 但是一个深度对象
+    watch(()=>person.a, (newSum,oldSum)=> console.log( '数值变化了' ),{ deep:true })
+
+
+    return {
+        fullPersonInfo
+    }
+}
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 七 ] watchEffect 函数
+ - 他会监听你所在它内部使用的值
+ - import { watchEffect } from 'vue'
+
+setup(){
+    let count = ref ( 0 )
+    let students = ref ( 0 )
+    let person = reactive({
+        name:"Monika",
+        age:18,
+        a:{
+            b:{
+	  c:0
+            }
+        }
+
+    watchEffect(()=>{
+        const x1 = person.a.b.c		//在检测数据改变时, 会自动调用回调函数
+
+    })
+}
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 八 ] Vue3 新生命周期函数
+1.生命周期的第一个阶段
+ - beforeCreate		 - 在创建之前调用		 - 创建	setup( )
+ - created			 - 在创建时调用		 - 创建	setup( )
+ - beforeMount		 - 在渲染之前调用		 - 渲染	onBeforeMount()
+ - mounted		 - 在渲染时调用		 - 渲染	onMounted()
+
+2.生命周期的第二个阶段
+ - 组件与用户之间产生了交互行为
+ - beforeUpdate		 - 在运行更新之前时调用	 - 运行	onBeforeUpdate()
+ - updated		 - 在运行更新时调用		 - 运行	onUpdated()
+
+3.生命周期的第三个阶段
+ - beforeUnmount		 -  在组件卸载之前		 - 销毁	onBeforeUnmount()
+ - unmounted		 - 在组件卸载之时		 - 销毁	onUnmounted()
+
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 十 ] Setup 生命周期函数使用
+ - import { onBeforeMount, onMounted......} from 'vue'
+setup(){
+
+    onBeforeMount(()=>{
+
+    })
+
+}
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 十一 ] 自定义 Hook 函数
+ - 类似于 Vue2 中的 mixin
+ - 1.创建一个 .js 文件
+ - 2.文件中向外默认暴露一个函数
+ - 3.里面去写入逻辑, 其中需要用到的 Vue3 Api 就去 import 导入即可
+ - 4. return 出模板中想要的内容
+ - 5.在需要用到此内容的 .vue 文件中, 首先 import 此文件
+	 - setup 中调用此文件的暴露内容
+	 - return 出去
+	 - 模板中使用
+
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 十二 ] toRef 与 toRefs
+ - toRef(读哪个属性,'其身上的哪个值')	将你想用的值变为 ref 形式, 可以省去前缀
+ - toRefs( 读哪个属性 )		将你想用的值变为 ref 形式, 可以省去前缀, 批量操作
+
+ - import { toRef } from 'vue'
+setup(){
+    let person = reactive({
+        name:"Monika",
+        age:18
+    })
+    const name1 = toRef(person,'name')
+    const PersonAll = toRefs( person )
+
+    return {
+        //name: toRef ( person, 'name' )
+        ...toRefs( person )
+    }
+
+}
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 十三 ] shallowReactive 与 shallowRef
+ - 1.shallowReactive		只修改一层为响应式数据
+ - 2.shallowRef		与 ref 差不多, 但如果你给它传的是复杂数据类型, 他就不工作
+
+let person = shallowReactive({
+    name:"monika",		响应
+    age:18,			响应
+    gender:"女"		响应
+    a:{			响应
+        b:{			不是响应式数据
+            c:123		不是响应式数据
+        }
+    }
+})
+
+let count = shallowRef ( 0 ) === ref ( 0 )
+let count = shallowRef ( { y: 0 } )		不会工作
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 十四 ] readonly 与 shallowReadonly
+ - reaadonly 让一个响应式数据变为只读的 ( 深只读 )
+ - shallowReadonly 让一个响应式数据变为只读的 ( 浅只读 )
+
+person = reaadonly( person )
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 十五 ] toRaw 与 markRaw
+ - 1.toRaw 	
+    - 将 响应式 数据变为 原始 数据, 无法处理 ref	( 深层 )
+    - 对于原始数据的任何操作, 不会引起页面更新
+
+let person = reactive({ name:"monika" })
+let rawPerson = toRaw(person)
+			
+ - 2.markRaw
+    - 标记一个对象, 使其永远不会成为一个响应式对象
+    - 当有一大堆数据且不需要为响应式时使用
+
+markRaw()
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 十六 ] customRef
+ - 创建一个自定义 ref, 并对其依赖跟踪和更新触发进行显示控制 
+import { customRef } from 'vue'
+
+setup(){
+
+    function myRef( value ){
+        return customRef(( track, trigger )=>{	追踪数值改变/通知 Vue 去重新解析模板
+            return {
+	get(){ track(),请在 return 之前调用 },
+	set(newValue){ trigger() }
+            }
+        })
+    }
+
+    let keyWord = myRef ( 'hello' )
+    return { keyWord }
+}
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 十七 ] provide 与 inject
+ - 祖孙之间进行 一带一路 传递
+ - 使用 Provide 与 inject 实现后代关系之间的数据共享
+ - 父节点向子孙组件共享数据
+ - 可以立即为继承
+
+ - 父组件写法
+setup(){
+    let car = reactive({name: " 扭扭车 ", price:'1145141919810万'})
+    provide('名字/car',数据/car)
+}
+
+ - 接受的子组件写法
+
+setup(){
+    const car = inject('car')
+    return { car }
+}
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 十八 ] 响应式数据的判断
+ - 返回布尔值
+ - isRef 检查一个值是否为 ref 对象
+ - isReactive 检查一个值是否由 reactive 创建的响应式代理
+ - isReadonly 检查一个值是否由 readonly 创建的只读代理
+ - isProxy 检查一个值是否由 reactive 或者 readonly 创建的代理
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 十九 ] Teleport 传送门
+ - 一种能够让我们组件 html 结构移动到指定位置的技术
+<teleport to="body/也可以些 css 选择器">
+    这里面写 html 元素, 会自动 to 到指定的位置
+</teleport>
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 二十 ] Suspence 等待渲染 [ 实验 ]
+ - 等待组件渲染时先渲染一些内容, 让用户有更好的体验
+import { defineAsyncComponent } from 'vue'
+const Child = defineAsyncComponent(()=> import(''))	//动态引入组件
+
+<Suspence>
+
+    <template #default>
+        异步加载的组件
+    </template>
+
+    <template #fallback>
+        组件没回来时加载的内容
+    </template>
+
+</Suspence>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

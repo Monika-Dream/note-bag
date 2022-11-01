@@ -1,0 +1,442 @@
+-----------------------------------------------------------------------------
+第六十九课（dom查询）
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Untitled Document</title>
+<link rel="stylesheet" type="text/css" href="style/css.css" />
+<script type="text/javascript">
+window.onload = function(){
+//为id为btn01的按钮绑定一个单击响应函数
+var btn01 = document.getElementById("btn01");
+btn01.onclick = function(){
+//查找#bj节点
+var bj = document.getElementById("bj");
+//打印bj
+//innerHTML 通过这个属性可以获取到元素内部的html代码
+alert(bj.innerHTML);
+};
+//为id为btn02的按钮绑定一个单击响应函数
+var btn02 = document.getElementById("btn02");
+btn02.onclick = function(){
+//查找所有li节点
+//getElementsByTagName()可以根据标签名来获取一组元素节点对象
+//这个方法会给我们返回一个类数组对象，所有查询到的元素都会封装到对象中
+//即使查询到的元素只有一个，也会封装到数组中返回
+var lis = document.getElementsByTagName("li");
+//打印lis
+//alert(lis.length);
+//变量lis
+for(var i=0 ; i<lis.length ; i++){
+alert(lis[i].innerHTML);
+}
+};
+//为id为btn03的按钮绑定一个单击响应函数
+var btn03 = document.getElementById("btn03");
+btn03.onclick = function(){
+//查找name=gender的所有节点
+var inputs = document.getElementsByName("gender");
+//alert(inputs.length);
+for(var i=0 ; i<inputs.length ; i++){
+/*
+* innerHTML用于获取元素内部的HTML代码的
+* 对于自结束标签，这个属性没有意义
+*/
+//alert(inputs[i].innerHTML);
+/*
+* 如果需要读取元素节点属性，
+* 直接使用 元素.属性名
+* 例子：元素.id 元素.name 元素.value
+* 注意：class属性不能采用这种方式，
+* 读取class属性时需要使用 元素.className
+*/
+alert(inputs[i].className);
+}
+};
+//查找#city下所有li节点
+//返回#city的所有子节点
+//返回#phone的第一个子节点
+//返回#bj的父节点
+//返回#android的前一个兄弟节点
+//读取#username的value属性值
+//设置#username的value属性值
+//返回#bj的文本值
+};
+</script>
+</head>
+<body>
+<div id="total">
+<div class="inner">
+<p>你喜欢哪个城市?</p>
+<ul id="city">
+<li id="bj">北京</li>
+<li>上海</li>
+<li>东京</li>
+<li>首尔</li>
+</ul>
+<br>
+<br>
+<p>你喜欢哪款单机游戏?</p>
+<ul id="game">
+<li id="rl">红警</li>
+<li>实况</li>
+<li>极品飞车</li>
+<li>魔兽</li>
+</ul>
+<br />
+<br />
+<p>你手机的操作系统是?</p>
+<ul id="phone"><li>IOS</li><li id="android">Android</li><li>Windows Phone</li></ul>
+</div>
+<div class="inner">
+gender:
+<input class="hello" type="radio" name="gender" value="male"/>
+Male
+<input class="hello" type="radio" name="gender" value="female"/>
+Female
+<br>
+<br>
+name:
+<input type="text" name="name" id="username" value="abcde"/>
+</div>
+</div>
+<div id="btnList">
+<div><button id="btn01">查找#bj节点</button></div>
+<div><button id="btn02">查找所有li节点</button></div>
+<div><button id="btn0  3">查找name=gender的所有节点</button></div>
+<div><button id="btn04">查找#city下所有li节点</button></div>
+<div><button id="btn05">返回#city的所有子节点</button></div>
+<div><button id="btn06">返回#phone的第一个子节点</button></div>
+<div><button id="btn07">返回#bj的父节点</button></div>
+<div><button id="btn08">返回#android的前一个兄弟节点</button></div>
+<div><button id="btn09">返回#username的value属性值</button></div>
+<div><button id="btn10">设置#username的value属性值</button></div>
+<div><button id="btn11">返回#bj的文本值</button></div>
+</div>
+</body>
+</html>
+-----------------------------------------------------------------------------
+第七十课（图片切换练习）
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Just Monika</title>
+//以下是css内容
+<style type = "text/css">
+* {
+margin: 0;
+padding: 0;
+}
+#outer {
+width: 3000px;
+margin: 50px auto;
+padding: 10px;
+background-color: greenyellow;
+text-align: center;
+}
+</style>
+//以下是JavaScrip内容
+<script type="text/javascript">
+window.onload = function() {
+var img = document.getElementsByTagName ("img")[0]
+var p = document.getElementById("info")
+var prev = document.getElementById("prev")
+var next = document.getElementById("next")
+var imgArr = ["1.png", "2.png", "3.png", "4.png", "5.png"]
+var n = 0
+p.innerHTML = "一共" + imgArr.length + "张片，当前第" + (n + 1) + "张"
+prev.onclick = function() {
+n = n - 1
+if (n < 0) {
+n = imgArr.length - 1
+}
+img.src = imgArr[n]
+p.innerHTML = "一共" + imgArr.length + "张片，当前第" + (n + 1) + "张"
+}
+next.onclick = function() {
+n = n + 1
+if (n > imgArr.length - 1) {
+n = 0
+}
+img.src = imgArr[n]
+p.innerHTML = "一共" + imgArr.length + "张片，当前第" + (n + 1) + "张"
+}
+}
+</script>
+</head>
+<body>
+<div id = "outer">
+<p id = "info"></p>
+<img src = "1.png" alt="第一张莫妮卡"/>
+<button id = "prev">上一张</button>
+<button id = "next">下一张</button>
+</div>
+</body>
+</html>
+//正经人谁写注释啊？（摊手）
+-----------------------------------------------------------------------------
+第七十一课（Dom查询）
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Untitled Document</title>
+<link rel="stylesheet" type="text/css" href="style/css.css" />
+<script type="text/javascript">
+function myClick(idStr,fun){
+var btn = document.getElementById(idStr);
+btn.onclick = fun
+}
+window.onload = function(){
+//为id为btn01的按钮绑定一个单击响应函数
+myClick("btn01",function(){
+//查找#bj节点
+var bj = document.getElementById("bj");
+//打印bj
+//innerHTML 通过这个属性可以获取到元素内部的html代码
+alert(bj.innerHTML);
+});
+//为id为btn02的按钮绑定一个单击响应函数
+myClick("btn02",function(){
+//查找所有li节点
+//getElementsByTagName()可以根据标签名来获取一组元素节点对象
+//这个方法会给我们返回一个类数组对象，所有查询到的元素都会封装到对象中
+//即使查询到的元素只有一个，也会封装到数组中返回
+var lis = document.getElementsByTagName("li");
+//打印lis
+//alert(lis.length);
+//变量lis
+for(var i=0 ; i<lis.length ; i++){
+alert(lis[i].innerHTML);
+}
+});
+//为id为btn03的按钮绑定一个单击响应函数
+myClick("btn03",function(){
+//查找name=gender的所有节点
+var inputs = document.getElementsByName("gender");
+//alert(inputs.length);
+for(var i=0 ; i<inputs.length ; i++){
+/*
+ * innerHTML用于获取元素内部的HTML代码的
+ * 	对于自结束标签，这个属性没有意义
+ */
+//alert(inputs[i].innerHTML);
+/*
+ * 如果需要读取元素节点属性，
+ * 	直接使用 元素.属性名
+ * 		例子：元素.id 元素.name 元素.value
+ * 		注意：class属性不能采用这种方式，
+ * 			读取class属性时需要使用 元素.className
+ */
+alert(inputs[i].className);
+}
+});
+//为id为btn04的按钮绑定一个单击响应函数
+myClick("btn04",function(){
+var city = document.getElementById("city")
+//查找#city下所有li节点	
+var lis = city.getElementsByTagName("li")
+for(i = 0; i <lis.length ; i++){
+alert(lis[i].innerHTML)
+}
+})
+//为id为btn05的按钮绑定一个单击响应函数
+myClick("btn05",function(){
+var city = document.getElementById("city")
+//返回#city的所有子节点
+var cns = city.children
+//alert(cns.length)
+for(i = 0; i <cns.length ; i++){
+alert(cns[i].innerHTML)
+}
+})
+//返回#phone的第一个子节点
+myClick("btn06",function(){
+var phone = document.getElementById("phone")
+var fir = phone.firstChild
+alert(fir)
+})
+//返回#bj的父节点
+myClick("btn07",function(){
+var bj = document.getElementById("bj")	
+var pn = bj.parentNode
+alert(pn.innerHTML)
+})
+//返回#android的前一个兄弟节点
+myClick("btn08",function(){
+var and = document.getElementById("android")	
+var ps = and.previousElementSibling.innerHTML
+alert(ps)
+})
+//读取#username的value属性值 
+//文本框中的Value属性值，就是文本框中填写的内容
+myClick("btn09",function(){
+var um = document.getElementById("username")
+alert(um.value)
+})
+//设置#username的value属性值
+myClick("btn10",function(){
+var um = document.getElementById("username")
+um.value = "住在大山里真不错"
+})
+//返回#bj的文本值
+myClick("btn11",function(){
+var bj = document.getElementById("bj")
+alert(bj.innerHTML)
+})
+};
+</script>
+</head>
+<body>
+<div id="total">
+<div class="inner">
+<p>
+你喜欢哪个城市?
+</p>
+<ul id="city">
+<li id="bj">北京</li>
+<li>上海</li>
+<li>东京</li>
+<li>首尔</li>
+</ul>
+<br>
+<br>
+<p>
+你喜欢哪款单机游戏?
+</p>
+<ul id="game">
+<li id="rl">红警</li>
+<li>实况</li>
+<li>极品飞车</li>
+<li>魔兽</li>
+</ul>
+<br />
+<br />
+<p>
+你手机的操作系统是?
+</p>
+<ul id="phone">
+<li>IOS</li>
+<li id="android">Android</li>
+<li>Windows Phone</li>
+</ul>
+</div>
+<div class="inner">
+gender:
+<input class="hello" type="radio" name="gender" value="male"/>
+Male
+<input class="hello" type="radio" name="gender" value="female"/>
+Female
+<br>
+<br>
+name:
+<input type="text" name="name" id="username" value="abcde"/>
+</div>
+</div>
+<div id="btnList">
+<div><button id="btn01">查找#bj节点</button></div>
+<div><button id="btn02">查找所有li节点</button></div><div><button id="btn03">查找name=gender的所有节点</button></div>
+<div><button id="btn04">查找#city下所有li节点</button></div>
+<div><button id="btn05">返回#city的所有子节点</button></div>
+<div><button id="btn06">返回#phone的第一个子节点</button></div>
+<div><button id="btn07">返回#bj的父节点</button></div>
+<div><button id="btn08">返回#android的前一个兄弟节点</button></div>
+<div><button id="btn09">返回#username的value属性值</button></div>
+<div><button id="btn10">设置#username的value属性值</button></div>
+<div><button id="btn11">返回#bj的文本值</button></div>
+</div>
+</body>
+</html>
+第七十三课（Dom查询）
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>全选练习</title>
+<script type="text/javascript">
+function myClick(idstr, fun) {
+var scp = document.getElementById(idstr)
+scp.onclick = fun
+}
+window.onload = function() {
+var items = document.getElementsByName("items")
+//全　选
+myClick("checkedAllBtn", function() {
+for (var i = 0; i < items.length; i++) {
+items[i].checked = true
+checkedAllBox.checked = items[i].checked
+}
+})
+//全不选
+myClick("checkedNoBtn", function() {
+for (var i = 0; i < items.length; i++) {
+items[i].checked = false
+checkedAllBox.checked = items[i].checked
+}
+})
+//反　选
+myClick("checkedRevBtn", function() {
+for (var i = 0; i < items.length; i++) {
+items[i].checked = !items[i].checked
+checkedAllBox.checked = true
+for (var j = 0; j < items.length; j++) {
+if (!items[j].checked) {
+checkedAllBox.checked = false
+break
+}
+}
+}
+})
+//提　交
+myClick("sendBtn", function() {
+for (var i = 0; i < items.length; i++) {
+if (items[i].checked) {
+alert(items[i].value)
+}
+}
+})
+//判断
+myClick("checkedAllBox", function() {
+for (var i = 0; i < items.length; i++) {
+items[i].checked = checkedAllBox.checked
+}
+})
+for (var i = 0; i < items.length; i++) {
+items[i].onclick = function() {
+checkedAllBox.checked = true
+for (var j = 0; j < items.length; j++) {
+if (!items[j].checked) {
+checkedAllBox.checked = false
+break
+}
+}
+}
+}
+}
+</script>
+</head>
+<body>
+<form method="post" action="">
+你爱好的运动是？
+<input type="checkbox" id="checkedAllBox" />
+全选/全不选
+<br />
+<input type="checkbox" name="items" value="足球" />
+足球
+<input type="checkbox" name="items" value="篮球" />
+篮球
+<input type="checkbox" name="items" value="羽毛球" />
+羽毛球
+<input type="checkbox" name="items" value="乒乓球" />
+乒乓球
+<br />
+<!-- 四个选项 -->
+<input type="button" id="checkedAllBtn" value="全　选" />
+<input type="button" id="checkedNoBtn" value="全不选" />
+<input type="button" id="checkedRevBtn" value="反　选" />
+<input type="button" id="sendBtn" value="提　交" />
+</form>
+</body>
+</html>

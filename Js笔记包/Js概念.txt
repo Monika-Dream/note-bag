@@ -1,0 +1,69 @@
+1.节流与防抖（防抖）
+- 只要用户的最后一次
+- 用户触发时间太过频繁，只要最后
+let inp = document.querySelector("input")
+inp.oninput=debounce(function(){
+console.log(this.value)
+},500)
+function debounce(fn,delay){
+let s = null
+return function(){
+if(s !== null){
+clearTimeout(s)
+}
+s = setTimeout(()=>{
+fn.call(this)
+},delay)
+}
+}
+——————————————————————————————————————
+2.节流与防抖（节流）
+- 控制执行次数
+window.onscroll = throttle(function () {
+console.log("Hello Monika")
+}, 500)
+function throttle(fn, delay) {
+let flag = true
+return function () {
+if (flag) {
+setTimeout(() => {
+fn.call(this)
+flag = true
+}, delay)
+}
+flag = false
+}
+}
+——————————————————————————————————————
+3.观察者模式
+class Teacher{constructor(){this.Observer = []}addStudent(student){
+this.Observer.push(student)}sendStudentMessage(msg){
+this.Observer.forEach(student => student.result(msg))}}
+class Students{constructor(name){this.name = name}result(msg){
+console.log(`我叫 ${this.name} 我收到消息为 ${msg}`)}}let Monika = new Teacher()
+let Sayori = new Students("Sayori")let Yuri = new Students("Yuri")
+let Natsuki = new Students("Natsuki")Monika.addStudent(Sayori)
+Monika.addStudent(Yuri)Monika.addStudent(Natsuki)
+Monika.sendStudentMessage("上学啦啦啦啦啦 !!!")
+——————————————————————————————————————
+4.策略模式
+ - 遵循开闭原则
+ - 化解多 if else 情况
+
+const userObj = {"Monika":{"优秀":()=>{console.log("不亏是你")},"差":()=>{
+console.log("???")}}}function tactics(name,poem){userObj[name][poem] 
+? userObj[name][poem]() : console.log("BUG")}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

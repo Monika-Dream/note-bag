@@ -1,0 +1,177 @@
+ - 本次项目学习中使用    vite 创建 SPA 项目 
+ - 下载 less 支持 				npm i less -D
+——————————————————————————————————————
+						第一课   方式
+1.两种方式床架 Vue3 SPA 项目
+	 - vite 创建单页面应用程序项目 ( 仅支持 Vue3 )
+——————————————————————————————————————
+						第二课   vite 开启方式
+ - npm init vite-app 项目名称
+ - cd 项目名称
+ - npm install
+ - npm run dev
+——————————————————————————————————————
+						第三课   开启 Css 的less
+ - 下载 less 支持 npm i less -D
+——————————————————————————————————————
+						第四课   全局注册组件
+ - 假设组件中都起了名字 name: "123"
+import 名字 from 文件地址
+app.component(导入名字.name, 导入名字)
+在任何组件中 <对应组件中的 name 值></对应组件中的 name 值>
+——————————————————————————————————————
+						第五课   局部注册组件
+import 名字 from 文件地址
+components:{
+    'my-别名': 名字
+}
+<my-别名></my-别名>
+——————————————————————————————————————
+						第六课   props 函数验证
+ - validator 是一个函数
+props:{
+    give_me_number_like_zero:{
+        validator( value ){
+	return 反正最后的值必须为 true , 否则警告
+	return [1,2,3,4,5,6].indexOf( value ) !== -1
+        }
+    }
+}
+——————————————————————————————————————
+						第七课   计算中的性能
+ - 对于数值中的计算 methods 与 computed 进行比较
+ - 计算属性会缓存计算结果, 只有计算属性依赖项发生变化时
+	 - 才会重新计算, 所以计算属性的性能更好
+——————————————————————————————————————
+						第八课   声明自定义事件
+ - vue3 中父子之间通讯
+ - 与 data 平级, 有一个 emits 节点
+emits:["change"],
+methods:{
+    onyouclick(){
+        this.$emit("change",this.count)
+    }
+}
+
+
+
+<my-border @change="getCount"></my-border>		注意在对应声明组件中
+methods:{
+    getCount(val){
+        console.log("检测到了 count 值的变化")
+    }
+}
+——————————————————————————————————————
+						第八课   子组件通过 props 修改父组件的值
+ - 如果要达成这次目标, 有几个规定
+	 - v-model:props中可视的值="data中定义的"
+	 - 如果这值需要 model 进行绑定, 需要  emits:["update: props中要更改的值"],
+	 - update: props中要更改的值, 作为 $emit 中触发的函数
+父组件中 
+  <zxcv2 @change="change_count" v-model:number="new_count"></zxcv2>
+data(){
+    return{
+        new_count:0
+    }
+}
+
+
+子组件中
+  <button @click="update">更新父组件中 props 中的值</button>
+ emits:["change","update:number"],
+update(){
+      this.$emit("update:number",this.number+1)
+    }
+——————————————————————————————————————
+						第九课 兄弟之间数据共享
+ - 和之前的 EventBus 一样
+ - 可以下载一个第三方的包       mitt      来创建 eventBus 对象
+	 - npm i mitt@2.1.0
+const bus = miit()export default bus 
+bus.emit('自定义事件',发送的数据)
+bus.on('自定义事件', (data)=>{})
+——————————————————————————————————————
+						第十课 后代组件之间的数据共享
+ - 使用 Provide 与 inject 实现后代关系之间的数据共享
+ - 父节点向子孙组件共享数据
+ - 可以立即为继承
+ - 这里是死数据( 不是响应式的 )
+			A
+		      /                 \
+		B		C
+	         /	                       /              \
+	D		E		F
+          /           \                                          /               \  
+G		H		I		J
+
+————————————>   父节点中
+
+data(){
+    return {
+        color:"red"
+    }  
+},
+provide(){
+    return {
+        color:this.color
+    }
+}
+————————————>   子节点中
+inject:['color']
+——————————————————————————————————————
+						第十一课 后代组件之间的响应式数据
+————————————>   父节点中
+import {computed} from 'vue'
+data(){
+    return{
+        color:"red"
+    }
+},
+provide(){
+    return{
+        color:computed(()=>this.color)
+    }
+}
+————————————>   子节点中
+inject:['color']
+<p>{{color.value}}</p>
+——————————————————————————————————————
+						第十二课 路由缓存写法
+<router-view v-slot="{ Component }">
+        <keep-alive>
+          <component :is="Component"></component>
+        </keep-alive>
+      </router-view>
+——————————————————————————————————————
+						第十三课 自定义指令
+directives:{
+    abcd{
+        created(el,building){
+               在绑定元素的 attribute 或事件监听器被应用之前调用
+        }
+        mounted( el ){
+	el.focus()
+        }
+        updated( el ){
+	el.focus()
+        }
+    }
+}
+ - 代码一致时, 则, 这里 Vue 会调用 mounted( el ), updated( el )
+directives:{
+    abcd(el) {
+        //代码
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+

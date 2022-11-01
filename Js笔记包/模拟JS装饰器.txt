@@ -1,0 +1,14 @@
+function fun_out(login){
+            function fun_in(c,b){
+                console.log("6666")
+                login(c,b)
+            }
+            return fun_in
+        }
+
+        login = fun_out(login)
+        function login(a,b){
+            console.log(a+b)
+        }
+        
+        login(1,2)

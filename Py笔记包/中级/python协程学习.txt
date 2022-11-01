@@ -1,0 +1,125 @@
+-------------------------------------------------------------------- Plase Just Monika Forever
+ - 协程学习部分
+____________________________________________________________________	      asyncio 模块
+
+ - import asyncio
+ - 用 async 创建出函数
+ - 用 asyncio.run( 函数名() ) 来执行
+
+async fun1():
+        print("这是一个异步函数")
+
+function1 = fun1()
+
+ - 将任务放到 ' 任务列表 '
+asyncio.run( function1 )
+
+____________________________________________________________________	      async
+
+ - python 中异步的方法
+ - async def Fun():
+ - 无法直接使用 函数名() 来执行函数
+ - 需要加入到 任务队列中去, 也就是 asyncio 模块
+
+____________________________________________________________________	      await
+
+ - 可等待的对象( 协程对象, Future, Task ) IO 等待
+ - await 就是等待对象的值结束之后再次继续往下走
+
+import asyncio
+
+async def MathIO():
+      print("Start")
+      await asyncio.sleep( 2 )
+      print("End")
+      return "执行完毕"
+
+async def func():
+      print("执行")
+      result = await MathIO()
+      print("结束",result)
+
+asyncio.run(func())
+
+____________________________________________________________________	      Task对象
+
+ - 在事件循环中添加多个任务
+ - 当第一个任务遇到  IO 耗时操作的时候自动切换到第二给任务中去
+ - 通过 asyncio.create_task( 协程对象 ) 的方式创建 Task 对象
+
+import asyncio
+
+async def fun1():
+    print("fun1 开始执行")
+    await asyncio.sleep(2)
+    print("fun1 结束执行")
+    return "666666"
+async def main():
+    print("main 函数开始执行")
+    #创建协程对象, 在 Task 创建过程中会自动加入到 任务队列 中去
+    task_list = [
+        asyncio.create_task(fun1(),name="Monika"),
+        asyncio.create_task(fun1(),name="Sayori")
+    ]
+    done,pending = await asyncio.wait(task_list,timeout=None)
+    print("main 函数执行完毕")
+    print(done)
+asyncio.run(main())
+
+----------------------------------------------
+
+import asyncio
+URL = [
+    "www.baidu.com",
+    "www.4399.com",
+    "www.qingju.com"
+]
+
+async def start(url):
+    print("爬取",url)
+    await asyncio.sleep(2)
+    print("结束",url)
+
+async def main():
+    stacks = []
+    for i in URL:
+        stacks.append(asyncio.create_task(start(i)))
+    print(stacks)
+    await asyncio.wait(stacks,timeout=None)
+asyncio.run(main())
+
+
+____________________________________________________________________	      future对象
+
+ - Task 继承 Future , Task 对象内置 await 结果的处理基于 Future 对象来的
+
+____________________________________________________________________	      concurrent_future对象
+
+ - 全程 concurrent_futures.Future 对象
+ - 用于 线程池, 进程池, 实现异步操作时用到的对象
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

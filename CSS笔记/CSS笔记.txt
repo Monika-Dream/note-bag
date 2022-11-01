@@ -1,0 +1,986 @@
+CSS ——> 笔记	2022 一月10号
+1.多个块级元素纵向排列找标准流，多个块级元素横向排列找浮动
+————————————————————————
+[*第一课*] - 写的位置
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS</title>
+    <style>css写入的地方</style>
+</head>
+<body>
+    <p>interesting</p>
+</body>
+</html>
+————————————————————————
+[*第二课*] - 写的方式
+p{
+            color:red;
+        }
+选择{样式表}
+
+ <p>interesting</p>
+
+color:red;
+font-size: 50px;
+————————————————————————
+[*第三课*] - 类选择器
+.p {
+         color: red	
+         font-size: 50px
+
+	}
+
+
+<p class="p">需要用的</p>
+————————————————————————
+[*第四课*] - id选择器
+ - 只能调用一次，别人切勿使用
+#名称 {
+         color: red	
+         font-size: 50px
+
+	}
+
+
+<p id="名称">需要用的</p>
+
+————————————————————————
+[*第五课*] - 通配符选择器
+ - 表示选取页面中的所有元素
+* {
+         color: red	
+         font-size: 50px
+
+	}
+
+
+<p >需要用的</p>
+————————————————————————
+[*第六课*] - 设置字体
+设置字体形式：
+ - font-family: 'Microsoft Yahei';
+设置字体大小:
+ - font-size: 50px
+设置字体粗细:
+ - font-weight:bold/bolder/lighter/number
+————————————————————————
+[*第七课*] - 复合字体
+格式：font: font-style font-weight font-size/line-height font-family
+ - 类型 粗细 大小 字体
+ - 必须保留 font-size font-family
+ - 不可更换顺序
+font: italic 700 16px 'Microsoft Yahei'
+————————————————————————
+[*第八课*] - 文本颜色
+ - 文本外观，颜色，文本，装饰文本，文本缩进，行间距
+1.外观：
+字体可以用 英语 : red 改颜色;
+	十六进制:#ff0000; -- 用的最多
+	255色值:rgb(255,255,255)
+2.对齐文本
+text-align:水平对齐方式
+3.装饰文本
+text-decoration:文本的装饰，下划线等
+none		默认
+underline		下划线
+overline		上划线
+line-through	删除线
+4.文本缩进
+text-indent:指定文本第一行的缩进
+text-indent: 10px;
+text-indent: 2em;
+1em = 一个字
+5.行间距
+line-height:行间的距离
+————————————————————————
+[*第九课*] - CSS引入方式
+ <link rel="stylesheet" href="css文件路径">
+————————————————————————
+[*第十课*] - 复合选择器 - 后代
+ ol li{
+            color: red;
+        }
+
+<ol>
+        <li>123</li>
+        <li>456</li>
+        <li>789</li>
+</ol>
+——————————————————————
+.nav li{
+            color: peru;
+}
+
+<ol class="nav">
+        <li>123</li>
+        <li>456</li>
+        <li>789</li>
+</ol>
+————————————————————————
+[*第十一课*] - 复合选择器 - 子
+ ol>li {
+            color: red;
+}
+
+<div class="nav">
+        <a href="#">我是儿子</a>
+        <p>
+            <a href="#">我是孙子</a>
+        </p>
+    </div>
+————————————————————————
+[*第十二课*] - 复合选择器 - 并集
+ - 任何选择器都可以作为并集选择器的一部分
+div,p{
+    color:pink
+}
+——————————————
+div,p,span, .pig li{
+       color:pink
+   }
+
+
+<div>熊大</div>
+    <p>熊二</p>
+    <span>光头强</span>
+    <ul class="pig">
+        <li>小猪佩奇</li>
+        <li>猪爸爸</li>
+        <li>猪妈妈</li>
+    </ul>
+————————————————————————
+[*第十三课*] - 复合选择器 - 伪类
+a:link		选择所有未被访问的链接
+a:visited		选择已被访问的链接
+a:hover		选择鼠标指针在其上的链接
+a:active		选择活动链接( 鼠标按下未弹起的链接 )
+
+a:link {
+        color: #333;
+        text-decoration: none;
+    }
+————————————————————————
+[*第十四课*] - 复合选择器 - 伪类focus
+ - 当鼠标焦点汇集在文本框中
+input:focus {
+        background-color: pink;
+        color: bisque;
+    }
+
+<input type="text" placeholder="请写东西">
+<input type="text" placeholder="请写东西">
+<input type="text" placeholder="请写东西">
+————————————————————————
+[*第十五课*] - 元素模式转换
+ - 转换为块元素: display:block
+ - 转换为行级元素:display:inline
+ - 转换为行内块:display:inline-block
+a{
+        width: 200px;
+        height: 200px;
+        background-color: brown;
+        display: block;
+}
+
+<a href="#">百度</a>
+————————————————————————
+[*第十六课*] - Css的背景
+background-image: url(imgs/IMG_20210415_134847.png);
+ - 过大的盒子会导致背景平铺
+background-repeat: reqaet/no-repeat/repeat-x/repeat-y
+ - 平铺设置
+background-position: x y;
+length		百分数|由浮点数字和单位标识符组成的长度值
+position		top|center|bottom|left|center|right 方位名词
+		顶     中         底        左      中       右
+ - 改变图片在背景中的位置
+ - 如果只有一个方位名词，那么另一个默认居中
+————————————————————————
+[*第十七课*] - Css背景固定
+ - background-attachment: scroll/fixed
+scroll - 背景图像是随对象内容滚动
+fixed  - 背景图像固定
+ - 属性设置背景图像是否固定或跟随其余部分滚动
+ - 所谓滚动就是导航栏下拉图片是否往上走
+ - 默认滚动
+————————————————————————
+[*第十八课*] - 背景的复合写法
+background:背景颜色 图片地址 平铺 滚动 位置
+background:url(imgs/bg.jpg) no-repeat fixed center top
+————————————————————————
+[*第十九课*] - 背景的半透明
+background:rgba(0,0,0,0.3)
+a - alpha - 透明度(0 - 1)
+————————————————————————
+[*第二十课*] - Css三大特性
+ - 层叠型，继承性，优先级
+ - 复合选择器会有权重叠加问题
+ - 不会进位
+————————————————————————
+[*第二十一课*] - 盒子模型
+border - 边框
+content - 内容
+padding - 内边距
+margin - 外边距
+
+border: border-widyh || border-style || border-color
+	边框的粗细	             样式                  颜色
+
+border-style: solid 实线边框  || dashed 虚线 || dotted 点线
+
+border-width: 5px;
+border-style:solid;
+border-color: plum;
+————————————————————————
+[*第二十二课*] - 边框的复合写法
+ - border: border-width || border-style || border-color
+ - 没有顺序
+border-top: border-width || border-style || border-color
+ - 单独改
+ - 没有顺序
+————————————————————————
+[*第二十三课*] - 表格细线边框
+ - border-collapse:属性控制浏览器绘制表格的方式，控制相邻单元格边框
+border-collapse: collapse	 - 合并
+ - 边框会影响盒子的实际大小
+————————————————————————
+[*第二十四课*] - 盒子模型内边距
+ - padding 属性用于设置内边距，即边框与内容的距离
+ - padding 会影响盒子的实际大小
+ - left || top || right || bottom
+————————————————————————
+[*第二十五课*] - padding复合属性
+padding:5	表示上下左右5
+5,10		表示上下5，左右10
+5,10,20		上边距5 左右10 下边距20
+5,10,20,30	上5 右10 下20 左30
+————————————————————————
+[*第二十六课*] - margin外边距
+left top right bottom
+margin 与 padding 简写一致
+————————————————————————
+[*第二十七课*] - 外边距的水平居中
+ - 指定了宽度
+ - 左右外边距为 auto 即可
+margin: 0 auto
+ - 仅限块级元素居中，行内元素与行内块元素需要给其父添加 text-align:center 即可
+————————————————————————
+[*第二十八课*] - 嵌套块元素塌陷
+1.父元素加个边框
+ - transparent 	- 透明
+2.父元素定义上内边距
+ - padding : 1px
+3.父元素添加 overflow:hidden
+————————————————————————
+[*第二十九课*] - 清除内外边距
+*{
+padding : 0	清除内边距
+margin : 0	清除外边距
+}
+————————————————————————
+[*第三十课*] - 圆角边框
+ - border-radius:length
+ - 参数可以是数值或百分比
+ - 可以跟四个值：左上，右上，右下，左下
+ - 两个数值会对角改变
+border-radius:10px
+————————————————————————
+[*第三十一课*] - 圆角阴影
+ - 使用 box-shadow 为盒子添加阴影
+box-shadow:10px 10px 10px -4px rgba(0,0,0,.3) inset;
+h-shadow		必须，水平阴影位置，可负值
+v-shadow		必须，垂直阴影，同上
+blur		可选，模糊程度
+spread		可选，阴影尺寸
+color		可选，阴影颜色
+inset		可选，将外部阴影改为内部阴影
+ - 水 垂 模 影 寸 色 改
+————————————————————————
+[*第三十二课*] - 文字阴影
+ - 使用 text-shadow 为文字添加阴影
+h-shadow		必须，水平阴影位置，可负值
+v-shadow		必须，垂直阴影，同上
+blur		可选，模糊程度
+color		可选，阴影颜色
+————————————————————————
+[*第三十三课*] - Css浮动
+float 用于创建浮动框，将其移到一遍，
+	- 知道左边/右边触及包含块或另一个浮动块边缘
+选择器{
+	float:属性值
+	}
+none	:	不浮动
+left	:	向左浮动
+right	:	向右浮动
+————————————————————————
+[*第三十四课*] - 浮动特性
+1.浮动元素会脱离标准流 ( 脱标 )
+ - 脱离标准普通流的控制( 浮 ) 移动到指定位置 ( 动 )
+2.浮动元素会一行内显示并且元素顶部对齐
+3.浮动元素会具有行内块元素的特性
+4.浮动的盒子不在保留原先的位置
+5.浮动元素经常和标准流父级搭配使用
+6.浮动的盒子只会影响浮动盒子后面的标准流，不会影响前面的标准流
+————————————————————————
+[*第三十五课*] - 清除浮动
+选择器{clear:属性值;}
+left	:	不允许左侧有浮动元素
+right	:	不允许右侧有浮动元素
+both	:	同时清除左右浮动元素的影响
+清除浮动常用方法
+1.父级添加 overflow 属性
+2.父级添加 after 伪元素
+3.父级添加双为元素
+4.额外标签法，必须是块级元素
+5.浮动元素不会压住标准流的文字/图片
+————————————————————
+额外标签法:
+.clear{
+	clear:both;
+}
+在浮动元素的最后一行加上方块级元素
+<div class:"clear"></div>
+————————————————————
+---------------------------------------------------------------
+————————————————————
+父级添加 overflow
+ - 给父级添加 overflow 属性:hidden | auto | scroll
+————————————————————
+---------------------------------------------------------------
+————————————————————
+after 伪元素法( 用时复制粘贴便可 )
+.clearfix:after {
+            content: "";
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden;
+        }
+        .clearfix {
+            /* IE6、7 专有 */
+            *zoom: 1;
+        }
+————————————————————
+<div class="box clearfix">
+        <div class="damao">大毛</div>
+        <div class="ermao">二毛</div>
+    </div>
+————————————————————
+---------------------------------------------------------------
+————————————————————
+清除浮动之双伪元素( 用时复制粘贴便可 )
+.clearfix:before,
+        .clearfix:after {
+            content: "";
+            display: table;
+        }
+        .clearfix:after {
+            clear: both;
+        }
+        .clearfix {
+            *zoom: 1;
+        }
+————————————————————
+<div class="box clearfix">
+        <div class="damao">大毛</div>
+        <div class="ermao">二毛</div>
+    </div>
+——————————————————————
+————————————————————————
+[*第三十六课*] - 定位导读
+ - 定位模式 + 边偏移
+ - position
+ - static 		静态定位	top|bottom|left|right
+ - relative 	相对定位	top|bottom|left|right
+ - absolute 	绝对定位	top|bottom|left|right
+ - fixed 		固定定位	top|bottom|left|right
+————————————————————————
+[*第三十七课*] - static ( 静态定位 )
+语法：
+选择器{
+	position:static;
+}
+ - 按照标准流特性摆放方式，没有边偏移
+ - 很少用到
+————————————————————————
+[*第三十八课*] - relative ( 相对定位 )
+ - 在元素移动时，相对于它原来位置来移动的
+ - 原来的标准流继续占用，以标准流对待
+ - 给绝对定位当爹的
+语法：
+选择器{
+	position:relative;
+}
+————————————————————————
+[*第三十九课*] - absolute ( 绝对定位 )
+ - 绝对定位是元素移动位置的时候，是相较于它祖先元素来说的
+ - 依附最近的祖先定位盒子
+ - 不占用原先的位置
+ - 可以超出父盒子
+语法：
+选择器{
+	position:absolute;
+}
+————————————————————————
+[*第四十课*] - fixed ( 固定定位 )
+ - 不占用原先位置
+ - 浏览器可视窗口为参照点
+语法：
+选择器{
+	position:fixed;
+}
+————————————————————————
+[*第四十一课*] - sticky ( 粘性定位 )
+ - 占用原先位置
+ - 浏览器可视窗口为参照点
+语法：
+选择器{
+	position:sticky;top:10px;
+}
+————————————————————————
+[*第四十二课*] - z-index ( 叠放次序 )
+ - 只有定位盒子才有该属性
+语法：
+选择器{
+	z-index:1;
+}
+————————————————————————
+[*第四十三课*] - 绝对定位盒子
+ - 绝对定位盒子的 margin:0 auto 方法不起效果
+ - left: 50%
+ - margin-left: -一半
+ - 绝/固定位 会压住下面所有东西
+————————————————————————
+[*第四十四课*] - display显示隐藏元素
+ - 让一个元素在页面中隐藏或者显示出来
+1.display		显示隐藏
+2.visibility	显示隐藏
+3.overflow	溢出显示隐藏
+
+ - display : none	隐藏对象
+ - display : block	还有显示元素的意思
+ - 隐藏元素后，不在保留原先位置
+
+ - visibility : visible	元素可视
+ - visibility : hidden	元素隐藏
+ - 隐藏元素后，保留原先位置
+
+ - overflow : hidden 溢出隐藏
+ - overflow : scroll	溢出部分显示滚动条
+ - overflow : auto	在需要的时候添加滚动条
+————————————————————————
+[*第四十五课*] - 字体图标的使用
+ - 用时复制一份即可
+    /* 字体声明 */
+@font-face {
+            font-family: 'icomoon';
+            src: url('fonts/icomoon.eot?x8k9su');
+            src: url('fonts/icomoon.eot?x8k9su#iefix') format('embedded-opentype'),
+                url('fonts/icomoon.ttf?x8k9su') format('truetype'),
+                url('fonts/icomoon.woff?x8k9su') format('woff'),
+                url('fonts/icomoon.svg?x8k9su#icomoon') format('svg');
+            font-weight: normal;
+            font-style: normal;
+            font-display: block;
+        }
+———————— 使用的 ————————
+        span{
+            font-family: 'icomoon';
+        }
+————————————————————————
+[*第四十六课*] - CSS三角
+.div {
+            width: 120px;
+            height: 250px;
+            background-color: purple;
+            margin: 100px auto;
+            position: relative;
+        }
+
+        .div_v {
+            width: 0px;
+            height: 0px;
+            /* background-color:  purple; */
+            line-height: 0;
+            font-size: 0;
+            border: 10px solid transparent;
+            border-bottom: 10px solid pink;
+            position: absolute;
+            left: 98px;
+            top:-20px;
+        }
+————————————————————————
+[*第四十七课*] - CSS用户界面样式
+li{
+cursor:pointer;
+}
+default		- 小白( 默认 )
+pointer		- 小手
+move		- 移动
+text		- 文本
+not-allowed	- 禁止
+——————————————————
+ - 轮廓线
+ - 给表单添加 outline(); 或 outline:none; 可以去掉默认的蓝色边框
+ - 防止拖拽文本域
+ - textarea{ resize: none};
+————————————————————————
+[*第四十八课*] - vertical-align 属性应用
+vertical-align: baseline | top | middle | bottom
+baseline 	:	默认，元素放在父元素的基线上
+top 	:	把元素顶端与行中最高元素的顶端对齐
+middle 	:	把此元素放置在父元素的中部
+bottom	:	把元素的顶端与行中最低元素的顶端对齐
+————————————————————————
+[*第四十九课*] - 溢出文字省略号显示
+ - 先强制一行内显示文本
+white-space:nowrap;
+ - 超出部分隐藏
+overflow:hidden;
+ - 文字用省略号替代超出的部分
+text-overflow:ellipsis;
+——————————————————
+ - 多行文本溢出显示省略号
+overflow: hidden;
+text-overflow:ellipsis;
+ - 弹性伸缩盒子模型显示
+display: -webkit-box;
+ - 限制在一个块元素显示的文本的行数
+-webkit-line-clamp: 2;
+ - 设置或检索伸缩盒对象的子元素的排列方式
+-webkit-box-orient:vertical;
+————————————————————————
+[*第五十课*] - 语义化标签
+<header>	: 头部标签
+<nav>	: 导航标签
+<article>	: 内容标签
+<section>	: 定义文档某个区域
+<aside>	: 侧边栏标签
+<footer>	: 尾部标签
+ - 本意和 div 一致
+————————————————————————
+[*第五十一课*] - 视频标签
+1.<audio> - 尽量使用 MP3 格式
+2.<video> - 尽量使用 MP4 格式
+ - <video src="文件地址" controls="controls"></video>
+————————————
+<video width="200" height="200" controls>
+        <source src="视频地址" type="video/mp4">
+        <source src="视频地址" type="video/ogg">
+</video>
+————————————————————————
+[*第五十二课*] - CSS新增选择器
+ - 属性选择器
+input[ value ]{
+}
+input[ value="123" ]{
+}
+input[ value^="123" ]{
+}
+input[ value&="123" ]{
+}
+input[ value*="123" ]{
+ - 有就选
+}
+——————————
+ - 结构伪类选择器
+E:first-child	匹配父元素中第一个子元素 E
+E:last-child	匹配父元素中最后一个 E 元素
+E:nth-child( n )	匹配父元素中第 N 给子元素 E
+E:first-of-type	指定类型 E 的第一个
+E:last-of-type	指定类型 E 的最后一个
+E:nth-of-type( n )	指定类型 E 的第 n 个
+
+ul li:first-child{
+}
+
+nth-child( n )
+ - n可以是数字，关键字，公式
+ - 从一开始
+ - even 偶数 odd 奇数
+ - 从0开始计算 括号必须是n
+	- 2n	偶数
+	- 2n+1	奇数
+	- 5n	5  10  15
+	- n+5	从第五( 包括 )个开始到最后
+	- -n+5	前五个( 包括 )
+
+
+——————————
+ - 伪元素选择器
+ - 属于行内元素
+ - 必须有 content:""
+::before
+::after
+
+div{
+}
+div::before{
+      content:""
+}
+————————————————————————
+[*第五十三课*] - CSS盒子模型变革
+ - CSS3中可以通过 box-sizing 来指定盒子模型
+ - content-box	width+padding+border ( 默认 )
+ - border-box	width
+
+box-sizing: border-box 
+ - padding+border 不会撑大盒子
+————————————————————————
+[*第五十四课*] - CSS图片模糊
+ - filter: blur( 5px )
+ - blur: 模糊处理, 数值越大越模糊
+ - blur是一个函数 小括号里面数值越大，图片越模糊 注意数值要加px单位
+————————————————————————
+[*第五十五课*] - 计算盒子宽度 calc 函数
+width: calc( 100% - 80%)
+————————————————————————
+[*第五十六课*] - CSS3过渡效果
+transition:要过度的属性 花费时间 运动曲线 何时开始
+ - 谁要过度给谁加
+ - 宽，高，内外边距，所有则 all
+ - 单位是秒
+ - 默认 ease ( 可以省略 )
+ - 默认是 0秒 ( 可以省略 )
+
+transition:width 0.5s ease 1s,heigth 0.5s ease 1s
+————————————————————————
+[*第五十七课*] - 2D转化之 translate
+ - 不会影响其他元素的位置
+ - 对于行内标签没有效果
+ - 如果设置百分号，那么就相当于自身的 50%
+ - 不脱标
+语法：transform:translate(x, y)
+例子：transform:translate(100px,1000px);
+ - translate 	移动
+ - rotate 		旋转
+ - scale		缩放
+
+居中方法
+margin-left: calc(50%);
+transform: translateX(-50%);			 - 互不冲突的两次方式
+————————————————————————
+[*第五十八课*] - 2D转化之 rotate
+ - 旋转角度
+语法:
+transform: rotate( 度数 );
+transform: rotate( 45deg );
+————————————————————————
+[*第五十九课*] - 2D转化之 origin
+ - 设置元素转化中心点
+transform-origin: x y;
+————————————————————————
+[*第六十课*] - 2D转化之 scale
+ - 缩放
+ - 是从中心点放大
+ - 不会影响其他盒子
+语法：
+transform:scale(x,y);
+ - 这里的 x,y 是倍数关系，1 倍与 2 倍
+————————————————————————
+[*第六十一课*] - CSS动画
+0%是动画的开始，100%是动画的结束
+语法：
+@keyframes 动画名称{
+    0%{
+	width:100%px;	
+
+	}
+     100%{
+	width:200%px;
+	opacity: 1( 透明度 );
+
+	}
+}
+
+div{
+	wid
+	hid
+	animation-name: 动画名称;
+	animation-duration:持续时间;
+}
+————————————————————————
+[*第六十二课*] - CSS动画简写
+animation: 动画名称 持续时间 运动曲线 何时开始 播放次数 是否反方向 动画起始或者结束的状态
+动，时，曲，何，次，反，状
+例子：
+animation: name         5s     linear(平均) 2s     infinite  alternate       forwards
+
+想要动画走回来: animation-direction : alternate	默认跳转
+停在动画结束的位置: animation-fill-mode : forwards	默认跳转至初始
+运动曲线: 默认由慢至快
+播放次数: 默认一次
+
+ - 动画名称 持续时间一定要写
+————————————————————————
+[*扩展*] - CSS动画相关属性
+@keyframes		规定动画
+animation		所有动画简写( animation-play-state 除外 )
+animation-name		调用哪个动画
+animation-duration		动画完成所需时间
+animation-timing-function	动画速度曲线 默认 ease
+animation-delay		动画从何时开始
+animation-iteration-count	播放次数 infinite为无限
+animation-direction		动画是否回播
+animation-play-state	动画运行？ pause为暂停
+animation-fill-mode		动画结束的方式？保持forwards/backwards
+
+ - 速度曲线调节
+linear		匀速
+ease		慢快慢
+ease-in		由慢至快
+ease-out		已低速结束
+ease-in-out	动画已低速开始与结束
+steps()		指定了时间函数中的间隔数量( 步长 )
+————————————————————————
+[*第六十三课*] - 3D转换
+语法:
+transform:translateX( 100px )	 X轴上移动
+transform:translateY( 100px )  Y轴上移动
+transform:translateZ( 100px )  Z轴上移动
+transform:translate3d( x,y,z ) 	
+————————————————————————
+[*第六十四课*] - 透视perspective
+ - 透视是写在父盒子上面的
+perspective:像素
+————————————————————————
+[*第六十五课*] - 3D旋转
+ - rotate3D
+ - 自定义 x y z 的旋转
+rotateX(45deg)
+rotateY(45deg)
+rotateZ(45deg)
+rotate3D(x,y,z,deg)
+————————————————————————
+[*第六十六课*] - transform-style
+ - 代码写给父级的，影响的是子盒子
+transform-style:preserve-3d;	子元素开启立体空间
+
+————————————————————————
+[*第六十七课*] - meta视口标签
+<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+————————————————————————
+[*第六十八课*] - 背景缩放
+ - %相对于父盒子来说的
+ - cover图片完全覆盖 ( 平铺 )
+ - contain 将图像扩大至极限
+background-size: 宽 高 ( px/%/cover/contain )
+————————————————————————
+[*第六十九课*] - 流式布局
+ - 布局方式侧重于宽度为百分比，可随视窗宽窄而变
+ - max-width/height 最大宽度
+ - min-width/height 最小宽度
+————————————————————————
+[*第七十课*] - fles弹性布局
+在父盒子上写display: flex
+flex-direction		设置主轴方向
+justify-content		设置主轴上子元素的排列方式
+flex-wrap			设置子元素是否换行
+align-content		设置侧轴上子元素的排列方式(多行)
+align-items		设置侧轴上子元素的排列方式(单行)
+flex-flow			复合属性，形如设置 flex-direction 与 flex-wrap
+————————————
+flex-direction设置主轴方向
+ - 项目排列方向
+ - 元素跟主轴来排列
+ - 设置为主轴，余为侧轴
+row			默认从左到右
+row-reverse		从右到左
+column			从上到下
+column-reverse		从下到上
+————————————
+justify-content设置主轴上子元素的排列方式
+ - 使用前确定主轴是谁
+flex-start			默认从头部开始 如果主轴是 x 轴,则从左到右
+flex-end			从尾部开始排列
+center			居中对齐
+space-around		平分剩余空间
+space-between		两边贴边，再平分空间
+————————————
+flex-wrap设置子元素是否换行
+ - 默认子元素不换行，会缩小子元素的宽度
+nowrap			默认值，不换行
+wrap			换行
+————————————
+align-content设置侧轴上子元素的排列方式(多行)
+ - 控制子项在侧轴上的排列方式并出现换行的情况
+flex-start			从侧轴的头部开始排列( 默认值 )
+flex-end			从侧轴的尾部开始排列
+center			从侧轴的中间显示
+space-around		子项在侧轴平分剩余空间
+space-between		子项在侧轴先分布在两头，再平分
+stretch			设置子项元素高度平分父元素高度
+————————————
+align-items设置侧轴上子元素的排列方式(单行)
+ - 控制子项在侧轴上的排列方式
+flex-start			从上到下
+flex-end			从下到上
+center			挤在一起居中( 垂直居中 )
+stretch			拉伸( 默认值 )
+————————————
+flex-flow复合属性，形如设置 flex-direction 与 flex-wrap
+flex-flow:row wrap;
+————————————————————————
+[*第七十一课*] - 子项flex使用
+ - flex 属性定义子项目分配剩余空间 , 用 flex 来表示占多少份数
+.item{
+    flex:数字
+	}
+————————————————————————
+[*第七十二课*] - align-self 与 order
+.item{
+    align-self: flex-end
+    自己控制自己的位置
+	}
+
+.order{
+    order:-1
+    调换盒子的位置
+	}
+————————————————————————
+[*第七十三课*] - 背景线性渐变
+background: line-gradient( 起始方向,颜色1,颜色2 )
+background:-webkit-linear-gradient(left,red,blue)
+————————————————————————
+[*第七十四课*] - rem适配布局
+ - rem的基准是相较于html元素的字体大小
+ - 所以我们可以通过控制html的文字大小来实现其他元素盒子的等比缩放
+————————————————————————
+[*第七十五课*] - 媒体查询
+ - 跟 if 判断差不多
+ - 语法
+@media mediatype and|not|only (media feature){
+            css-Code;
+        }
+
+@media：开头
+mediatype：媒体类型
+and|not|only：关键字
+(media feature)：媒体属性，必须有小括号
+
+
+mediatype：媒体类型
+ - all		用于所有设备
+ - print		用于打印机和打印预览
+ - scree		用于电脑屏幕，平板电脑，手机等
+————————————
+and|not|only：关键字
+ - 链接到一起的查询条件
+————————————
+(media feature)：媒体属性，必须有小括号
+ - width		定义输出设备中页面可见的宽度
+ - min-width	定义输出设备中页面最小可见的宽度
+ - max-width	定义输出设备中页面最大可见的宽度
+————————————
+例子：
+ - max-width 小于等于 800px 时，启用样式
+@media scree and (max-width:800px) and (max-width:400px){
+            body{
+	        background-color:pink;
+	}
+        }
+————————————————————————
+[*第七十六课*] - 媒体查询引入文件
+ - 分离控制
+<link rel="stylesheet" href="大于320像素的文件" media="screen and (min-width: 320px)">
+<link rel="stylesheet" href="大于640像素的文件" media="screen and (min-width: 640px)">
+————————————————————————
+[*第七十七课*] - less变量
+@变量名:值;
+body{
+	background:@变量名
+}
+————————————————————————
+[*第七十八课*] - less运算
+ - 如果两个不同单位的数字参与运算，以前面的单位为准
+ - 两个值之间如果只有一个值有单位，那以一个有单位的值为结果单位
+/需要用 ( ) 包起来
+
+————————————————————————
+[*第七十九课*] - cssrem总结
+相当于是在 less 中定义 @basesize:50
+不会去干扰先前写好的媒体查询
+
+————————————————————————
+[*第八十课*] - 响应式布局之Bootstarp
+ - Bootstarp需要页面内容和栅格系统包裹一个 .container 容器
+	Bootstarp预先定义好了这个类,叫.container
+	他提供了两个作此用处的类
+ - 默认会有内外边距
+1.container
+ - 响应式布局的容器,固定宽度
+ - 大屏( >=1200px )	宽度定位 1170px
+ - 中屏( >=992px )	宽度定位 970px
+ - 小屏( >=768px )	宽度定位 750px
+ - 超小屏( 100% )
+
+2.container-fluid
+ - 流式布局容器 百分百宽度
+ - 占据全部视口的容器
+ - 适合于单独做移动端开发
+
+————————————————————————
+[*第八十一课*] - 响应式布局之栅格系统
+ - 行必须放到container布局容器里面
+ - 我们实现列的平均分，需要给列添加类前缀
+.col-xs-平均分数字	超小 	<768px
+.col-sm-平均分数字	小 	>=768px
+.col-md-平均分数字	中 	>=992px
+.col-lg-平均分数字	大 	>=1200px
+ - 列大于12,多余的列所在的元素会作为一个整体另起一行排列
+ - 每一列默认有左右15像素的 padding
+ - 可以同时为一列指定多个设备的类名以便划分不同的分数
+	class="col-md-4 col-sm-6"
+ - row:列嵌套加一个 row 可以删除父元素的 padding 值，高度自动和父级一样高
+1.row 的作用
+.row {
+    /* margin-right: -15px; */
+    /* margin-left: -15px; */
+}
+
+2.container所包含的
+.container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+————————————————————————
+[*第八十二课*] - 列偏移
+Bootstarp4.5：.offset-md-平均分数字
+————————————————————————
+[*第八十三课*] - 列排序
+Bootstarp4.0+：转为order-( 权重 )
+.order-n
+n:1-12	数字越小越优先
+ - 牵一发而动全身
+.order-[breakpoint]-[n]	在指定尺寸及以上,遵循顺序
+order-first
+order-last
+————————————————————————
+[*第八十四课*] - 响应式工具
+ - 针对不同的设备,展示或隐藏页面内容
+ - d-none	无条件隐藏
+类名		超小屏	小屏	中屏	大屏
+.d-sm-none	N	Y	Y	Y
+.d-md-none	Y	N	Y	Y		隐藏
+.d-lg-none	Y	Y	N	Y
+.d-xl-none	Y	Y	Y	N
+——————
+类名		超小屏	小屏	中屏	大屏
+.d-sm-block	N	Y	Y	Y
+.d-md-block	Y	N	Y	Y		出现
+.d-lg-block	Y	Y	N	Y
+.d-xl-block	Y	Y	Y	N
+——————
+组合用法
+d-none d-md-block
+ - 当设备处于中屏或大屏时，元素才显示
+
+————————————————————————
+[*第八十五课*] - Bootstarp的给予
+ - 给予了清除浮动 clearfix 类

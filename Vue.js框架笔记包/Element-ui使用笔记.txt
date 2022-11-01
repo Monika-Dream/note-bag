@@ -1,0 +1,29 @@
+1.先根据官网下载,如果下载不成功就
+	npm install element-plus			《-- vue3
+2.下载 npm i babel-plugin-component -D 按需引入
+	在 babel.config.js 中加入
+	"plugins": [["component",{"libraryName": "element-ui","styleLibraryName": "theme-chalk"}]]
+	具体官网查看
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

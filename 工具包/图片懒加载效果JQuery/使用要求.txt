@@ -1,0 +1,15 @@
+1.导入上面两个包    EasyLazyload 必须写在所有图片下面
+2.将 <img src=""> 换成 <img data-lazy-src="">
+3.在 Js 中调用全局方法 
+<script src="js/EasyLazyload.min.js"></script>
+    <script>
+        lazyLoadInit({
+            showTime: 1100,
+            onLoadBackEnd: function(i, e) {
+                console.log("onLoadBackEnd:" + i);
+            },
+            onLoadBackStart: function(i, e) {
+                console.log("onLoadBackStart:" + i);
+            }
+        });
+    </script>

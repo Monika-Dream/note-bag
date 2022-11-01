@@ -1,0 +1,18 @@
+1. Cannot set headers after they are sent to the client
+翻译：将请求头发送到客户端后无法设置请求头
+原因：客户端发送一次请求的时候，服务器端给出了多次响应
+解决：在你的每次响应后添加return，避免多余响应。
+理解:  就是在客户端发送了一次响应的时候 , 你服务器发送了两次 , 
+	占用了请求头 , 导致第二次无法发送
+——————————————————————————————————————————
+2.express error: express deprecated res.send(status): Use res.sendStatus(status) instead 
+翻译：express 已弃用 res.send（status）：改用res.sendStatus（status）相反
+原因：express将数字当成状态码
+解决：将返回结果与空字符串拼接为字符串或将数字 toString() 直接变成字符串
+——————————————————————————————————————————
+3.无法加载文件 C:\Users\ASUS\AppData\Roaming\npm\express.ps1
+	因为在此系统上禁止运行脚本
+解决：在win10中找到powershell -- 以管理员身份运行PowerShell 
+输入set-ExecutionPolicy RemoteSigned 
+选A -- 输入get-ExecutionPolicy 
+ok，问题解决

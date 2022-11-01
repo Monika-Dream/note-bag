@@ -1,0 +1,89 @@
+------------------------- Pinia -------------------------  基础使用
+ - npm install pinia
+ - import { createPinia } from 'pinia'
+ - const pinia = createPinia()
+ - const app = createApp(App)
+ - app.use(pinia)
+ - app.mount('#app')
+ - 创建 store 文件夹, 表示容器
+ - 创建 index.ts
+ - import { defineStore } from 'pinia'
+			         //容器的 ID 必须唯一, 选项对象
+export const useStore = defineStore('你想给容器起的名字', {	//定义并导出容器, 获得返回的函数
+    state:()=>{		//类似于组件的 data
+        return {
+            count:0
+        }
+    },
+    getters:{},		//类似并用于封装组件的计算属性, 有缓存的功能
+    actions:{}		//封装业务逻辑类似于 methods , 修改 state
+})
+
+ - 组件使用
+ - import {你想给容器起的名字} form "store"
+const 名字 = 你想给容器起的名字()		调用返回的函数获得容器的实例
+名字.count
+
+
+------------------------- Pinia -------------------------  使用解构赋值导致未响应式问题
+ - 使用 pinia 官方的 import { storeToRefs } from "pinia"
+ - const { count } = storeToRefs( 名字 )
+ - 官方建议 storeToRefs 使用在阅读状态, 不涉及 actions 改值
+ - console.log( count.value )
+
+<template>
+  <p>{{count}}</p>
+</template>
+<script lang="ts" setup>
+import { useMonika } from './store'
+import {storeToRefs} from "pinia"
+const {count} = storeToRefs(useMonika())
+console.log(count.value)
+</script>
+<style lang="less" scoped></style>
+
+
+------------------------- Pinia -------------------------  论如何修改值
+ - 1.最简单的方法
+import { useMonika } from './store'
+import { storeToRefs } from 'pinia'
+const monika = useMonika()
+const { count } = storeToRefs(monika)	//    const { count } = storeToRefs(useMonika())
+count.value ++
+
+ - 2.批量修改值的方法
+monika.$patch({
+    count: monika.const + 1
+    otherCount: "Hello Js.py"
+})
+
+ - 3.批量修改值的方法 ( 函数体现 )
+monika.$patch(state =>{
+    state.count ++
+    state.otherCount = ["Monika", "Sayori", "Yuri", "Natsuki"]
+})
+
+ - 4.批量修改值的方法封装到 actions 中 
+	 - 和操作 methods 一样, 不要使用箭头函数?
+	 - 上面方法仍可使用
+monika.changeState()			 - 进行调用
+actions: {
+  changeState(){
+    this.count ++
+  }
+}
+
+ - 5.批量修改值的方法封装到 getters 中 
+	 - 类似于计算属性 computed
+getters:{
+    count10(state){
+        return state.count + 10
+    }
+}
+
+
+
+
+
+
+
