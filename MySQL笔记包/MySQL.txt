@@ -489,12 +489,12 @@ select * from students left join classes on students.cls_id = classes.id where c
  - 注意：建立连接的类型要一致
 2.创建表时就有外键约束，约束对象必须存在
 +------------------------------------+
-| Tables_in_jing_dong 	|
+| Tables_in_jing_dong 	     |
 +------------------------------------+
-| goods               		|
-| goods_brands        	|
-| goods_cates         		|
-| goods_test          		|
+| goods               		 |
+| goods_brands        	     |
+| goods_cates         		 |
+| goods_test          		 |
 +------------------------------------+
 create table goods_test (
 	id int primary key auto_increment,
