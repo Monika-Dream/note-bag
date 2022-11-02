@@ -129,8 +129,144 @@ DATABASES = {
     }
 }
 
+-------------------------------------------------------------- 站点管理
+
+ - 界面本地化
+ - 创建管理员
+ - 注册模型类
+ - 发布内容到数据库
+     - 打开网站后,网址加入 /admin
+     - 创建超级用户管理员
+     - python manage.py createsuperuser
+         - 注意密码不显示
+-------------------------------------------------------------- Settings 选项
+# 语言
+LANGUAGE_CODE = 'zh-Hans'
+# 时区
+TIME_ZONE = 'Asia/Shanghai'
+
+USE_I18N = True
+
+USE_TZ = True
+
+-------------------------------------------------------------- views 视图
+
+ - 打开 views 文件
+ - 所谓的视图实际就是 Python 函数
+ - 视图函数有两个要求
+     - 视图函数第一个参数是接受请求
+     - 必须返回一个响应
+# requests 参数实则就是下面的
+# from django.http import HttpRequest
+from django.http import HttpResponse
+def index(requests):
+
+    return HttpResponse("ok")
+
+-------------------------------------------------------------- 路由匹配
+
+ - 打开 urls.py 
+from django.contrib import admin
+from django.urls import path
+from MonikaAPP.views import index
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path("index/", index)
+]
+
+-------------------------------------------------------------- 路由匹配2
+
+ - 子应用创建 urls 的方式
+ - 右键新建 urls.py 文件
+
+from django.urls import path
+from 文件名.views import 函数名
+urlpatterns = [
+    # path(路由,路由函数名)  
+    path("index/",函数名)
+]
 
 
+ - 总路由文件
+from django.contrib import admin
+from django.urls import path
+from django.urls import include
 
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('访问子应用路径', include('文件名.urls'))
+]
+
+-------------------------------------------------------------- 模板
+
+ - 创建文件夹 templantes
+ - 创建文件名对应目录 例: Monika
+     - 存放 html,css,js 文件
+ - 打开 Settings文件
+ - 找到 TEMPLATES["DIRS"] 位置
+     - 参照下面路径配置方式
+     - ['DIRS': [BASE_DIR / 'templantes'],]
+ - 返回需要输出模板文件的地方
+ - 打开 views 文件
+
+def index(requests):
+    print(requests)
+    return render(requests,'Monika/index.html')
+
+-------------------------------------------------------------- 模板渲染数据(了解)
+
+def index(requests):
+    object = {
+        name:"monika"
+    }
+    return render(requests,'Monika/index.html',context=object)
+
+<div>{{name}}</div>
+
+-------------------------------------------------------------- setting部分内容讲解
+
+BASE_DIR = 内部文件的最近外层文件
+# C:\Users\Lenovo\Desktop\Django学习\学习  ,   MonikaAPP/学习
+
+DEBUG = True
+# 开启调试模式
+# 项目部署时请关闭
+
+ALLOWED_HOSTS = ['*',"127.0.0.1"]
+# 允许以什么样的形式访问我们的项目
+# 默认 127.0.0.1
+# * 表示可以使用 IP, 也可以使用 127.0.0.1
+
+-------------------------------------------------------------- 静态文件
+
+ - 在跟文件底下创建 static 文件, 可以将静态文件(js/css/html/img) 文件放入
+
+ - settings 文件加入配置, 告知文件路径( DEBUG 需要为 TRUE )
+    STATICFILES_DIRS = [ BASE_DIR / 'static' ]
+    # http://127.0.0.1:8000/static/001.jpg 当时访问路径
+
+-------------------------------------------------------------- apps 了解
+
+ - 和子应用配置相关的
+
+-------------------------------------------------------------- 数据库修改为 MySQL
+
+ - 开启虚拟环境
+ - pip install mysqlclient
+ - 接下来开启 MySQL 并且创建一个库
+create database 名字
+
+到 settings 中的 DATABASES 进行配置
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',   使用什么命令
+        "HOST":"127.0.0.1",                     主机地址
+        "PORT":3306,                            端口号
+        "USER":"root",                          权力
+        "PASSWORD":"sxhmzz840845135",           密码
+        'NAME': "django学习",                   数据库名
+    }
+}
 
 

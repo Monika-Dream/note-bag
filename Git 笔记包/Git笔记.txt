@@ -111,6 +111,23 @@ git branch -D newbranch
 
 
 -------------------------------------------------------------- git 注意
+
 error: failed to push some refs to 'https://gitee.com/literary_club/note-bag.git'
  - 远程库文件与本地文件不一致, 需要同步
     git pull --rebase 仓库名 master
+
+-------------------------------------------------------------- git 忽略文件方式
+
+ - 在项目根目录下面 添加 .gitignore文件
+ - 文件中每一行表示需要忽略的文件的正则表达式。
+ - .gitignore文件过滤有两种模式，开放模式和保守模式
+
+ - 1. 开放模式负责设置过滤哪些文件和文件夹
+例如： /target/ 表示项目根目录下的target文件夹里面所有的内容都会被过滤，不被GIT 跟踪
+.classpath 表示项目根目录下的.classpath文件会被过滤，不被GIT跟踪
+
+ - 2. 保守模式负责设置哪些文件不被过滤，也就是哪些文件要被跟踪。
+例如：
+!/target/*.h 表示target文件夹目录下所有的.h文件将被跟踪
+
+如果你不清楚GIT会跟踪哪些文件，你可以先用git status命令查看一下
