@@ -139,7 +139,9 @@ DATABASES = {
      - 创建超级用户管理员
      - python manage.py createsuperuser
          - 注意密码不显示
+
 -------------------------------------------------------------- Settings 选项
+
 # 语言
 LANGUAGE_CODE = 'zh-Hans'
 # 时区
@@ -268,5 +270,136 @@ DATABASES = {
         'NAME': "django学习",                   数据库名
     }
 }
+
+-------------------------------------------------------------- 关于选项
+
+ - unique = true                        不许重复,默认值是False
+ - default = 1                          默认值
+ - null = False                         非空
+ - Max_length = 20                      最大 20 字符, 仅可用在 CharField 上
+ - choices = 有序元组变量名              只能在这里面选择(约束数据),填写 1 / 2
+     - 有序元组变量名 = ( (1,'male'),(2,"female") )
+ - blank                                如果为True，则该字段允许为空白，默认值是False
+ - db_column                            字段的名称，如果未指定，则使用属性的名称
+ - db_index                             若值为True, 则在表中会为此字段创建索引，默认值是False
+
+ - primary_key                          若为True，则该字段会成为模型的主键字段，
+                                             - 默认值是False，一般作为AutoField的选项使用
+
+-------------------------------------------------------------- 关于 models.
+
+models.CharField()                                                  varchar()
+models.SmallIntegerField(choices= ,default= )                       内容约束
+models.BooleanField()                                               True/False
+models.DateField()                                                  日期
+models.ForeignKey(另一个类,on_delete=models.CASCADE)                 外键约束
+     - CASCADE          主表没了, 子表一并删除
+     - PROTECT          子表还在则无法删除主表, 抛出异常( ProtectedError )
+     - SET_NULL         主表没了, 无关紧要, 子表继续执行
+     - SET_DEFFAULT     候选人
+     - SET              选举候选人(设置特定值或调用特定方法)
+     - DO_NOTHING       关我屁事
+
+ - 补充:
+
+     - models.AutoField()   
+         - 自动增长的IntegerField，通常不用指定，
+         - 不指定时Django会自动创建属性名为id的自动增长属性
+
+     - models.BooleanField()    
+         - 布尔字段，值为True或False
+
+     - models.NullBooleanField()    
+         - 支持Null、True、False三种值
+
+     - models.CharField()   
+         - 字符串，参数max_length表示最大字符个数
+
+     - models.TextField()   
+         - 大文本字段，一般超过4000个字符时使用
+
+     - models.IntegerField()    
+         - 整数
+
+     - models.DecimalField()    
+         - 十进制浮点数， 参数max_digits表示总位数， 参数decimal_places表示小数位数
+
+     - models.FloatField()  
+         - 浮点数
+
+     - models.DateField()   
+         - 日期， 参数auto_now表示每次保存对象时，自动设置该字段为当前时间，
+         - 用于"最后一次修改"的时间戳，它总是使用当前日期，默认为False； 
+         - 参数auto_now_add表示当对象第一次被创建时自动设置当前时间，用于创建的时间戳，
+         - 它总是使用当前日期，默认为False; 
+         - 参数auto_now_add和auto_now是相互排斥的，组合将会发生错误
+
+     - models.TimeField()   
+         - 时间，参数同DateField
+
+     - models.DateTimeField()   
+         - 日期时间，参数同DateField
+
+     - models.FileField()   
+         - 上传文件字段
+
+     - models.ImageField()  
+         - 继承于FileField，对上传的内容进行校验，确保是有效的图片
+
+-------------------------------------------------------------- 模型类的基本定义(外键)
+
+ - 模型类 需要继承自 models.Model
+    - id 默认生成
+    - 一个表就是一个类
+    - 字段就是属性
+        - 属性名 = models.类型( 选项 )
+        - 属性名就是字段名 
+        - 不要使用连续的下划线 __
+ - 选项 (是否唯一, 默认值, CharField 必须有 Max_length)
+ - 默认表的名称时 子应用名 + 类名
+     - 修改表的名字
+
+
+例子:
+class BookInfo(models.Model):
+    name = models.CharField(max_length=10,unique=true)
+    pub_date = models.DateField(null=True)
+    readcount = models.IntegerField(default=0)
+    commentcount = models.IntegerField(default=0)
+    isdelete = models.BooleanField(default=False)
+
+    # 改变表名
+    class Meta:
+        db_table = 'bookinfo' 
+
+class PepoleInfo(models.Model):
+
+    gender_choice = (
+        (1,'male'),
+        (2,"female")
+    )
+
+    name=models.CharField(max_length=10,unique=True)
+    gender = models.SmallIntegerField(choices=gender_choice,default=1)
+    description = models.CharField(max_length=100,null=True)
+    is_delete = models.BooleanField(default=False)
+
+    #外键 - 系统会自动为外键添加 _id
+    book=models.ForeignKey(BookInfo)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
