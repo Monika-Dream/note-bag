@@ -501,13 +501,13 @@ BookInfo.objects.filter(name__isnull=True)
 
 #查询编号为 1, 3, 5 的图书
 # select * from peopleinfo where id in (1,3,5,7,9);
-BookInfo.objects.filter(id_in=[1,3,5])
+BookInfo.objects.filter(id__in=[1,3,5])
 
 #查询编号大于3图书
 # 大于 gt 大于等于 gte
 # 小于 lt 小于等于 lte
 # 不等于 BookInfo.objects.exclude()
-BookInfo.objects.filter(id_gt=3)
+BookInfo.objects.filter(id__gt=3)
 
 #查询1980年发布的图书
 BookInfo.objects.filter(pub_date__year=1980)
@@ -551,8 +551,97 @@ from django.db.models import Sum
 BookInfo.objects.aggregate(Sum('readcount'))
 返回 {'readcount': 126}
 
+ - 排序函数()
+# select * from peopleinfo order by id [desc]
+
+BookInfo.objects.all().order_by('readcount')    从小到大
+BookInfo.objects.all().order_by('-readcount')   从大到小
+
+-------------------------------------------------------------- 级联排序 ( 关联查询 )
+
+ - 关联查询()          
+由一到多的访问模型中, 系统会为我们自动添加一个 关系模型类名小写_set 字段
+与当前有关联的内容
+
+ # 查询书籍为 1 的所有人物信息 
+book = BookInfo.objects.get(id=1)
+book.peopleinfo_set.all()
+
+ # 查询人物为 1 的书籍信息
+person = peopleinfo.objects.get(id=1)
+person.book
+person.book.name
+
+-------------------------------------------------------------- 关联查询和管理过滤查询
+
+#语法形式
+# 查询为 1 的数据,条件为 N
+# 模型类名.objects.(关联模型类名小写__字段名__运算符=值)
+
+#查询图书,要求图书人物为 '郭庆'
+BookInfo.objects.filter(peopleinfo__name='郭靖')
+
+#查询图书, 要求图书中人物包含 八
+BookInfo.objects.filter(peopleinfo__description__contains='八')
+
+#查询书名为天龙八部的所有人物
+PeopleInfo.objects.filter(book__name="天龙八部")
+
+#查询图书阅读量大于 30 的所有人物
+PeopleInfo.objects.filter(book__readcount__gt=30)
+
+-------------------------------------------------------------- 一切的运算符
+
+__exact = <str>             =                   可以省略    
+__contains = <str>          包含           
+__endswith = <str>          包含且结尾为     
+__isnull = <boolean>        是否为空
+__in = <list>               包含在列表
+__gt = <number>             大于
+__lt = <number>             小于
+__gte = <number>            大于等于
+__lte = <number>            小于等于
+__year = <number>           需要四位数
+
+-------------------------------------------------------------- 查询集 QuerySet
+
+                                                                1.惰性执行()
+创建查询集不会访问数据库，直到调用数据时，才会访问数据库，
+    - 调用数据的情况包括迭代、序列化、与if合用
+例如，当执行如下语句时，并未进行数据库查询，只是创建了一个查询集books
+
+books = BookInfo.objects.all()
+
+继续执行遍历迭代操作后，才真正的进行了数据库的查询
+
+for book in books:
+    print(book.name)
 
 
+
+                                                                2.缓存执行()
+经过存储后，可以重用查询集
+    - 第二次使用缓存中的数据。
+
+books=BookInfo.objects.all()
+[book.id for book in books]
+
+
+
+                                                                3.限制查询集()
+ - 不支持负数
+books = BookInfo.objects.all()[0:2]
+<QuerySet [<BookInfo: 射雕英雄传>, <BookInfo: 天龙八部>]>
+
+
+                                                                4.分页()
+books = BookInfo.objects.all()
+from django.core.paginator import Paginator
+paginator=Paginator(books,2)
+page_books = paginator.page(1)
+total_page=paginator.num_pages
+
+-------------------------------------------------------------- 项目准备工作
 
 
 
