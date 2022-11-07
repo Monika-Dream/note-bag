@@ -418,7 +418,7 @@ from 文件.models import 类名
 #    return self.name
 # <QuerySet [<BookInfo: 射雕英雄传>, <BookInfo: 天龙八部>, <BookInfo: 笑傲江湖>, <BookInfo: 雪山飞狐>]>
 
--------------------------------------------------------------- 数据的增删改查
+-------------------------------------------------------------- MySQL 数据的增删改查
 
                                              - 增加数据(views.py)
 from book.models import BookInfo
@@ -515,28 +515,41 @@ BookInfo.objects.filter(pub_date__year=1980)
 #查询 1980 1月1日 之后年发布的图书
 BookInfo.objects.filter(pub_date__gt=1980-1-1)
 
--------------------------------------------------------------- F 对象
+-------------------------------------------------------------- F 对象( 两个属性之间进行比较 )
 
+ - 进行两个属性的比较, F 对象
+     - 注意大写 F
+from django.db.models import F
+模型类名.objects.filter(属性名__运算符=F('第二个属性名'))
+BookInfo.objects.filter(readcount__gt=F('commentcount'))
 
+#查询阅读量大于两倍评论量的图书
+BookInfo.objects.filter(readcount__gt=F('commentcount')*2)
 
+-------------------------------------------------------------- Q 对象( 两个属性之间进行比较 )
 
+ - 多个过滤器逐个调用表示逻辑与关系, 同 SQL 语句中的 Where 与 and 关键字
 
+#阅读量大于 20 且标号小于 3 的图书
+BookInfo.objects.filter(readcount__gt=20,id__lt=3)                     #并且
+BookInfo.objects.filter(readcount__gt=20).filter(id__lt=3)             #并且
+BookInfo.objects.filter(Q(readcount__gt=20)&Q(id__lt=3))               #并且
 
+from django.db.models import Q
+模型类名.objects.filter(Q(属性名__运算符=值)|Q(属性名__运算符=值))        #或者
+模型类名.objects.filter(Q(属性名__运算符=值)&Q(属性名__运算符=值))        #并且
+模型类名.objects.filter(~Q(属性名__运算符=值)&~Q(属性名__运算符=值))      #除了 not/~Q
 
+-------------------------------------------------------------- 聚合函数和排序函数
 
+ - 聚合函数()
+使用 aggregate() 过滤器调用聚合函数, 聚合函数包括 [Avg平均, Count数量, Max最大, Min最小, Sum求和]
+     被定义在 django.db.models 中
 
-
-
-
-
-
-
-
-
-
-
-
-
+#查询图书的总阅读量
+from django.db.models import Sum
+BookInfo.objects.aggregate(Sum('readcount'))
+返回 {'readcount': 126}
 
 
 
