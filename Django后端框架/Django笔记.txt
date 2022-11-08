@@ -641,7 +641,114 @@ paginator=Paginator(books,2)
 page_books = paginator.page(1)
 total_page=paginator.num_pages
 
--------------------------------------------------------------- 项目准备工作
+-------------------------------------------------------------- HttpRequest 对象(传参)
+
+ - 提取URL的特定部分，如/weather/beijing/2018，可以在服务器端的路由中用正则表达式截取；
+ - 查询字符串（ query string )，形如 key1=value1&key2=value2；
+ - 请求体（ body ）中发送的数据，比如表单数据、json、xml；
+ - 在http报文的头（ header ）中。
+
+from django.urls import path
+from book.views import shop
+urlpatterns=[
+    path('<city_id>/<shop_id>/',shop)
+]
+
+def shop(request, city_id, shop_id):
+    pass
+
+-------------------------------------------------------------- 查询字符串( Query String )
+
+ - query 参数
+ - 请求路径?查询字符串
+ - QueryDict 区别于普通字典的为
+     - 字典的特性
+     - 一键多值,需要用  query_params.getlist("键名")  来获取值
+
+def shop(request):
+    query_params = request.GET
+    print(query_params.get("键名"))
+
+-------------------------------------------------------------- 传递 From 表单数据
+
+ - Django 默认不允许我们发送 Post 请求
+ - 想要发送 Post 请求需要在 setting文件 中
+     - 将 MIDDLEWARE 对象的
+     - 'django.middleware.csrf.CsrfViewMiddleware', 
+     注释掉就行了
+
+-------------------------------------------------------------- JSON 数据请求与发送
+
+ - JSON 数据无法通过 requests.POST 获取
+ - requests.body 获取会得到 二进制数据, 需要 decode() 解码, 解码之后会成为字符串
+     - JSON 形式的字符串可以转换为 python 的字典
+     - 需要导入 import json
+     - json.loads(body)
+
+-------------------------------------------------------------- 请求头
+
+ - 可以通过 requests.META 属性获取请求头中的 headers 中的数据
+     - requests.META 为字典类型
+
+-------------------------------------------------------------- 转化器的使用( 在路径时就进行验证 )
+
+ - 系统为我们提供了一些路由转换器位置在django.urls.converters.py
+
+from django.urls import path
+from book.views import shop
+from django.urls import converters      #在路径时就进行验证
+
+# <转换器名字:变量名>
+# 转换器会对变量数据进行验证，正则的验证
+
+urlpatterns=[
+    path('<int:city_id>/<int:shop_id>/',shop)
+]
+
+
+DEFAULT_CONVERTERS = {
+    'int': IntConverter(), # 匹配正整数，包含0
+    'path': PathConverter(), # 匹配任何非空字符串，包含了路径分隔符
+    'slug': SlugConverter(), # 匹配字母、数字以及横杠、下划线组成的字符串
+    'str': StringConverter(), # 匹配除了路径分隔符（/）之外的非空字符串，这是默认的形式
+    'uuid': UUIDConverter(), # 匹配格式化的uuid，如 075194d3-6885-417e-a8a8-6c931e272f00
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
