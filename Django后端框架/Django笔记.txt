@@ -784,32 +784,67 @@ from django.shortcuts import redirect
 def response(request):
     return redirect('/get_header')
 
--------------------------------------------------------------- Cookie 的流程和设置
+-------------------------------------------------------------- Cookie饼干 && Session令牌 ( 状态保持 )
 
 
+ - 1. 浏览器请求服务器是无状态的。
+ - 2. 无状态：指一次用户请求时，
+        - 浏览器、服务器无法知道之前这个用户做过什么，每次请求都是一次新的请求。
+ - 3. 无状态原因：浏览器与服务器是使用 Socket 套接字进行通信的，
+        - 服务器将请求结果返回给浏览器之后，
+            - 会关闭当前的 Socket 连接，
+            - 而且服务器也会在处理页面完毕之后销毁页面对象。
+ - 4. 有时需要保持下来用户浏览的状态，比如用户是否登录过，浏览过哪些商品等
+ - 5. 实现状态保持主要有两种方式：
+        - 在客户端存储信息使用 Cookie
+        - 在服务器端存储信息使用 Session
 
+-------------------------------------------------------------- 饼干(Cookie)
 
+ - 一些饼干... 一些饼干...
+ - 追踪用户行为常用( html指纹技术? )
+ - Cookie 是由服务器端生成
+ - 下次请求服务器时会自动发送 Cookie( 浏览器开启 Cookie 情况下 )
 
+                浏览器        第一次访问没有 Cookie 信息  ->    服务器
+                浏览器        返回 Cookie                <-    服务器
+                浏览器        请求携带 Cookie 信息        ->   服务器( 返回相关 Cookie 处理内容 )
+                浏览器        请求携带 Cookie 信息        ->   服务器( 返回相关 Cookie 处理内容 )
 
+ - Cookie = Key-Value 形式
+ - Cookie 是基于域名安全的, 不同网站之间无法访问 Cookie
 
+-------------------------------------------------------------- 设置饼干( 设置Cookie )
 
+ - 设置 response 获取 requests      #生命周期
+ - response.set_cookie(key, value, max_age = 秒)       #设置 Cookie (默认浏览器关闭时销毁)
+ - requests.COOKIES.get('键名')                        #获取 
+ - response.delete_cookie('键名')                      #删除 Cookie
 
+def set_cookie(requests):
+    query_Name = requests.GET.get("username")   
+    response =  HttpResponse("set_Cookie")
+    response.set_cookie('name',query_Name)
+    print(requests.COOKIES['name'])
+    return response
 
+-------------------------------------------------------------- 设置Session
 
+ - Django 默认启用 Session
+    - 'django.contrib.sessions.middleware.SessionMiddleware' - setting 文件
+ - 保存在 服务器 端
+ - 直接就加密了
+ - 需要依赖于 Cookie(曲奇饼干)
 
+                浏览器        第一次访问没有 Cookie 信息  ->    服务器( 保存数据,生成 Cookie )
+                浏览器        返回 Cookie[空],sessionID  <-    服务器( 返回携带 SessionID 的 Cookie 信息 )
+                浏览器        请求携带 C包含S 信息        ->   服务器( Session 指向的数据内容 )
+                浏览器        请求携带 C包含S 信息        ->   服务器( Session 指向的数据内容 )
 
+-------------------------------------------------------------- 读取Session
 
-
-
-
-
-
-
-
-
-
-
-
+ - user_id = requests.session['user_id']
+ - username = requests.session['user_name']
 
 
 
