@@ -841,10 +841,79 @@ def set_cookie(requests):
                 浏览器        请求携带 C包含S 信息        ->   服务器( Session 指向的数据内容 )
                 浏览器        请求携带 C包含S 信息        ->   服务器( Session 指向的数据内容 )
 
+requests.session['userID'] = user_id
+requests.session['userName'] = userName
+requests.session['message'] = "你好,这是设置了 Session 的 message 内容"
+
+ - 在数据库 Mysql 中 session_key 就是服务器将要发送给浏览器的 Session 凭证, 也就是每次
+     - 浏览器访问服务器去携带 Cookie 的时候, 服务器解析 Cookie 中的 Session 凭证, 凭借 session_key 
+     - 访问 session_data 中的加密数据, 并将加密数据解析到我们的读取 username = requests.session['user_name'] 中
+     - 也就是所谓的数据存储在服务器中
+ - 一个浏览器对应一个 SessionID 
+ - 实现 Session 的时候, 系统会自动实现 Cookie
+
 -------------------------------------------------------------- 读取Session
 
- - user_id = requests.session['user_id']
- - username = requests.session['user_name']
+ - user_id = requests.session.get('user_id')
+ - username = requests.session.get('user_name')
+ - 使用常规读取字典的方式可能会导致报错, 没有则 None, 不会报错
+
+-------------------------------------------------------------- Session 存储位置更改
+
+ - MySQL 终是慢的, 源于硬盘, 那么更换数据库, 大抵 Redis 会更好
+     - 正如我门前有两颗树, 一颗是 二叉树, 另一个也是 二叉树
+
+ - 安装扩展 (虚拟) pip install django-redis
+
+在settings.py文件中做如下设置
+# Session 保存在 Redis 中
+CACHES = {                  
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',         #让 Redis 实现我们的缓存
+        'LOCATION': 'redis://127.0.0.1:6379/1',             #IP地址,1号库
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
+
+-------------------------------------------------------------- Session 相关操作
+
+1） 以键值对的格式写session。
+     - request.session['键'] = 值
+
+2）根据键读取值。
+     - request.session.get('键',默认值)
+
+3）清除所有 session ，在存储中删除值部分。
+     - request.session.clear()
+
+4）清除所有 session 数据，在存储中删除 session 的整条数据。
+     - request.session.flush()
+
+5）删除session中的指定键及值，在存储中只删除某个键及对应的值。
+     - del request.session['键']
+
+6）设置session的有效期
+     - request.session.set_expiry(value)
+
+如果value是一个整数，session将在value秒没有活动后过期。
+如果value为0，那么用户session的Cookie将在用户的浏览器关闭时过期。
+如果value为None，那么session有效期将采用系统默认值， 默认为两周，可以通过在settings.py中设置SESSION_COOKIE_AGE来设置全局默认值。
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
