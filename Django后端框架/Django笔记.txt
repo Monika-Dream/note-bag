@@ -685,6 +685,9 @@ def shop(request):
      - 需要导入 import json
      - json.loads(body)
 
+ - 表单数据 requests.POST
+ - JSON 数据 requests.body
+
 -------------------------------------------------------------- 请求头
 
  - 可以通过 requests.META 属性获取请求头中的 headers 中的数据
@@ -932,7 +935,64 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view()),
 ]
 
--------------------------------------------------------------- 类视图
+-------------------------------------------------------------- 多继承和 MRO 排序
+
+# 登陆用户访问, 未登录用户跳转登陆界面
+# LoginRequiredMixin 
+#    - 判断, 只有登陆用户才可以运行页面 admin 页面
+#    - 失败会跳转到系统的 accounts/login 页面
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+class login(View, LoginRequiredMixin)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
