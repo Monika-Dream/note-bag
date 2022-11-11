@@ -770,8 +770,12 @@ safe = False : 我们的数据为非字典数据
 -------------------------------------------------------------- 转化 JSON
 
 import json as JSON 
+from django.http import JsonResponse
 
- - Python 字典转换为 JSON 格式
+ - 将 Python 的 dist字典 转换成 JSON 格式
+     - return JsonResponse( data=info, safe=False )
+
+ - JSON 形式的字符串可以转换为 python 的字典
      - JSON.loads()
 
  - 字典转化为字符串
@@ -856,7 +860,8 @@ requests.session['message'] = "你好,这是设置了 Session 的 message 内容
 
  - user_id = requests.session.get('user_id')
  - username = requests.session.get('user_name')
- - 使用常规读取字典的方式可能会导致报错, 没有则 None, 不会报错
+ - 使用常规读取字典的方式可能会导致报错
+    - .get()没有则 None, 不会报错
 
 -------------------------------------------------------------- Session 存储位置更改
 
@@ -927,7 +932,7 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view()),
 ]
 
-
+-------------------------------------------------------------- 类视图
 
 
 
