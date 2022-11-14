@@ -1,0 +1,39 @@
+----------------------------------------------------------------------- 关于用户名与密码设置
+	1.django 自带一个用户模型
+	2.这个用户模型 有密码的加密 和 密码的验证
+		 - from django.contrib.auth.models import User
+		 	 - 有可能内部所使用的无法满足我们的需求, 比如没有 email模型, 那么重写与继承
+		 - from django.contrib.auth.models import AbstractUser			
+class User(AbstractUser):
+	email = models.CharField(max_length=11, unique=True)
+
+	# 改变表名
+    class Meta:
+        db_table = 'tb_users' 
+
+
+异常解决:
+	自定义模型类与 Django 原生 Users 继承一致导致报错 (fields.E304)
+		 - 请在 Setting.py 文件中写入 AUTH_USER_MODEL = 'app名字.模型类的名字' 
+		 - python manage.py makemigrations users	 = 只用一次
+		 - python manage.py migrate
+
+----------------------------------------------------------------------- 关于接口的风格
+ - restful 风格
+ - 多使用 名词的复数形式
+
+ GET /goods/4 			前端获取后端指定产品
+ GET /goods				前端获取后端所有产品
+
+ POST /goods/ 			前端发送数据保存到后端
+
+ PUT /goods/4  			前端修改后端保存的数据
+
+ DELETE /goods/4  		前端删除后端保存的指定数据
+
+
+
+
+
+
+
