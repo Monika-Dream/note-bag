@@ -92,17 +92,27 @@ CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
  - 使用 create_user 即可
 User.objects.create_user(username=username,password=password,mobile=mobile)
 
+-------------------------------------------------------------- 图片验证码
 
+ - 接受路由中的 uuid									请求
+ - 生成图片验证码和图片二进制, 保存在 rides 中 			业务逻辑
+ - 返回图片二进制										响应
 
+请将工具包中的 生成图片验证码 解压近你所认定为第三方库的地方 - libs
+ - pip install pillow
 
+from libs.captcha.captcha import captcha
+text, image = captcha.generate_captcha()			文本内容 与 二进制
 
+ - 链接 redis ( 默认是 default )
 
+from django_redis import get_redis_connection
+redis_cli = get_redis_connection('code') <- 选择库,不写默认 default 配置信息
 
+#指令,限时 name , time/秒 , value
+redis_cli.setex(uuid, 100, text)
 
-
-
-
-
+ - 二进制文件请用 HttpResponse(image)
 
 
 

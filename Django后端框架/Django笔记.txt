@@ -1113,8 +1113,15 @@ CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
 User.objects.create_user(username=username,password=password,mobile=mobile)
 
 
+-------------------------------------------------------------- 代码连接 redis
 
+ - 链接 redis ( 默认是 default )
 
+from django_redis import get_redis_connection
+redis_cli = get_redis_connection('code') <- 选择库,不写默认 default 配置信息
+
+#指令,限时 name , time/秒 , value
+redis_cli.setex(uuid, 100, text)
 
 
 
