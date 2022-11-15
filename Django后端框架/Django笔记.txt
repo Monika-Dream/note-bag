@@ -1107,8 +1107,10 @@ CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
  - 凡是出现在白名单中的域名，都可以访问后端接口
  - CORS_ALLOW_CREDENTIALS 指明在跨域访问中，后端是否支持对cookie的操作。
 
+-------------------------------------------------------------- Django 原生密码加密
 
-
+ - 使用 create_user 即可
+User.objects.create_user(username=username,password=password,mobile=mobile)
 
 
 

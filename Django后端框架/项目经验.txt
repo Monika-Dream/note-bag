@@ -18,6 +18,22 @@ class User(AbstractUser):
 		 - python manage.py makemigrations users	 = 只用一次
 		 - python manage.py migrate
 
+
+ - 如果根据上面写入, 那么假设加入数据成功时, 数据库将显示为
+ id    					1
+ password 				123456789
+ last_login				NULL
+ is_superuser			0
+ username				Monika
+ first_name
+ last_name
+ email
+ is_staff				0
+ is_active				1
+ date_joined			2022-11-15 09:15:38.279283
+ mobile					18629421525
+
+
 ----------------------------------------------------------------------- 关于接口的风格
  - restful 风格
  - 多使用 名词的复数形式
@@ -58,11 +74,23 @@ CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
  - 凡是出现在白名单中的域名，都可以访问后端接口
  - CORS_ALLOW_CREDENTIALS 指明在跨域访问中，后端是否支持对cookie的操作。
 
+-------------------------------------------------------------- 收集前端数据并进行非空校验
+
+ def post(self,request):
+        body_dist = JSON.loads(request.body.decode())
+        username = body_dist.get('username')
+       	...
+
+        if not all([username,password,password2,mobile,allow]): 			#一旦出现 None 或 False 则 all 返回 False
+            return JsonResponse({'code':1,'errorMsg':"请勿绕过前端界面"})
 
 
+        return JsonResponse({'code':0,'errorMsg':'ok'})
 
+-------------------------------------------------------------- Django 原生密码加密
 
-
+ - 使用 create_user 即可
+User.objects.create_user(username=username,password=password,mobile=mobile)
 
 
 
