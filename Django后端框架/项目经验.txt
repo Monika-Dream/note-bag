@@ -112,9 +112,18 @@ redis_cli = get_redis_connection('code') <- 选择库,不写默认 default 配�
 #指令,限时 name , time/秒 , value
 redis_cli.setex(uuid, 100, text)
 
- - 二进制文件请用 HttpResponse(image)
-
-
+'image/jpeg'     'image/gif'     'image/png'
+ - 二进制文件请用 HttpResponse(image,content_type='image/jpeg')
+ 
+使用案例:
+class ImageCodeView(View):
+    def get(self, requests ,uuid):
+        from libs.captcha.captcha import captcha   					#导入 二维码 生成第三方库
+        text, image = captcha.generate_captcha()   					#接收 
+        from django_redis import get_redis_connection  				#
+        redis_cli = get_redis_connection('code')
+        redis_cli.setex(uuid, 100, text)
+        return HttpResponse(image,content_type='image/jpeg')
 
 
 

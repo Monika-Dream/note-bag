@@ -160,6 +160,7 @@ USE_TZ = True
      - 必须返回一个响应
 # requests 参数实则就是下面的
 # from django.http import HttpRequest
+HttpResponse('响应体', content_type='image/jpeg' <- 响应格式)
 from django.http import HttpResponse
 def index(requests):
 
@@ -1124,8 +1125,11 @@ redis_cli = get_redis_connection('code') <- 选择库,不写默认 default 配�
 redis_cli.setex(uuid, 100, text)
 
 
+-------------------------------------------------------------- HttpResponse - content_type 选项详细化
 
-
+ - 大类接小类    例子: .text = text/plain
+ - 请在网上搜索 MIME 以得以使用
+ - return HttpResponse(image, content_type='image/jpeg')
 
 
 
