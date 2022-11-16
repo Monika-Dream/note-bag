@@ -125,5 +125,23 @@ class ImageCodeView(View):
         redis_cli.setex(uuid, 100, text)
         return HttpResponse(image,content_type='image/jpeg')
 
+-------------------------------------------------------------- 图片验证码后端逻辑
 
+ - 借助第三方平台进行首发短信
+ - 我 没钱 邮箱
+ - https://www.yuntongxun.com/
+ - 工具包里面以存放文件
 
+ - 流程
+  - 获取前端发过来的 image_code 以和 uuid <- image_code是用户输入的图形验证码,uuid 是图片的 redis 库的键 
+  - 进行两方的全部非空判断
+  - 连接 redis 根据 uuid 以取得值 ( 二进制文件需要解码 ), 判断是否为空( is None )
+  - 需要将解码之后的数据库中 密码小写化( .decode().lower() ), 与用户写的验证码小写化进行比对 ( .lower() )
+  - 比对成功之后编写接下来的业务逻辑
+
+-------------------------------------------------------------- 避免恶意多次发送短信
+
+ - 根据手机号拼接新字段写入 redis数据库,  send_flag_phoneNumber
+     - 限制最大生存时间, 在生存周期之内无法再次发送短信
+send_flag = redis.get()
+if send_flag is not None:
