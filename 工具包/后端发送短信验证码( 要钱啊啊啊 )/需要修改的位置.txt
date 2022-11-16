@@ -1,0 +1,27 @@
+ - 需要修改的地方为一下地方
+     - 一条短信 0.06 元, 什么个人网站会这么奢华, 建议用邮箱
+     - 注意一下 导入路径问题
+
+
+# -*- coding:utf-8 -*-
+from libs.yuntongxun.CCPRestSDK import REST
+# from .CCPRestSDK import REST
+
+# 说明：主账号，登陆云通讯网站后，可在"控制台-应用"中看到开发者主账号ACCOUNT SID
+_accountSid = '8aaf0708842397dd01847dd2aaa02084'
+
+# 说明：主账号Token，登陆云通讯网站后，可在控制台-应用中看到开发者主账号AUTH TOKEN
+_accountToken = 'e6d9a29ee41a4b8593aa292c46368795'
+
+# 请使用管理控制台首页的APPID或自己创建应用的APPID
+_appId = '8aaf0708842397dd01847dd2ab82208b'
+
+
+
+
+if __name__ == '__main__':
+    ccp = CCP()
+    # 注意： 测试的短信模板编号为1
+	 - 测试号码的话只能给本机发送
+	 - 
+    ccp.send_template_sms('18629421525', [' 验证码编号 Number ', 5], 1)

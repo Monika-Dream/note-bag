@@ -721,6 +721,7 @@ DEFAULT_CONVERTERS = {
 -------------------------------------------------------------- 自定义转化器的使用( 在路径时就进行验证 )
 
  - 比如：在工程根目录下，新建converters.py文件，用于自定义路由转换器
+ - 转换器好像已经是 严格匹配了 无需再次 严格
 class MobileConverter:
   """自定义路由转换器：匹配手机号"""
   # 匹配手机号码的正则
@@ -1122,7 +1123,7 @@ from django_redis import get_redis_connection
 redis_cli = get_redis_connection('code') <- 选择库,不写默认 default 配置信息
 
 #指令,限时 name , time/秒 , value
-redis_cli.setex(uuid, 100, text)
+redis_cli.setex(Key, 最大生存时间/秒, Value)
 
 
 -------------------------------------------------------------- HttpResponse - content_type 选项详细化
@@ -1131,10 +1132,12 @@ redis_cli.setex(uuid, 100, text)
  - 请在网上搜索 MIME 以得以使用
  - return HttpResponse(image, content_type='image/jpeg')
 
+-------------------------------------------------------------- 短信验证码后端逻辑
 
-
-
-
+ - 借助第三方平台进行首发短信
+ - 我 没钱 邮箱
+ - https://www.yuntongxun.com/
+ - 工具包里面以存放文件
 
 
 
