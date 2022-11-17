@@ -114,7 +114,7 @@ redis_cli.setex(uuid, 100, text)
 
 'image/jpeg'     'image/gif'     'image/png'
  - 二进制文件请用 HttpResponse(image,content_type='image/jpeg')
- 
+
 使用案例:
 class ImageCodeView(View):
     def get(self, requests ,uuid):
@@ -145,3 +145,13 @@ class ImageCodeView(View):
      - 限制最大生存时间, 在生存周期之内无法再次发送短信
 send_flag = redis.get()
 if send_flag is not None:
+
+-------------------------------------------------------------- 生产者消费者模式
+
+问题：
+ - 我们的代码是自上而下同步执行的。
+ - 发送短信是耗时的操作。如果短信被阻塞住，用户响应将会延迟。
+ - 响应延迟会造成用户界面的倒计时延迟。
+
+
+	

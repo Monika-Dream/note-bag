@@ -382,10 +382,23 @@ checkbox.addEventListener("change",function(){
 
 e.target.checked		 - 获取状态
 
+————————————————————————————————————————————
+51.观察器示例
+ - 用于检测元素是否在浏览器视图窗口之内
+ - 异步, 底权重, 比 scroll 节省
+let test = document.querySelector(".test")
+let test1 = document.querySelector(".test1")
+
+const io = new IntersectionObserver(Element_Change, 配置对象)         //回调函数内部只有一个参数 entries 
+
+io.observer(test).observer(test1)       
+
+//当没见到 元素 或 见到元素 都会执行一次, 刚进入浏览器是也会执行
+function Element_Change(entries:Array){
+    //entries 是一个数组, 数组的多少取决于 io.observe(test) 了多少次
 
 
-
-
+}
 
 
 
