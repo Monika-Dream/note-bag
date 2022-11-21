@@ -178,3 +178,57 @@ user = authenticate(username=username,password=password)           提供的查�
         requests.session.set_expiry(None)                           设置时间
     else:
         requests.session.set_expiry(0)
+
+
+-------------------------------------------------------------- 展示登陆信息
+
+ - 这里是 Vue 读取 Cookie 信息得知用户已经登陆的方案, 之前我的网站是 ... 
+ 	 - 好吧之前我那写的是个什么锤子 ?
+ - 只不过现在好像用到的都是 Token 了
+ - 就是吧数据写到 Cookie 上就是了
+
+-------------------------------------------------------------- 退出登陆
+
+ - 当用户退出登陆的时候 axios 发送 delete 请求
+from django.contrib.auth import logout
+class LogoutView(View):
+    def delete(self,request):
+        #删除 Session
+        logout(request)
+        response = JsonResponse({'code':0, 'errmsg':"ok"})
+        #删除 Cookie
+        response.delete_cookie('username')
+        return response
+
+-------------------------------------------------------------- 用户界面权限问题
+
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+ # - 但是 LoginRequiredMixin 未登录返回的是一个重定向, 并不是 JSON 数据
+ 	 # - 我们需要 JSON
+ 	 # - 重写类方法就可以啦
+
+- 1. 重写 LoginRequiredMixin
+from django.contrib.auth.mixins import AccessMixin
+class LoginRequiredJSONMixin(AccessMixin):
+    """Verify that the current user is authenticated."""
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({'code':0,'errmsg':'没有登陆捏 ~'})
+        return super().dispatch(request, *args, **kwargs)
+
+- 1. 重写 LoginRequiredMixin 内部函数 self.handle_no_permission()
+from django.contrib.auth.mixins import LoginRequiredMixin
+class LoginRequiredJSONMixin(LoginRequiredMixin):
+    def handle_no_permission(self):
+       return JsonResponse({'code':0,'errmsg':'没有登陆捏 ~'})
+
+
+
+class CenterView(LoginRequiredMixin,View):
+    def
+
+-------------------------------------------------------------- 第三方登陆
+
+
+

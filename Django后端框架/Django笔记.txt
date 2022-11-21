@@ -1308,4 +1308,24 @@ user = authenticate(username=username,password=password)           提供的查�
         requests.session.set_expiry(0)
 
 
+-------------------------------------------------------------- LoginRequiredMixin 猜测的登陆判断逻辑
+
+ - 先导入
+ - 继承
+ - 点进去发现 LoginRequiredMixin 继承自 AccessMixin
+ - 而 LoginRequiredMixin 的判断是 if not request.user.is_authenticated:
+     - request.user.is_authenticated:
+         - 据我打印发现 request.user 其实就是指向 浏览器的 Session 凭证的
+         - 凭证 去 找数据库的内容，找到了就是登陆了
+         - 因为一旦删除该凭证则无法认为已登陆
+
+
+
+
+
+
+
+
+
+
 
