@@ -874,6 +874,7 @@ requests.session['message'] = "你好, 这是设置了 Session 的 message 内�
 
 2. login()方法使用
 # 保存注册数据
+from django.contrib.auth import login
 try:
     user = User.objects.create_user(username=username, password=password, mobile=mobile)
 except DatabaseError:
@@ -1292,9 +1293,19 @@ if send_flag is not None:
 
 -------------------------------------------------------------- 登陆
 
- - 状态保持
- - 
+ - 判断用户输入的是用户名还是电话号码
+ - User.USERNAME_FIELD="mobile"/"username"(默认)                   设置查询字段
+ - from django.contrib.auth import authenticate                    导入 Django 的自带验证库, 因为加密也是他加的
+user = authenticate(username=username,password=password)           提供的查询方式(上方可以设置)
+    if user is None:                                               没有查到或密码不对就返回 
+        return JsonResponse({'code':400,'errmsg':'账号或密码错误'}) 
 
+    from django.contrib.auth import login                           导入 Django 自带的状态保持库
+    login(requests,user)
+    if remembered:                                                  前端选择是否记住密码
+        requests.session.set_expiry(None)                           设置时间
+    else:
+        requests.session.set_expiry(0)
 
 
 
