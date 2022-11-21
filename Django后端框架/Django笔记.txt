@@ -852,7 +852,7 @@ def set_cookie(requests):
 
 requests.session['userID'] = user_id
 requests.session['userName'] = userName
-requests.session['message'] = "你好,这是设置了 Session 的 message 内容"
+requests.session['message'] = "你好, 这是设置了 Session 的 message 内容"
 
  - 在数据库 Mysql 中 session_key 就是服务器将要发送给浏览器的 Session 凭证, 也就是每次
      - 浏览器访问服务器去携带 Cookie 的时候, 服务器解析 Cookie 中的 Session 凭证, 凭借 session_key 
@@ -860,6 +860,30 @@ requests.session['message'] = "你好,这是设置了 Session 的 message 内容
      - 也就是所谓的数据存储在服务器中
  - 一个浏览器对应一个 SessionID 
  - 实现 Session 的时候, 系统会自动实现 Cookie
+
+-------------------------------------------------------------- 状态保持
+
+1. login()方法介绍
+ - 状态保持：
+ - 将通过认证的用户的唯一标识信息（比如：用户ID）写入到当前session会话中
+    - login()方法：
+ - Django用户认证系统提供了 login() 方法
+ - 封装了写入session的操作，帮助我们快速实现状态保持
+     - login()位置： django.contrib.auth.__init__.py文件中
+ - login(request, user)
+
+2. login()方法使用
+# 保存注册数据
+try:
+    user = User.objects.create_user(username=username, password=password, mobile=mobile)
+except DatabaseError:
+    return http.JsonResponse({'code': 400, 'errmsg': '注册失败!'})
+
+# 实现状态保持
+login(request, user)
+
+# 响应注册结果
+return http.JsonResponse({'code': 0, 'errmsg': '注册成功!'})
 
 -------------------------------------------------------------- 读取Session
 
@@ -1188,20 +1212,88 @@ if send_flag is not None:
  - 异步发送短信
  - 发送短信和响应分开执行，将发送短信从主业务中解耦出来。
 
+-------------------------------------------------------------- 生产者消费者方案( 异步方案Celery )
+
+ - 一个简单、灵活且可靠、处理大量消息的分布式系统，可以在一台或者多台机器上运行。
+ - Celery是一个功能完备即插即用的任务队列
+ - 单个 Celery 进程每分钟可处理数以百万计的任务。
+ - 通过消息进行通信，使用消息队列（broker）在客户端和消费者之间进行协调。
+
+-------------------------------------------------------------- Celery 实现异步发送
+
+ - 在根目录创建单独的文件夹 celery_tasks
+ - 内部存放文件 main.py  config.py  [名字]文件夹(专门存放 tasks.py 文件)
+
+ - 在 main 文件中写入
+ from celery import Celery
+
+ # 为celery使用django配置文件进行设置
+ import os
+ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'meiduo_mall.settings')
+
+ # 创建celery实例  设置名字(这里就写路径吧)
+ celery_app = Celery('celery_tasks')
+
+ # 设置 broker 也就是队列的指定
+ # 通过加载配置文件设置        路径
+ app.config_from_object('celery_tasks.config')
+
+ # 开始执行,添加生产者       路径, 自动检测 tasks 文件
+ app.autodiscover_tasks(['celery_tasks.sms'])
+
+
+ - 在 config 文件中写入
+ #我们指定 redis 作为我们的队列        15号库
+ broker_url = "redis://127.0.0.1:6379/15"
+
+
+ - 在 [名字]文件夹(专门存放 tasks.py 文件) 文件里放入
+     - 导包 将上面的 celery_app 变量导入进来, 需要它作为装饰器
+     - 生产者
+ from celery_tasks.main import app
+ @app.task
+ def celery_send_sms_code(mobie,code):
+    CCP().send_template_sms(mobie, [f'{code}', 5], 1)
+
+
+ - 开启 celery ( 消费者准备 )
+ - 跑到跟文件
+ celery -A celery_tasks.main worker -l info   (虚拟环境使用)
+    1. -A 指对应的应用程序, 其参数是项目中 Celery 实例的位置。
+    2. worker 指这里要启动的 worker。
+    3. -l 指日志等级，比如info等级。
 
 
 
+ - 一切准备完毕之后理所当然的应当要添加任务了
+ - 请将之前需要分开的同步代码改为
+ from celery_tasks.sms.tasks import celery_send_sms_code
+ # 添加任务 - 执行参数
+ celery_send_sms_code(mobile,sms_code)
 
 
 
+1. main.py 配置 - config 解耦
+2. [名字]文件夹(专门存放 tasks.py 文件) 这里是生产者的 业务逻辑 (没有使用)
+3. 指令就是 使用配置文件redis队列 消费生产的代码 
+4. 同步文件 修改独立化 添加生产者( 使用 )
 
+生产 - redis作为队列 - 消费(芹菜执行)
 
+5. 补充celery worker的工作模式
+ - 默认是进程池方式，进程数以当前机器的CPU核数为参考，每个CPU开四个进程。
+ - 如何自己指定进程数： celery worker -A proj --concurrency=4
+ - 如何改变进程池方式为协程方式： celery worker -A proj --concurrency=1000 -P eventlet -c 1000
+ - # 安装eventlet模块
+ - $ pip install eventlet
 
+ - # 启用 Eventlet 池
+ - $ celery -A celery_tasks.main worker -l info -P eventlet -c 1000
 
+-------------------------------------------------------------- 登陆
 
-
-
-
+ - 状态保持
+ - 
 
 
 

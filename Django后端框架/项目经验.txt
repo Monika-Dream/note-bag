@@ -1,3 +1,13 @@
+----------------------------------------------------------------------- 视图定义 get 与 post 注意
+
+class LoginView(View):
+    def post(self,requests):
+        return HttpResponse("ok")
+    def get(self,requests):
+    	return HttpResponse("ok")
+
+ - 注意参数必须要有一个
+
 ----------------------------------------------------------------------- 关于用户名与密码设置
 	1.django 自带一个用户模型
 	2.这个用户模型 有密码的加密 和 密码的验证
@@ -154,4 +164,3 @@ if send_flag is not None:
  - 响应延迟会造成用户界面的倒计时延迟。
 
 
-	
