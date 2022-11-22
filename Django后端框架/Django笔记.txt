@@ -1319,13 +1319,42 @@ user = authenticate(username=username,password=password)           提供的查�
          - 凭证 去 找数据库的内容，找到了就是登陆了
          - 因为一旦删除该凭证则无法认为已登陆
 
+-------------------------------------------------------------- 对于 ORM 的类进行基类定义
+
+from django.db import models
+
+class BaseModel(models.Model):
+    """为模型类补充字段"""
+
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
+    update_time = models.DateTimeField(auto_now=True, verbose_name="更新时间")
+
+    class Meta:
+        abstract = True  # 说明是抽象模型类, 用于继承使用，数据库迁移时不会创建BaseModel的表
 
 
+# class create_user_QQ(BaseModel) ...
 
+-------------------------------------------------------------- 协助 QQ 登陆的库 QQLoginTool
 
-
-
-
-
+1. QQLoginTool介绍
+ - 该工具封装了对接QQ互联的请求操作。
+ - 可用于快速实现QQ登录的一种工具包。
+2. QQLoginTool安装
+ - pip install QQLoginTool
+3. QQLoginTool使用说明
+     - 导入
+         - from QQLoginTool.QQtool import OAuthQQ
+     - 初始化OAuthQQ对象
+         - oauth = OAuthQQ(client_id=settings.QQ_CLIENT_ID,         appid
+            client_secret=settings.QQ_CLIENT_SECRET,                appsecret
+            redirect_uri=settings.QQ_REDIRECT_URI,                  用户同意登陆之后, 跳转的页面
+            state=next)                                             未知
+     - 获取QQ登录扫码页面，扫码后得到Authorization Code
+         - login_url = oauth.get_qq_url()
+     - 通过Authorization Code获取Access Token
+         - access_token = oauth.get_access_token(code)
+     - 通过Access Token获取OpenID
+         - openid = oauth.get_open_id(access_token)
 
 

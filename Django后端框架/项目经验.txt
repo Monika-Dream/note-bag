@@ -230,5 +230,96 @@ class CenterView(LoginRequiredMixin,View):
 
 -------------------------------------------------------------- 第三方登陆
 
+ - 查看文档
+ 	 - https://wiki.connect.qq.com/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C_oauth2-0
+ 	 - 查看文档即可，下面只是给一些看文档思路
+
+ - 准备工作
+# QQ登录参数
+# 我们申请的 客户端id
+QQ_CLIENT_ID = '101474184'
+# 我们申请的 客户端秘钥
+QQ_CLIENT_SECRET = 'c6ce949e04e12ecc909ae6a8b09b637c'
+# 我们申请时添加的: 登录成功后回调的路径
+QQ_REDIRECT_URI = 'http://www.meiduo.site:8080/oauth_callback.html'
+111111111111111111111111111111111111111111111111111111
+ - 放置 QQ 前端登陆
+ - 获取 Authorization Code
+	 - 请求地址： PC网站：https://graph.qq.com/oauth2.0/authorize
+	 - 请求方法： GET
+	 - 传参方式： Query参数
+
+response_type		必须	授权类型，此值固定为“code”。
+client_id			必须	申请QQ登录成功后，分配给应用的appid。
+redirect_uri		必须	成功授权后的回调地址，必须是注册appid时填写的主域名下的地址，
+						 - 建议设置为网站首页或网站的用户中心。注意需要将url进行URLEncode。
+state				必须	client端的状态值。用于第三方应用防止CSRF攻击，
+						 - 成功授权后回调时会原样带回。请务必严格按照流程检查用户与state参数状态的绑定。
+scope				可选	请求用户授权时向用户显示的可进行授权的列表。
+display				可选	仅PC网站接入时使用,用于展示的样式。
+						 - 如果传入“mobile”，则展示为mobile端下的样式, 不传则默认展示为PC下的样式
+返回说明：
+ -  如果用户成功登录并授权，则会跳转到指定的回调地址，并在redirect_uri地址后带上Authorization Code和原始的state值。如：
+	 - PC网站：http://graph.qq.com/demo/index.jsp?code=9A5F************************06AF&state=test
+注意：此code会在10分钟内过期()
+222222222222222222222222222222222222222222222222222222
+ - 通过Authorization Code获取Access Token
+ - 请求地址： PC网站：https://graph.qq.com/oauth2.0/token
+ - 请求方法：GET
+ - 请求参数：
+请求参数请包含如下内容：
+ - grant_type	必须	授权类型，在本步骤中，此值为“authorization_code”。
+ - client_id	必须	申请QQ登录成功后，分配给网站的appid。
+ - client_secret	必须	申请QQ登录成功后，分配给网站的appkey。
+ - code	必须	上一步返回的authorization code。
+		 - 如果用户成功登录并授权，则会跳转到指定的回调地址，并在URL中带上Authorization Code。
+		 - 例如，回调地址为www.qq.com/my.php，则跳转到：
+		 - http://www.qq.com/my.php?code=520DD95263C1CFEA087******
+注意此code会在10分钟内过期。
+redirect_uri	必须	与上面一步中传入的redirect_uri保持一致。
+fmt	可选	因历史原因，默认是x-www-form-urlencoded格式，如果填写json，则返回json格式
+
+返回说明：
+ - 如果成功返回，即可在返回包中获取到Access Token。 如(不指定fmt时）：
+ - access_token=FE04************************CCE2&expires_in=7776000&refresh_token=88E4************************BE14
+ - 参数说明	描述
+ - access_token			授权令牌，Access_Token。
+ - expires_in			该access token的有效期，单位为秒。
+ - refresh_token		在授权自动续期步骤中，获取新的Access_Token时需要提供的参数。
+							 - 注：refresh_token仅一次有效
+
+
+-------------------------------------------------------------- 第三方登陆 QQ 例子
+
+class QQLoginURLView(View):
+    def get(self,requests):
+    	# 协助 QQ 登陆的库 QQLoginTool Django笔记，settings 位置集中处理
+        qq = OAuthQQ(client_id=settings.QQ_CLIENT_ID,client_secret=settings.QQ_CLIENT_SECRET,redirect_uri=settings.QQ_REDIRECT_URI, state='xxxxxx')
+        qq_login_url = qq.get_qq_url()
+        # 前端将用户想要 QQ 登陆意向发送给后端，后端返回 QQ 登陆的官方链接
+        return JsonResponse({'code':0,'errmsg':'ok','login_url':qq_login_url})
+
+
+class OauthQQView(View):
+	#这里是 QQ 在用户登陆完之后, 将 code 发送给 前端(query), 前端再次发送给后端
+    def get(self,requests):
+        code = requests.GET.get('code')
+        if code is None:
+            return JsonResponse({'code':400,'errmsg':'参数不全'})
+        qq = OAuthQQ(client_id=settings.QQ_CLIENT_ID,
+                     client_secret=settings.QQ_CLIENT_SECRET,
+                     redirect_uri=settings.QQ_REDIRECT_URI,
+                     state='xxxxxx')	#state 仍旧不知道怎么用
+        token = qq.get_access_token(code)	# 获取 Token 
+        openid = qq.get_open_id(token)		# 获取 用户 openid 一一对应的
+        # 绑定过就直接登陆, 没有就需要绑定
+        # D0F21A7F37C761BFBFB87B3DEE3ECF69 这是 自己的 openid 示例
+        # D0F21A7F37C761BFBFB87B3DEE3ECF69 两次登陆，一模一样
+
+
+
+
+
+
 
 
