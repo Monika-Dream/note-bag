@@ -1,3 +1,8 @@
+ - 在没有 session 或 cookie 的 时候请检查电脑的 host 文件 之类的, 一定要在同源
+ - get 或 post 之类的一定要携带一个参数 一般为 request
+
+
+
 ----------------------------------------------------------------------- 视图定义 get 与 post 注意
 
 class LoginView(View):
@@ -43,6 +48,11 @@ class User(AbstractUser):
  date_joined			2022-11-15 09:15:38.279283
  mobile					18629421525
 
+-------------------------------------------------------------- 检查密码
+
+对于 user = User.objects.create_user(username=mobile,mobile=mobile,password=password) 的检测密码
+     - 由于密码加密, 所以我们仍然需要 Django 的方法解密
+user.check_password(password)  
 
 ----------------------------------------------------------------------- 关于接口的风格
  - restful 风格
@@ -316,9 +326,19 @@ class OauthQQView(View):
         # D0F21A7F37C761BFBFB87B3DEE3ECF69 这是 自己的 openid 示例
         # D0F21A7F37C761BFBFB87B3DEE3ECF69 两次登陆，一模一样
 
+-------------------------------------------------------------- 模型类外键补充
 
+apps
+	oauth 
+		models.py
+	users
+		models.py
+	...
+		...
 
+oauth - models.py 中外键可以 远程链接 users - models.py
 
+oauth - models.py = user = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='用户')
 
 
 

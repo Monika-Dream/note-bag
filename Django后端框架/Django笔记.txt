@@ -881,6 +881,7 @@ except DatabaseError:
     return http.JsonResponse({'code': 400, 'errmsg': '注册失败!'})
 
 # 实现状态保持
+- 这里的 User 应当是一个返回的类
 login(request, user)
 
 # 响应注册结果
@@ -1291,7 +1292,7 @@ if send_flag is not None:
  - # 启用 Eventlet 池
  - $ celery -A celery_tasks.main worker -l info -P eventlet -c 1000
 
--------------------------------------------------------------- 登陆
+-------------------------------------------------------------- 登陆(两个都检查)
 
  - 判断用户输入的是用户名还是电话号码
  - User.USERNAME_FIELD="mobile"/"username"(默认)                   设置查询字段
@@ -1357,4 +1358,58 @@ class BaseModel(models.Model):
      - 通过Access Token获取OpenID
          - openid = oauth.get_open_id(access_token)
 
+-------------------------------------------------------------- 检查密码(单一检查)
+
+对于 user = User.objects.create_user(username=mobile,mobile=mobile,password=password) 的检测密码
+     - 由于密码加密, 所以我们仍然需要 Django 的方法解密
+user.check_password(password)    
+
+ - 一个是两个都检查, 一个是单一检查
+
+-------------------------------------------------------------- 对于敏感数据的加密 - Authlib HS256( 例如 openid )
+
+- https://docs.authlib.org/en/latest/basic/install.html 请查看官当文档
+
+from authlib.jose import jwt
+
+1. 使用方式一 (不安全, 简单)                                          这里是单独测试环境
+from authlib.jose import jwt
+header = {'alg': 'HS256'}
+payload = {'iss': 'Authlib', 'sub': '123', 'name': 'bob'}
+secret = '123abc.'
+token = jwt.encode(header, payload, secret)
+detoken = jwt.decode(token,secret)
+print(token)
+print(detoken)
+
+-------------------------------------------------------------- 对于敏感数据的加密 - Authlib RSA256( 例如 openid )
+pip install pycryptodome
+
+1. 使用非对称密钥加密 (安全, 难欸)
+ - 找不到模块情况下 windows环境下安装完pycryptodome后在你python的根目录下如: "Python/Python36/Lib/site-packages"
+    - 里面有一个文件夹叫做 crypto,将首字母小写c改成大写C即可解决
+
+2.先单独创建一个文件, 用于生成私钥与公钥, 然后文件中写入 (这里代码压了一下)
+    """
+    from Crypto.PublicKey import RSA   from Crypto import Random
+    def main():random_generator = Random.new().read         rsa = RSA.generate(2048, random_generator)
+    # 私钥private_pem = rsa.exportKey()       with open("private.pem", "wb") as f:
+    f.write(private_pem)# 公钥public_pem = rsa.publickey().exportKey()
+    with open("public.pem", "wb") as f:     f.write(public_pem)
+    if __name__ == '__main__':main()
+    """
+
+3.完成之后会多出 private.pem (私钥) 与 public.pem (公钥) 文件
+
+
+{
+    username:"Monika",              HS256
+    age:"18",                       HS256
+    userBackground:'imagePath'      HS256
+    permissions:"root",             HS256
+    key:"123456"                    RSA
+}
+
+
+hs256加密所有数据, rsa256 加密密钥传输
 
