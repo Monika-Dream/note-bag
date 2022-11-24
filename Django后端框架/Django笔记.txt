@@ -1413,3 +1413,73 @@ pip install pycryptodome
 
 hs256加密所有数据, rsa256 加密密钥传输
 
+-------------------------------------------------------------- 参数 request 详细解释
+
+ - 来自中间件 'django.contrib.auth.middleware.AuthenticationMiddleware'
+ - 一开始去寻找 session 信息, 没找到就返回匿名用户
+     - 作为中间件, 他会重复查找, 找到之后会获取 session 所对应的信息
+ - request 是一个大对象, 
+     - .user                    包含用户的所有在数据库中的信息 ( 用户的示例对象, 可以直接修改值, 数据库也会改变, 下文 )
+     - .COOKIES                 存储浏览器 cookie 所有信息, username/sessionid
+     - .is_authenticated        判断用户登陆状态 LoginRequiredJSONMixin 的判断逻辑
+
+-------------------------------------------------------------- 对于 数据库 修改的便捷方式
+
+ - 在登陆的状态下, 也就是需要 LoginRequiredJSONMixin 加入
+ 
+class EmailView(LoginRequiredJSONMixin,View):
+    def put(self, requests):
+        data = JSON.loads(requests.body.decode())
+        email = data.get('email')
+        user = requests.user
+        user.email = email
+        user.save()
+
+-------------------------------------------------------------- Django 实现发送邮件
+
+ - send_mall()方法介绍
+ - 位置： 在django.core.mail模块提供了send_mail()来发送邮件。
+ - 方法参数：
+     - send_mail(subject, message, from_email, recipient_list, html_message=None)
+         - subject 邮件标题
+         - message 普通邮件正文，普通字符串
+         - from_email 发件人
+         - recipient_list 收件人列表
+         - html_message 多媒体邮件正文，可以是html字符串
+ - 配置邮件服务器
+     - EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'        # 让 Django 那个库发送邮件
+     - EMAIL_HOST = 'smtp.163.com'                                          # 邮件服务器
+     - EMAIL_PORT = 25                                                      # 邮件服务器端口
+     - EMAIL_HOST_USER = 'monika_dream@163.com'                             # 发送文件的邮箱
+     - EMAIL_HOST_PASSWORD = 'JQSNZVNTDYLGQKWC'                             # 授权码
+     - EMAIL_FROM = '美多商城<qi_rui_hua@163.com>'                           # 邮件来自  
+
+
+
+ - 发送邮件
+from django.core.mail import send_mail
+subject = "美多商城激活邮件"                            # 标题
+message = "永远爱 Monika"                              # 与 html_message 二选一, 后者会将这里覆盖
+from_email = "我永远爱Monika<monika_dream@163.com>"    # 发件人
+recipient_list = ['1109827629@qq.com']                # 给谁发
+html_message = "<h1>扣你吉瓦</h1>"                     # 可以写 html/css 
+
+send_mail(subject,message,from_email,recipient_list,html_message)
+
+配置邮件服务器 那里直接丢到 setting 文件中即可, 无需页面引入
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

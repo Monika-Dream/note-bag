@@ -1,7 +1,7 @@
  - 在没有 session 或 cookie 的 时候请检查电脑的 host 文件 之类的, 一定要在同源
  - get 或 post 之类的一定要携带一个参数 一般为 request
 
-
+ - python manage.py shell	所见即所得
 
 ----------------------------------------------------------------------- 视图定义 get 与 post 注意
 
@@ -339,6 +339,25 @@ apps
 oauth - models.py 中外键可以 远程链接 users - models.py
 
 oauth - models.py = user = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='用户')
+
+
+-------------------------------------------------------------- 对于 数据库 修改的便捷方式
+
+ - 在登陆的状态下, 也就是需要 LoginRequiredJSONMixin 加入
+ 
+class EmailView(LoginRequiredJSONMixin,View):
+    def put(self, requests):
+        data = JSON.loads(requests.body.decode())
+        email = data.get('email')
+        user = requests.user
+        user.email = email
+        user.save()
+
+
+
+
+
+
 
 
 
