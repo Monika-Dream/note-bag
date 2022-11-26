@@ -1266,12 +1266,19 @@ if send_flag is not None:
     3. -l 指日志等级，比如info等级。
 
 
+ - 补充：celery worker工作模式
+     - celery 高版本不兼容 windows 因此需要pip install eventlet来兼容windows
+celery -A celery_tasks.main worker -l info -P eventlet -c 1000 #将进程改变为协程
+
+
+
+
 
  - 一切准备完毕之后理所当然的应当要添加任务了
  - 请将之前需要分开的同步代码改为
  from celery_tasks.sms.tasks import celery_send_sms_code
  # 添加任务 - 执行参数
- celery_send_sms_code(mobile,sms_code)
+ celery_send_sms_code.delay(mobile,sms_code)
 
 
 
@@ -1388,6 +1395,7 @@ pip install pycryptodome
 1. 使用非对称密钥加密 (安全, 难欸)
  - 找不到模块情况下 windows环境下安装完pycryptodome后在你python的根目录下如: "Python/Python36/Lib/site-packages"
     - 里面有一个文件夹叫做 crypto,将首字母小写c改成大写C即可解决
+    - 公钥加密的信息，只有私钥才能解密
 
 2.先单独创建一个文件, 用于生成私钥与公钥, 然后文件中写入 (这里代码压了一下)
     """
@@ -1468,6 +1476,7 @@ send_mail(subject,message,from_email,recipient_list,html_message)
 
 配置邮件服务器 那里直接丢到 setting 文件中即可, 无需页面引入
 
+ - 如果要 跳转链接, 必须要为 https 
 
 
 
