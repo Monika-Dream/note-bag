@@ -19,6 +19,7 @@ django-admin startproject 项目名字
 
  - 6.创建子应用(可选)
 python manage.py startapp name
+django-admin startapp areas
 
 -------------------------------------------------------------- Django 文件刨析
 
@@ -286,6 +287,13 @@ DATABASES = {
 
  - primary_key                          若为True，则该字段会成为模型的主键字段，
                                              - 默认值是False，一般作为AutoField的选项使用
+ - related_name='subs'                  详细请看关联查询 
+                                             - 由一到多的访问模型中, 系统会为我们自动添加一个 关系模型类名小写_set 字段
+                                             - 与当前有关联的内容
+                                             - # 查询书籍为 1 的所有人物信息 
+                                             - book = BookInfo.objects.get(id=1)
+                                             - book.peopleinfo_set.all()
+                                             - 而 related_name 就是设置 peopleinfo_set 的换名的
 
 -------------------------------------------------------------- 关于 models.
 
@@ -1478,15 +1486,43 @@ send_mail(subject,message,from_email,recipient_list,html_message)
 
  - 如果要 跳转链接, 必须要为 https 
 
+-------------------------------------------------------------- Django 缓存工具
 
 
+ - 不是频繁变化的数据，所以没有必要每次都重新查询。
+ - 所以我们可以选择对 数据 进行 缓存 处理。
+ - 1.缓存工具
+ - from django.core.cache import cache
+         - 存储缓存数据：cache.set('key', 内容, 有效期/秒)
+         - 读取缓存数据：cache.get('key')
+         - 删除缓存数据：cache.delete('key')
+ - 注意：存储进去和读取出来的数据类型相同，所以读取出来后可以直接使用。
+
+ - 2.缓存逻辑
+                有        返回缓存数据
+拿   缓存数据
+                没有      查询数据           存储缓存数据
+
+from django.core.cache import cache
+class SubAreaView(View):
+    def get(self, requests, id):
+        data_list = cache.get('province')
+        # 没有缓存数据就查询数据并且设置缓存
+        if data_list is None:
+            up_level = Area.objects.get(id=id)
+            down_level = up_level.subs.all()
+            data_list=[]
+            for item in down_level:
+                data_list.append({
+                    'id': item.id,
+                    'name': item.name
+                })
+            cache.set('province',data_list,24*3600)
 
 
+        return JsonResponse({'code': 0, 'errmsg': 'ok', 'sub_data': {'subs': data_list}})
 
-
-
-
-
+ - 缓存走的是 setting 文件中的 CACHES 配置项中的 default 配置, 我这里走的是 redis
 
 
 
