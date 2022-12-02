@@ -1,47 +1,99 @@
- - 点击安装包直接下一步即可
- - 安装完后控制台 docker --help 显示则说明完成
+- 点击安装包直接下一步即可
+- 安装完后控制台 docker --help 显示则说明完成
+- docker version           检查 docker 版本
 
- - docker version           检查 docker 版本
+- 启动docker
+service docker start
+- 重启docker
+sudo service docker restart
+- 停止docker
+sudo service docker stop
 
+* REPOSITORY：镜像所在的仓库名称 
+* TAG：镜像标签 
+* IMAGEID：镜像ID 
+* CREATED：镜像的创建日期(不是获取该镜像的日期) 
+* SIZE：镜像大小
 
+- 查看所有镜像 
+docker image ls
 
+- 搜索镜像
+docker search 名字                        =
 
+- 官方镜像
+docker image pull 镜像名称 或者 sudo docker image pull library/镜像名称
+docker image pull ubuntu 或者 sudo docker image pull library/ubuntu
+docker image pull ubuntu:16.04
+或者 sudo docker image pull library/ubuntu:16.04
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- 个人镜像
+docker image pull 仓库名称/镜像名称
+docker image pull itcast/fastdfs
 
 
+- 删除镜像
+docker image rm 镜像名或镜像ID
+docker image rm hello-world:TAG加上
+docker image rm fce289e99eb9
+
+- 导出镜像      名字[压缩方式]    导出哪个
+docker save -o redis.rar redis 
+
+- 导入镜像
+docker load -i '路径' 
+
+
+ - 运行的镜像就是容器
 
 
 
+- 容器列表
+- 查看正在运行的容器
+docker container ls
+
+- 查看所有的容器
+docker container ls -a
+
+   容器ID     依赖的镜像                 创建时间        状态                  名字         
+CONTAINER ID   IMAGE         COMMAND    CREATED       STATUS      PORTS     NAMES
+
+- 运行镜像
+docker run [镜像] 镜像名字 [指令]
+docker run -dit ubuntu:TAG [指令]
+常用可选参数说明：
+* -i 表示以《交互模式》运行容器。
+* -t 表示容器启动后会进入其命令行。加入这两个参数后，容器创建就能登录进去。即  分配一个 伪终端 。
+* --name 为创建的容器命名。
+* -v 表示目录映射关系，即宿主机目录:容器中目录。注意:最好做目录映射，在宿主机上做修改，然后共享到容器上。 
+* -d 会创建一个守护式容器在后台运行(这样创建容器后不会自动登录容器),也就是不会进入容器
+* -p 表示端口映射，即宿主机端口:容器中端口。
+* --network=host 表示将主机的网络环境映射到容器中，使容器的网络与主机相同。
+- 运行完之后会像虚拟环境一样显示终端, 无界面
+- exit 退出
+
+- 在后台运行的容器应当如何进入?
+docker exec -it 容器id /bin/bash
+ctrl + d 退出
+
+
+- 设置一个名字(守护方式运行) 会开启
+docker run -dit --name=Myubuntu ubuntu /bin/bash
 
 
 
+- 停止容器
+docker container stop 容器名或容器id
 
+- kill掉容器
+docker container 
+kill 容器名或容器id
 
+- 启动容器
+docker container start 容器名或容器id
+
+- 删除容器(正在运行的容器无法直接删除)
+docker container rm 容器名或容器id
 
 
 

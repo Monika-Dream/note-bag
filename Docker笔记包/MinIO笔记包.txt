@@ -1,0 +1,75 @@
+minio官网：https://docs.min.io/docs/minio-docker-quickstart-guide.html
+
+ - docker search minIO 						搜索下 MinIo
+ - docker pull minio/minio  				拉取 MinIO
+ - docker images  							查看镜像文件
+
+docker 进入 minio 伪终端
+ - docker exec -it minio /bin/sh
+
+
+
+- 创建并启动minIO容器：
+docker run -p 9000:9000 -p 9090:9090 --name minio -d --restart=always -e "MINIO_ACCESS_KEY=minioadmin" -e "MINIO_SECRET_KEY=minioadmin" -v C:/users/lenovo/desktop/minio/data:/data minio/minio server /data --console-address ":9090" -address ":9000"
+
+
+1.docker run -p 9000:9000 -p 9090:9090 		
+    - 这里的9090端口指的是minio的客户端端口。虽然设置9090，但是我们在访问9000的时候，他也会自动跳到9090。
+        - 9000端口是minio的服务端端口，我们程序在连接minio的时候，就是通过这个端口来连接的。
+        - 前者是api方式访问的端口，后者是客户端界面访问的端口
+ 
+2. --name minio 这是容器名称
+
+3. -d --restart=always 代表重启linux的时候容器自动启动 ( 你这个minio已经搭配好了乌班图 )
+
+4.两个 -e
+    MINIO_ACCESS_KEY:账号 MINIO_SECRET_KEY:密码 (正常账号应该不低于3位，密码不低于8位，不然容器会启动不成功)
+
+5.C:/users/lenovo/desktop/minio/data:/data
+    -v就是docker run当中的挂载，这里的/mydata/minio/data:/data
+        - 意思就是将容器的/data目录和宿主机的/mydata/minio/data目录做映射，
+        - 这样我们想要查看容器的文件的时候，就不需要看容器当中的文件了。
+        - 注意在执行命令的时候，他是会自动在宿主机当中创建目录的。我们不需要手动创建。
+        - minio所上传的文件默认都是存储在容器的data目录下的！
+        - 假如删除容器了宿主机当中挂载的目录是不会删除的。
+            - 假如没有使用-v挂载目录，那他在宿主机的存储位置的文件会直接删除的。
+        - 宿主机的挂载目录一定是根目录，如果是相对路径会有问题。
+            - 还有容器当中的目录也是必须是绝对路径（根路径就是带/的）。
+        - 所谓的挂载其实就是将容器目录和宿主机目录进行绑定了，
+            - 操作宿主机目录，容器目录也会变化，操作容器目录，宿主机目录也会变化。
+            - 这样做的目的 可以间接理解为就是数据持久化，防止容器误删，导致数据丢失的情况。
+
+6.server 
+    -使用docker service创建MinIO服务
+
+7./data 
+    - /data 作为映射来启动 minio, 可是当容器关闭后 data 目录也会随之消逝( 不过所有的数据都会在容器退出时丢失。 映射的原因)
+
+8. --console-address ":9090"  指定客户端端口
+
+9. -address ":9000" 应用接口
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
