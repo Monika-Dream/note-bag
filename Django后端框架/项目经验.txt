@@ -2,7 +2,7 @@
  - get 或 post 之类的一定要携带一个参数 一般为 request
 
  - python manage.py shell	所见即所得
-
+ - python -m http.server 8080	运行前端在它的文件夹中
 ----------------------------------------------------------------------- 视图定义 get 与 post 注意
 
 class LoginView(View):

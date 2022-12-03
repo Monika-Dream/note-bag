@@ -1526,9 +1526,9 @@ class SubAreaView(View):
  - 缓存走的是 setting 文件中的 CACHES 配置项中的 default 配置, 我这里走的是 redis
 
 
--------------------------------------------------------------- FastDFS 工具
+-------------------------------------------------------------- MinIO 工具
 
- - 用c语言编写的一款开源的轻量级分布式文件系统。
+ - 用 go 语言编写的一款开源的轻量级分布式文件系统。
  - 功能包括：
      - 文件存储、文件访问（文件上传、文件下载）、文件同步等，
      - 解决了大容量存储和负载均衡的问题。
@@ -1559,6 +1559,63 @@ class SubAreaView(View):
 
  - 仓库（Repository）
      - Docker的仓库功能类似于Github，是用于托管镜像的。
+
+-------------------------------------------------------------- python 连接 MinIO 方式
+
+.minio.sys/config/config.json/里面的文件就是了, 但是你可以在创建的时候就修改密码啊
+
+pip install minio
+
+from minio import Minio
+from minio.error import S3Error
+
+
+minioClient = Minio('127.0.0.1:9000',access_key="minioadmin",secret_key="minioadmin",secure=False)
+
+secure = 设为True代表启用HTTPS。 (默认是True)。 设置为 True 现在会报错 ? 
+
+
+try:
+    minioClient.fput_object('imagessss',"JustMonika.jpg",'./monika.png')        #添加图片
+    minioClient.make_bucket("monika")                                           #创建桶, 注意命名规则
+    buckets1 , buckets2 = bucketList = minioClient.list_buckets()               #查看所有桶, 返回 list
+             # - buckets1.creation_date     创建时间
+             # - buckets1.name              名字
+    minioClient.bucket_exists('monika')                                         #检查是否已经有了这个桶
+    minioClient.remove_bucket('images')                                         #删除这个桶
+    re_obj = minioClient.list_objects('images', prefix=None, recursive=False)   #返回数组里包对象, 遍历这个桶
+             # - prefix 过滤对象桶的前缀
+             # - recursive True代表递归查找，False代表类似文件夹查找，以'/'分隔，不查子文件夹。（可选，默认值是False）。
+                    # re_obj.bucket_name string  对象所在存储桶的名称。
+                    # re_obj.object_name string  对象的名称。
+                    # re_obj.is_dir      bool  True代表列举的对象是文件夹（对象前缀）， False与之相反。
+                    # re_obj.size        int  对象的大小。
+#---之后不在此过多赘述, 请去 http://docs.minio.org.cn/docs/master/python-client-api-reference 查看
+             #list_incomplete_uploads(bucket_name, prefix, recursive=False)     #列出存储桶中未完整上传的对象。
+            get_object(存储桶名称。, 对象名称, request_headers=None )                                #下载一个对象。
+            get_partial_object(bucket_name, object_name, offset=0, length=0, request_headers=None) #下载一个对象的指定区间的字节数组。
+            fget_object(bucket_name, object_name, file_path, request_headers=None)                 #下载并将文件保存到本地。
+            copy_object(查文档)                #拷贝对象存储服务上的源对象到一个新对象
+            put_object(查文档)                 #添加一个新的对象到对象存储服务。
+            stat_object(查文档)                #获取对象的元数据。
+            remove_object(查文档)              #删除一个对象。
+            remove_objects(查文档)             #删除存储桶中的多个对象。
+            fput_object(查文档)                #通过文件上传到对象中。
+            remove_incomplete_upload(查文档)   #删除一个未完整上传的对象。
+except S3Error:
+    print("没有桶啊")
+
+-------------------------------------------------------------- collections 库介绍
+
+Python内置的数据类型和方法，
+collections模块在这些内置类型的基础提供了额外的高性能数据类型，
+比如基础的字典是不支持顺序的，collections模块的OrderedDict类构建的字典可以支持顺序，
+collections模块的这些扩展的类用处非常大
+
+https://docs.python.org/zh-cn/3/library/collections.html#module-collections
+
+
+
 
 
 
