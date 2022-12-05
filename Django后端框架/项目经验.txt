@@ -424,7 +424,35 @@ stu_id						teacher_id
 200   							999
 200 							999
 
+-------------------------------------------------------------- models.ImageField
 
+ - 对于它可以实现 url 自动拼接
+它里面有
+    def url(self):
+        self._require_file()
+        return self.storage.url(self.name)	数据库中的路径
+我们重写的就是这里
+
+ - 首先在 setting 中
+DEFAULT_FILE_STORAGE = 'utils.storage.MinIOStorage'
+
+# MinIO相关参数
+MinIO_BASE_URL = 'http://127.0.0.1:9000/monika/'
+
+
+ - 创建 storage 文件
+
+from django.core.files.storage import Storage
+from meiduo_mall.settings import MinIO_BASE_URL
+
+class MinIOStorage(Storage):
+    """自定义文件存储系统，修改存储的方案"""
+    def __init__(self, minio_base_url=None):
+        self.minio_base_url = minio_base_url or MinIO_BASE_URL
+    def _open(self, name, mode='rb'):pass
+    def _save(self, name, content):pass
+    def url(self, name):
+        return self.minio_base_url + name
 
 
 
