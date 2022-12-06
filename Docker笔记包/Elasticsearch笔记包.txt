@@ -1,0 +1,64 @@
+ - 运行 Elasticsearch
+ - 记得关闭防火墙 控制面板\系统和安全\Windows Defender 防火墙
+ - 得等上半天
+ 
+docker run -d -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" --name es -v C:/Users/Lenovo/Desktop/es/config:/usr/share/elasticsearch/config --restart=always --cpuset-cpus="1" --memory="2G" -e TZ="Asia/Shanghai" -e LANG="C.UTF-8" elasticsearch:8.5.2
+
+user: elastic 
+password: changeme 
+
+
+
+-d 创建一个守护式容器在后台运行
+
+- 9200 api 端口
+- 9300 网页端口
+
+-e "discovery.type=single-node" 单机运行
+
+--name es 起名字
+
+--restart=always 代表重启linux的时候容器自动启动 ( 你这个minio已经搭配好了乌班图 )
+
+--network=host 表示将主机的网络环境映射到容器中，使容器的网络与主机相同。
+
+--cpuset-cpus="1" 限制容器使用 cup 的数量
+
+--memory 对容器能使用的内存的大小作出限制
+
+-e TZ="Asia/Shanghai" 修改容器时区
+
+-e LANG="C.UTF-8" 修改容器的编码方式
+
+
+ - 运行 Elasticsearch(ElasticHD)可视化界面
+
+
+docker run -d -p 8230:9800 --name elastichd --restart=always --link es containerize/elastichd
+
+
+通过cmd命令查看哪些端口被禁用TCP协议
+netsh interface ipv4 show excludedportrange protocol=tcp
+如果你想要开启的端口在被禁用范围内, 请重新开一个
+
+
+
+-v C:/Users/Lenovo/Desktop/es/config:/usr/share/elasticsearch/config
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

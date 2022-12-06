@@ -1621,8 +1621,18 @@ https://docs.python.org/zh-cn/3/library/collections.html#module-collections
 from collections import OrderedDict
 具有顺序的字典
 
-
-
+-------------------------------------------------------------- Elasticsearch 搜索
+ - 实现全文检索的搜索引擎，首选的是Elasticsearch。
+ - Elasticsearch是用 Java 实现的，开源的搜索引擎。
+ - 它可以快速地储存、搜索和分析海量数据。维基百科、Stack Overflow、Github等都采用它。
+    - Elasticsearch 的底层是开源库Lucene 。但是，没法直接使用 Lucene，必须自己写代码去调用它的接口。
+ - 分词说明
+     - 搜索引擎在对数据构建索引时，需要进行分词处理。
+     - 分词是指将一句话拆解成多个单字或词，这些字或词便是这句话的关键词。
+     - 比如：我是中国人
+     - 分词后：我、是、中、国、人、中国等等都可以是这句话的关键字。
+ - Elasticsearch 不支持对中文进行分词建立索引
+ - 需要配合扩展elasticsearch-analysis-ik来实现中文分词处理。
 
 
 

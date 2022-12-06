@@ -20,12 +20,14 @@ docker run -p 9000:9000 -p 9090:9090 --name minio -d --restart=always -e "MINIO_
  
 2. --name minio 这是容器名称
 
-3. -d --restart=always 代表重启linux的时候容器自动启动 ( 你这个minio已经搭配好了乌班图 )
+3. -d 创建一个守护式容器在后台运行
 
-4.两个 -e
+4. --restart=always 代表重启linux的时候容器自动启动 ( 你这个minio已经搭配好了乌班图 )
+
+5.两个 -e
     MINIO_ACCESS_KEY:账号 MINIO_SECRET_KEY:密码 (正常账号应该不低于3位，密码不低于8位，不然容器会启动不成功)
 
-5.C:/users/lenovo/desktop/minio/data:/data
+6.C:/users/lenovo/desktop/minio/data:/data
     -v就是docker run当中的挂载，这里的/mydata/minio/data:/data
         - 意思就是将容器的/data目录和宿主机的/mydata/minio/data目录做映射，
         - 这样我们想要查看容器的文件的时候，就不需要看容器当中的文件了。
@@ -39,15 +41,15 @@ docker run -p 9000:9000 -p 9090:9090 --name minio -d --restart=always -e "MINIO_
             - 操作宿主机目录，容器目录也会变化，操作容器目录，宿主机目录也会变化。
             - 这样做的目的 可以间接理解为就是数据持久化，防止容器误删，导致数据丢失的情况。
 
-6.server 
+7.server 
     -使用docker service创建MinIO服务
 
-7./data 
+8./data 
     - /data 作为映射来启动 minio, 可是当容器关闭后 data 目录也会随之消逝( 不过所有的数据都会在容器退出时丢失。 映射的原因)
 
-8. --console-address ":9090"  指定客户端端口
+9. --console-address ":9090"  指定客户端端口
 
-9. -address ":9000" 应用接口
+10. -address ":9000" 应用接口
 
 
 

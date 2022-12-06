@@ -68,8 +68,25 @@ docker run -dit ubuntu:TAG [指令]
 * -v 表示目录映射关系，即宿主机目录:容器中目录。注意:最好做目录映射，在宿主机上做修改，然后共享到容器上。 
 * -d 会创建一个守护式容器在后台运行(这样创建容器后不会自动登录容器),也就是不会进入容器
 * -p 表示端口映射，即宿主机端口:容器中端口。
-* --network=host 表示将主机的网络环境映射到容器中，使容器的网络与主机相同。
+* --net 或 --network=host 表示将主机的网络环境映射到容器中，使容器的网络与主机相同。
 * -e 设置一个参数, 具体怎么写请看相关对应的文档
+* --ip  表示设置固定的 IP 地址
+* -m 或 --memory 内存限制，格式是数字加单位，单位可以为 b,k,m,g。最小为 4M
+* --memory-swap   内存+交换分区大小总限制。格式同上。必须必-m设置的大
+* --memory-reservation    内存的软性限制。格式同上
+* --oom-kill-disable  是否阻止 OOM killer 杀死容器，默认没设置
+* --oom-score-adj 容器被 OOM killer 杀死的优先级，范围是[-1000, 1000]，默认为 0
+* --memory-swappiness 用于设置容器的虚拟内存控制行为。值为 0~100 之间的整数
+* --kernel-memory 核心内存限制。格式同上，最小为 4M
+* --link 容器之间互相通信, 后面写 容器的名字
+
+ - docker启动时指定--network=host或-net=host，如果还指定了-p或-P，那这个时候就会有警告，
+     - 并且通过-p或-P设置的参数将不会起到任何作用，端口号会以主机端口号为主，重复时则递增。
+
+ - docker cp 容器id:路径/文件 本地路径。这样，文件就从容器中拷贝到了宿主机上。
+
+
+
 - 运行完之后会像虚拟环境一样显示终端, 无界面
 - exit 退出
 
@@ -97,6 +114,10 @@ docker container start 容器名或容器id
 docker container rm 容器名或容器id
 
 
+通过cmd命令查看哪些端口被禁用TCP协议
+netsh interface ipv4 show excludedportrange protocol=tcp
+如果你想要开启的端口在被禁用范围内, 请重新开一个
 
 
-
+ - docker 创建一个网络
+ docker network create default_network
