@@ -1,13 +1,31 @@
  - 运行 Elasticsearch
  - 记得关闭防火墙 控制面板\系统和安全\Windows Defender 防火墙
  - 得等上半天
- 
-docker run -d -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" --name es -v C:/Users/Lenovo/Desktop/es/config:/usr/share/elasticsearch/config --restart=always --cpuset-cpus="1" --memory="2G" -e TZ="Asia/Shanghai" -e LANG="C.UTF-8" elasticsearch:8.5.2
 
-user: elastic 
-password: changeme 
+docker run -d -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" --name es ^
+-v C:/Users/Lenovo/Desktop/es/config:/usr/share/elasticsearch/config ^
+-v C:/Users/Lenovo/Desktop/es/data:/usr/share/elasticsearch/data ^
+-v C:/Users/Lenovo/Desktop/es/plugins:/usr/share/elasticsearch/plugins ^
+--cpuset-cpus="1" --memory="1G" -e TZ="Asia/Shanghai" -e LANG="C.UTF-8" elasticsearch:8.5.2
 
 
+
+
+
+ - 下载 ik 分词器
+./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v8.5.2/elasticsearch-analysis-ik-8.5.2.zip
+
+
+
+
+docker cp es:/usr/share/elasticsearch/config C:/Users/Lenovo/Desktop/es/config
+
+
+
+
+
+
+elasticsearch.yml
 
 -d 创建一个守护式容器在后台运行
 
@@ -34,7 +52,7 @@ password: changeme
  - 运行 Elasticsearch(ElasticHD)可视化界面
 
 
-docker run -d -p 8230:9800 --name elastichd --restart=always --link es containerize/elastichd
+docker run -d -p 8230:9800 --name elastichd --link es:demo containerize/elastichd
 
 
 通过cmd命令查看哪些端口被禁用TCP协议

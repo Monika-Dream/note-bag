@@ -1622,6 +1622,8 @@ from collections import OrderedDict
 具有顺序的字典
 
 -------------------------------------------------------------- Elasticsearch 搜索
+ - 数据库 like 查询效率太低
+
  - 实现全文检索的搜索引擎，首选的是Elasticsearch。
  - Elasticsearch是用 Java 实现的，开源的搜索引擎。
  - 它可以快速地储存、搜索和分析海量数据。维基百科、Stack Overflow、Github等都采用它。
@@ -1634,7 +1636,9 @@ from collections import OrderedDict
  - Elasticsearch 不支持对中文进行分词建立索引
  - 需要配合扩展elasticsearch-analysis-ik来实现中文分词处理。
 
-
+搜索引擎进行全文检索时，会对数据库中的数据进行一遍预处理，单独建立起一份索引结构数据。
+索引结构数据类似新华字典的索引检索页，里面包含了关键词与词条的对应关系，并记录词条的位置。
+搜索引擎进行全文检索时，将关键字在索引数据中进行快速对比查找，进而找到数据的真实存储位置。
 
 
 
