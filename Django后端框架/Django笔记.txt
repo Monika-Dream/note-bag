@@ -1640,13 +1640,67 @@ from collections import OrderedDict
 索引结构数据类似新华字典的索引检索页，里面包含了关键词与词条的对应关系，并记录词条的位置。
 搜索引擎进行全文检索时，将关键字在索引数据中进行快速对比查找，进而找到数据的真实存储位置。
 
+-------------------------------------------------------------- Haystack 扩展建立索引
+
+ - Haystack 是在Django中对接搜索引擎的框架，搭建了用户和搜索引擎之间的沟通桥梁。
+ - 我们在Django中可以通过使用 Haystack 来调用 Elasticsearch 搜索引擎。
+ - Haystack 可以在不修改代码的情况下使用不同的搜索后端（比如Elasticsearch、Whoosh、Solr等等）。
+
+pip install "django-haystack[elasticsearch]"
+
+与大多数 Django 应用程序一样，您应该将 Haystack 添加到您的设置文件中（通常）。
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+
+    # Added.
+    'haystack',
+
+    # Then your usual apps...
+    'blog',
+]
+
+#setting 中写入
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch7_backend.Elasticsearch7SearchEngine',
+        'URL': 'http://127.0.0.1:9200/',    #请查看 ES config 中的配置方案
+        'INDEX_NAME': 'haystack',           #索引名字, 随便起
+    },
+}
+
+ - 请在需要检索的子应用下面去创建一个 search_indexes.py 文件( 他会自动搜索 )
+ - 针对于去搜索什么什么则需要去针对于创建一个类
+
+import datetime
+from haystack import indexes
+from myapp.models import Note
 
 
+class NoteIndex(indexes.SearchIndex, indexes.Indexable): 
+#每个都需要有一个（并且只能有一个）document=True 的字段。
+    #这向 Haystack 和搜索引擎表明 哪个字段是在其中搜索的主要字段,说白就是在整个搜索过程中的权重比较高
+    #字段名起什么都可以, text 只是惯例
+    #所有的索引的 这个字段都一致就行
+#use_template=True 允许我们单独设置一个文件来设置哪些字段需要检索
+    #创建的方案, 在根目录下创建 templates/search/indexes/子应用名目录/模型类名小写_text.txt
+    # {{object.name}}  {{object.caption}}  {{object.id}}
+    text = indexes.CharField(document=True, use_template=True)
 
 
+    def get_model(self):
+        return SKU
+
+    def index_queryset(self, using=None):
+        """Used when the entire index for model is updated."""
+        return self.get_model().objects.all()   #这里根据具体需求
 
 
-
-
-
-
+ - 运行
+./manage.py rebuild_index
+没什么提示?
