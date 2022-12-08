@@ -21,6 +21,18 @@ django-admin startproject 项目名字
 python manage.py startapp name
 django-admin startapp areas
 
+-------------------------------------------------------------- 需要的文件目录
+
+meiduo_mall
+    - apps                          存放子应用
+    - celery_tasks                  这个无强制规定
+    - libs                          存放自己导的第三方库
+    - logs                          日志存放
+    - meiduo_mall                   自动生成的
+    - templates                     模板文件存放文件夹(强制需要)
+    - utils                         存放项目自己定义的公共函数或类等
+    - manage.py                     目录下执行命令
+
 -------------------------------------------------------------- Django 文件刨析
 
 settings.py - 项目的整体设置
@@ -1704,3 +1716,176 @@ class NoteIndex(indexes.SearchIndex, indexes.Indexable):
  - 运行
 ./manage.py rebuild_index
 没什么提示?
+
+
+-------------------------------------------------------------- Haystack 搜索
+
+ - 因为我们是借助于 haystack 来对接 ES(已经对于数据建立索引) 来查找数据
+ - 所以 haystack 可以帮助我们查询数据
+ - def create_response(self) 我们需要重写这个方法, 因为它是 render
+
+from haystack.views import SearchView
+class SKUSearchView(SearchView):
+    def create_response(self):
+        context = self.get_context()  # 搜索的结果
+        sku_list = []                   #构建列表
+        for sku in context['page'].object_list:
+            sku_list.append({
+                ...
+            })
+        return JsonResponse(sku_list,safe=False)
+
+
+ - 然后在 url 中直接实例化即可
+ path("search/", SKUSearchView())
+
+
+
+ - 查询的底层内容
+def get_query(self):                    #前端注意传参方式是 query 传参, 且参数为 q=?
+    self.form.cleaned_data["q"]
+
+def build_page(self):                   #这是分页底层逻辑
+
+#前端方案 query 传参[GET]
+q: huawei       
+page: 2
+page_size: 2  ? 这个存疑, 或许没必要传
+
+ - 设置搜索每页返回的记录条数
+    在 setting 文件中写入即可
+    HAYSTACK_SEARCH_RESULTS_PER_PAGE = 5
+
+
+-------------------------------------------------------------- 页面静态化
+
+1.为什么要做页面静态化
+ - 减少数据库查询次数。
+ - 提升页面响应效率。
+
+2.什么是页面静态化
+ - 将动态渲染生成的页面结果保存成html文件，放到静态文件服务器中。
+ - 用户直接去静态服务器，访问处理好的静态html文件。
+
+3.页面静态化注意点
+ - 用户相关数据不能静态化：
+     - 用户名、购物车等不能静态化。
+ - 动态变化的数据不能静态化：
+     - 热销排行、新品推荐、分页排序数据等等。
+ - 不能静态化的数据处理：
+     - 可以在用户得到页面后，在页面中向后端发送Ajax请求获取相关数据。
+     - 直接使用模板渲染出来。
+     - 其他合理的处理方式等等。
+
+
+ - 说白就是偷梁换柱
+ - 这种一般都是最后的性能优化方案
+ - 后端将大至不变的数据渲染到页面上
+ - 替换前端要请求的内容, 再把前端文件替换
+     - 直接函数就可以了, 替换的时候命令行运行就可以了 python manage.py shell
+     - 导入文件, 运行函数
+ - 在 根文件夹中需要有 templantes
+ - 下面是流程
+def generic_meiduo_index():
+    print("--------------------------")
+
+    # 我们的首页 后边会讲解页面静态化
+    # 我们把数据 传递 给 模板
+    context = {
+        'categories': categories,
+        'contents': contents,
+    }
+    #加载渲染的模板
+    from django.template import loader
+    index_template = loader.get_template('index.html')
+    #把数据给模板
+    index_html_data = index_template.render(context)
+    #把渲染好的 HTML 放到指定文件中去
+    from meiduo_mall import settings
+    import os
+
+    file_path = os.path.join(os.path.dirname(settings.BASE_DIR),'front_end_pc/index.html')
+    with open(file_path,'w',encoding='utf-8') as f:
+        f.write(index_html_data) 
+
+
+-------------------------------------------------------------- 定时任务 crontab 静态化首页(windows 无法使用)
+
+ - 可以使用 celery 的定时任务
+
+ - 对于首页的静态化，考虑到页面的数据可能由多名运营人员维护，并且经常变动，
+     - 所以将其做成定时任务，即定时执行静态化。
+ - 在Django执行定时任务，可以通过 django-crontab 扩展来实现。
+
+ - 1.安装 django-crontab          pip install django-crontab
+
+ - 2.注册 django-crontab 应用
+    INSTALLED_APPS = [    
+        'django_crontab', # 定时任务
+    ]
+
+ - 3.设置定时任务
+
+     - 定时时间基本格式 :  *  *  *  *  *
+
+        分 时 日 月 周    命令
+
+        M: 分钟（0-59）。每分钟用 * 或者 */1 表示
+        H：小时（0-23）。（0表示0点）
+        D：天（1-31）。
+        m: 月（1-12）。
+        d: 一星期内的天（0~6，0为星期天）。
+
+     - 定时任务分为三部分定义：
+
+        - 任务时间
+        - 任务方法
+        - 任务日志
+
+ - settings 中写入
+CRONJOBS = [
+    # 每1分钟生成一次首页静态文件
+    # 分 时 日 月 周    路径.函数名                                       日志文件存放 >> 是必须的
+    ('*/1 * * * *', 'apps.contents.crons.generic_meiduo_index', '>> ' + os.path.join(BASE_DIR, 'logs/crontab.log'))
+]
+解决 crontab 中文问题
+
+在定时任务中，如果出现非英文字符，会出现字符异常错误
+CRONTAB_COMMAND_PREFIX = 'LANG_ALL=zh_cn.UTF-8'
+4.管理定时任务
+
+# 添加定时任务到系统中
+
+$ python manage.py crontab add
+
+
+# 显示已激活的定时任务
+
+$ python manage.py crontab show
+
+
+# 移除定时任务
+
+$ python manage.py crontab remove
+
+解决 ModuleNotFoundError: No module named 'fcntl'
+     - C:/Users/Lenovo/Desktop/mido-mall-git42/meiduo_center/Lib/site-packages
+     - 添加 fcntl.py 文件
+     - 写入:
+def fcntl(fd, op, arg=0):
+    return 0
+def ioctl(fd, op, arg=0, mutable_flag=True):
+    if mutable_flag:
+        return 0
+    else:
+        return ""
+def flock(fd, op):
+    return
+def lockf(fd, operation, length=0, start=0, whence=0):
+    return     
+
+
+
+
+
+
