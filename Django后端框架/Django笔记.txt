@@ -1884,9 +1884,38 @@ def flock(fd, op):
 def lockf(fd, operation, length=0, start=0, whence=0):
     return     
 
--------------------------------------------------------------- 
+-------------------------------------------------------------- 字典转 二进制模块
+
+ - pickle模块介绍
+ - pickle模块是Python的标准模块，提供了对Python数据的序列化操作，
+     - 可以将数据转换为bytes类型，且序列化速度快。
+ - pickle模块使用：
+ - pickle.dumps()   将Python数据序列化为bytes类型数据。
+ - pickle.loads()   将bytes类型数据反序列化为python数据。
 
 
+import pickle
+
+ - dict = {'1': {'count': 10, 'selected': True}, '2': {'count': 20, 'selected': False}}
+ - ret = pickle.dumps(dict)
+         - b'\x80\x03}q\x00(X\x01\x00\x0 ... tedq\x04\x88x04\x89uu.'
+ - pickle.loads(ret)
+         - {'1': {'count': 10, 'selected': True}, '2': {'count': 20, 'selected': False}}
+
+
+ - 提示：pickle模块序列化转换后的数据是bytes类型，浏览器cookie无法存储。
+ - base64模块是Python的标准模块，可以对bytes类型数据进行编码，并得到bytes类型的密文数据。
+ - base64模块使用：
+     - base64.b64encode()   将bytes类型数据进行base64编码，返回编码后的bytes类型数据。
+     - base64.b64deocde()   将base64编码后的bytes类型数据进行解码，返回解码后的bytes类型数据。
+
+
+ - import base64
+ - ret = b'\x80\x03}q\x00(X\x01 ... tedq\x04x04\x89uu.'
+ - b = base64.b64encode(ret)
+ - b = b'gAN9cQAoWAE ... Il1dS4='
+ - base64.b64decode(b)
+ - b = b'selectedq\x04\x88uX ... q\x05}q\x06(h\x03K\x14h\x04\x89uu.'
 
 
 
