@@ -454,7 +454,13 @@ class MinIOStorage(Storage):
     def url(self, name):
         return self.minio_base_url + name
 
+-------------------------------------------------------------- 数据库有表, 但是迁移文件没有执行
 
+ - django 在 django_migrations 表中记录迁移
+ - 新增一条针对的文件即可
+ - 例如
+  id     文件名                            时间, 随便
+  26    contents    0001_initial    2022-12-09 08:41:30.000000
 
 
 
