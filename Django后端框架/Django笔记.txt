@@ -1995,35 +1995,170 @@ freight = Decimal('10') <- 货币
      - 悲观锁类似于我们在多线程资源竞争时添加的互斥锁，容易出现死锁现象，采用不多。
 
  - 乐观锁
+     - 先记录某一个数据, 在更新的时候, 比对一下这个记录对不对
      - 乐观锁并不是真实存在的锁，而是在更新的时候判断此时的库存是否是之前查询出的库存，
      - 如果相同，表示没人修改，可以更新库存，否则表示别人抢过资源，不再执行库存更新。类似如下操作
      - update tb_sku set stock=2 where id=1 and stock=7;
      - SKU.objects.filter(id=1, stock=7).update(stock=2)
+例子:
+old_data = sku.stock 
+new_stock = sku.stock - count
+new_sales = sku.sales + count
+
+result = SKU.objects.filter(id=sku_id, stock=old_data).update(stock=new_stock, sales=new_sales)
+if result == 0:
+    return JsonResponse({"code":400,"errmsg":"下单失败"})
+
+
+
+
+
  - 任务队列
      - 将下单的逻辑放到任务队列中（如celery），将并行转为串行，所有人排队下单。
      - 比如开启只有一个进程的Celery，一个订单一个订单的处理。
 
+-------------------------------------------------------------- MySQL事务隔离级别
+
+1. MySQL事务隔离级别
+     - 事务隔离级别指的是在处理同一个数据的多个事务中，一个事务修改数据后，其他事务何时能看到修改后的结果。
+     - MySQL数据库事务隔离级别主要有四种：
+
+        1 - Serializable：串行化，一个事务一个事务的执行。
+
+        2 - Repeatable read：可重复读，无论其他事务是否修改并提交了数据，在这个事务中看到的数据值始终不受其他事务影响。
+
+        3 - Read committed：读取已提交，其他事务提交了对数据的修改后，本事务就能读取到修改后的数据值。
+
+        4 - Read uncommitted：读取未提交，其他事务只要修改了数据，即使未提交，本事务也能看到修改后的数据值。
+
+     - MySQL数据库默认使用可重复读（ Repeatable read）。
+         - 使用乐观锁的时候，如果一个事务修改了库存并提交了事务，
+             - 那其他的事务应该可以读取到修改后的数据值，所以不能使用可重复读的隔离级别，
+             - 应该修改为读取已提交（Read committed）。
+
+修改方式：
+
+sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
+
+
+transaction-isolation=READ-COMMITTED
 
 
 
+修改完成之后重启
+sudo service mysql restart
 
 
 
+#查看当前隔离级别
+mysql> SELECT @@GLOBAL.transaction_isolation;
++--------------------------------+
+| @@GLOBAL.transaction_isolation |
++--------------------------------+
+| REPEATABLE-READ                |
++--------------------------------+
+1 row in set (0.00 sec)
+
+#设置个隔离级别为RC
+mysql> set global transaction isolation level READ COMMITTED;
+Query OK, 0 rows affected (0.00 sec)
+
+#再次查看隔离级别，设置成功   **注意要新开会话再查看**
+mysql> SELECT @@GLOBAL.transaction_isolation;
++--------------------------------+
+| @@GLOBAL.transaction_isolation |
++--------------------------------+
+| READ-COMMITTED                 |
++--------------------------------+
+
+-------------------------------------------------------------- Mysql主从配置成功后使用
+
+ - 现在是 幻想时间 !
+
+DATABASES = {
+    'default': { # 写（主机）
+        'ENGINE': 'django.db.backends.mysql', # 数据库引擎
+        'HOST': '192.168.103.158', # 数据库主机
+        'PORT': 3306, # 数据库端口
+        'USER': 'itcast', # 数据库用户名
+        'PASSWORD': '123456', # 数据库用户密码
+        'NAME': 'meiduo_mall' # 数据库名字
+    },
+    'slave': { # 读（从机）
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': '192.168.103.158',
+        'PORT': 8306,
+        'USER': 'root',
+        'PASSWORD': 'mysql',
+        'NAME': 'meiduo_mall'
+    }
+}
 
 
+ - 1.创建数据库读写路由
+     - 在utils.db_router.py中实现读写路由
+
+class MasterSlaveDBRouter(object):
+    """数据库读写路由"""
+
+    def db_for_read(self, model, **hints):
+        """读"""
+        return "slave"
+
+    def db_for_write(self, model, **hints):
+        """写"""
+        return "default"
+
+    def allow_relation(self, obj1, obj2, **hints):
+        """是否运行关联操作"""
+        return True
+
+ - 2.配置数据库读写路由
+
+DATABASE_ROUTERS = ['utils.db_router.MasterSlaveDBRouter']
+
+-------------------------------------------------------------- uWSGI 运行美多商城
+
+ - windows 无法使用, 请到 ubuntu 下使用
+
+ - Django的程序通常使用uwsgi服务器来运行。
+     - pip install uwsgi
+
+ - 在根目录下面新建文件叫 uwsgi.ini
+
+[uwsgi]
+# 使用Nginx连接时使用，Django程序所在服务器地址
+#socket=172.16.21.25:8001
+# 直接做web服务器使用，Django程序所在服务器地址
+http=172.16.21.25:8001
+# 项目目录 - 到 Base DIR 下的 绝对路径
+chdir=项目路径/meiduo_project/meiduo_mall
+# 项目中wsgi.py文件的目录，相对于项目目录
+wsgi-file=meiduo_mall/wsgi.py
+# 进程数
+processes=4
+# 线程数
+threads=2
+# uwsgi服务器的角色
+master=True
+# 存放进程编号的文件
+pidfile=uwsgi.pid
+# 日志文件
+daemonize=uwsgi.log
+# 指定依赖的虚拟环境
+virtualenv=虚拟环境路径/.virtualenvs/meiduo_mall
+
+# 开启
+uwsgi --ini uwsgi.ini
+# 关闭
+uwsgi --stop uwsgi.pid
 
 
+ - 报错:os没有uname()
+ - 解决:
+     - 定位到uwsgiconfig.py文件中, 首先import platform后, 将os.unam()都改为platform.uname()即可。
+os.uname()是不支持windows系统的。platform模块是支持任何系统。
 
-
-
-
-
-
-
-
-
-
-
-
+-------------------------------------------------------------- uWSGI 运行美多商城
 
 

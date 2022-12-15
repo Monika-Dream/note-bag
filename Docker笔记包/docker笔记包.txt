@@ -80,12 +80,15 @@ docker run -dit ubuntu:TAG [指令]
 * --kernel-memory 核心内存限制。格式同上，最小为 4M
 * --link 容器之间互相通信, 后面写 容器的名字
 
+ - 严重警告：host模式主机网络驱动程序仅适用于Linux主机，
+     - 并且不支持Docker for Mac，Docker for Windows或Docker EE for Windows Server。
+
  - docker启动时指定--network=host或-net=host，如果还指定了-p或-P，那这个时候就会有警告，
      - 并且通过-p或-P设置的参数将不会起到任何作用，端口号会以主机端口号为主，重复时则递增。
 
  - docker cp 容器id:路径/文件 本地路径。这样，文件就从容器中拷贝到了宿主机上。
 
-
+ - docker 查看日志  docker logs -f 00a473540772
 
 - 运行完之后会像虚拟环境一样显示终端, 无界面
 - exit 退出

@@ -131,3 +131,39 @@ error: failed to push some refs to 'https://gitee.com/literary_club/note-bag.git
 !/target/*.h 表示target文件夹目录下所有的.h文件将被跟踪
 
 如果你不清楚GIT会跟踪哪些文件，你可以先用git status命令查看一下
+
+-------------------------------------------------------------- git 多人协同使用
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
