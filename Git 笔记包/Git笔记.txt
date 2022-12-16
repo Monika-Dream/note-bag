@@ -134,11 +134,29 @@ error: failed to push some refs to 'https://gitee.com/literary_club/note-bag.git
 
 -------------------------------------------------------------- git 多人协同使用
 
+ - 同步服务器代码执行 git pull
+ - 本地仓库记录版本执行 git commit -am "版本描述" ( -a 参数设置修改文件后不需要执行 git add 命令 )
+ - 推送代码执行 git push 
 
+-------------------------------------------------------------- git 创建标签
 
+ - 相当于软件版本, 就是为了好找对应的大功能
 
+git tag -a 标签名 -m "标签描述"
+ - git tag -a v1.0 -m "版本1.0"
 
+git tag 
+ - v1.0
 
+ - 推送标签, 一个大标签
+git push origin v1.0
+
+-------------------------------------------------------------- git 分支
+
+ - git branch                             获取当前分支
+ - git checkout -b order                  切换并创建新分支 order
+ - -b 删除就是切换
+ - git merge order                        把分支合并到当前所在的分支(套马)
 
 
 

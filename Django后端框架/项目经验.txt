@@ -55,17 +55,71 @@ class User(AbstractUser):
 user.check_password(password)  
 
 ----------------------------------------------------------------------- 关于接口的风格
- - restful 风格
+ - RESTful 风格
  - 多使用 名词的复数形式
+ - 对于数据的增删改查使用 GET/PUSH/PUT/DELETE 来实现
+ - 将参数多使用 URL 进行传递, 这里注意并不是 query 传参
+ - 应当尽量把 API 部署在专用域名之下, 如果 API 简单则可以考虑放在主域名之下
+ - 需求变更多时, 应该将 API 版本号放入 URL 中 http://127.0.0.1:8080/app/1.1/foo
 
+
+传参示例(非重要)
+http://127.0.0.1:8080/goods?type=t01&id=1001     简化为下方形式
+http://127.0.0.1:8080/t01/goods/1001
+
+传参示例(重要)
+ - 例如 分页 之类的, 是可以使用 query 传参, 本质实则是美化 URL 传参, 无所谓
+
+
+接口示例:
  GET /goods/4 			前端获取后端指定产品
  GET /goods				前端获取后端所有产品
-
  POST /goods/ 			前端发送数据保存到后端
-
  PUT /goods/4  			前端修改后端保存的数据
-
  DELETE /goods/4  		前端删除后端保存的指定数据
+
+----------------------------------------------------------------------- 关于响应状态码
+
+200 OK - [GET]：服务器成功返回用户请求的数据
+
+201 CREATED - [POST/PUT/PATCH]：用户新建或修改数据成功。
+
+202 Accepted - [*]：表示一个请求已经进入后台排队（异步任务）
+
+204 NO CONTENT - [DELETE]：用户删除数据成功。
+
+400 INVALID REQUEST - [POST/PUT/PATCH]：用户发出的请求有错误，服务器没有进行新建或修改数据的操作
+
+401 Unauthorized - [*]：表示用户没有权限（令牌、用户名、密码错误）。
+
+403 Forbidden - [*] 表示用户得到授权（与401错误相对），但是访问是被禁止的。
+
+404 NOT FOUND - [*]：用户发出的请求针对的是不存在的记录，服务器没有进行操作，该操作是幂等的。
+
+406 Not Acceptable - [GET]：用户请求的格式不可得（比如用户请求JSON格式，但是只有XML格式）。
+
+410 Gone -[GET]：用户请求的资源被永久删除，且不会再得到的。
+
+422 Unprocesable entity - [POST/PUT/PATCH] 当创建一个对象时，发生一个验证错误。
+
+500 INTERNAL SERVER ERROR - [*]：服务器发生错误，用户将无法判断发出的请求是否成功。
+
+----------------------------------------------------------------------- 错误处理
+
+ - 如果状态码是4xx，服务器就应该向用户返回出错信息。
+     - 一般来说，返回的信息中将error作为键名，出错信息作为键值即可。
+
+{
+    error: "Invalid API key"
+}
+
+return JsonResponse({},status=404)
+
+
+----------------------------------------------------------------------- 返回数据
+
+ - 应当使用 JSON ,避免 XML
+ - 在数据库响应成功时,应当再把数据返回回去 ( 酌情而定 )
 
 -------------------------------------------------------------- 前端 CORS 跨域问题解决
 
@@ -528,6 +582,53 @@ for sku_id in sku_ids:
 # 添加邮费和保存订单信息
 order.total_amount += order.freight
 order.save()
+
+-------------------------------------------------------------- Serializer 字段方案
+
+class BookInfo(models.Model):
+    name = models.CharField(max_length=20, verbose_name='名称') #图书名称
+    pub_date = models.DateField(verbose_name='发布日期') #发布日期
+    readcount = models.IntegerField(default=0, verbose_name='阅读量') #阅读量
+    commentcount = models.IntegerField(default=0, verbose_name='评论量') #评论量
+    is_delete = models.BooleanField(default=False, verbose_name='逻辑删除') #逻辑删除
+    image = models.ImageField(upload_to='book/', verbose_name='图片', null=True)
+    #元类信息 : 修改表名
+    class Meta:
+        db_table = 'bookinfo' # 指明数据库表名
+        verbose_name = '图书'  # 在admin站点中显示的名称
+        verbose_name_plural = verbose_name  # 显示的复数名称
+
+    def __str__(self):
+        """定义每个数据对象的显示信息"""
+        return self.name
+
+ - 单独创建一个 serializers.py 文件 
+
+from rest_framework import serializers
+
+class BookInfoSerializer(serializers.Serializer):
+    """图书数据序列化器"""
+    id = serializers.IntegerField(label='ID')
+    name = serializers.CharField(label='名称')
+    pub_date = serializers.DateField(label='发布日期')
+    readcount = serializers.IntegerField(label='阅读量')
+    commentcount = serializers.IntegerField(label='评论量')
+
+-------------------------------------------------------------- Serializer 使用
+
+ - 上方定义好之后, 导入 图书数据序列化器 进 view 文件后即可使用
+
+from ... import BookInfo
+from ... import BookInfoSerializer
+
+ - 查出数据时(打印字典数据)
+book = BookInfo.objects.get(id=1)
+Serializer = BookInfoSerializer(instance=book)
+print(Serializer.data)
+
+
+
+
 
 
 
