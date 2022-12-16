@@ -2285,6 +2285,90 @@ INSTALLED_APPS = [
     
          - min_value            最小值
 
+-------------------------------------------------------------- Serializer 使用
+
+ - 上方定义好之后, 导入 图书数据序列化器 进 view 文件后即可使用
+ - 默认情况下, 我们不能传递查询结果集, 只能单个传递, 也就是 get(id=1)
+     - 如果需要传递查询结果集, 需要在创建 Serializer 增加 many=True 参数
+
+from ... import BookInfo
+from ... import BookInfoSerializer
+
+ - 查出单个数据时(打印字典数据)
+book = BookInfo.objects.get(id=1)
+Serializer = BookInfoSerializer(instance=book)
+print(Serializer.data)
+
+ - 查出多个数据时(打印带有顺序的字典数据)
+book = BookInfo.objects.all()
+Serializer = BookInfoSerializer(instance=book, many=True)
+print(Serializer.data)
+
+-------------------------------------------------------------- 关联对象嵌套序列化
+
+ - 串行关系
+     - 如果需要序列化的数据中包含有其他关联对象，则对关联对象数据的序列化需要指明。
+     - 例如
+         - 在定义人物数据的序列化器时，外键book（即所属的图书）字段     如何序列化？(如何序列, 并非查找)
+         - 在定义人物数据的序列化器时，外键book（即所属的图书）字段     如何序列化？(如何序列, 并非查找)
+         - 在定义人物数据的序列化器时，外键book（即所属的图书）字段     如何序列化？(如何序列, 并非查找)                 
+     - 我们先定义PeopleInfoSerialzier除外键字段外的其他部分
+
+ - 对于关联字段，可以采用以下几种方式：
+
+1.IntegerField( 如果你使用这个, 那么你要序列化的外键名必须与数据库保持一致 )
+ - book_id = serializers.IntegerField(label='书籍id')
+
+2.PrimaryKeyRelatedField(如果你期望的外键数据的 key 是模型字段的名字, 请使用这个, 获取到 id 值)
+ - 必须设置一个选项信息, queryset/read_only=True
+ - 包含read_only=True参数时，该字段将不能用作反序列化使用
+ - 包含 queryset 参数时，需要告诉系统在哪里匹配外键数据
+ - queryset:
+     - book = serializers.PrimaryKeyRelatedField(label='图书',queryset=BookInfo.objects.all())
+ - 包含 read_only=True 参数时，表示我不验证数据了
+ - read_only=True
+     - book = serializers.PrimaryKeyRelatedField(label='图书',read_only=True)
+
+3.StringRelatedField(外键所关联的外键的信息, 也就是魔术方法 __str__ 返回值)
+ - 这里会进行查找, 查找你这个关联到了哪里, 返回那里的 __str__ 数据, 关联的模型中 __str__ 里面的返回数据
+ - 此字段将被序列化为关联对象的字符串表示方式（即 __str__ 方法的返回值）
+
+4.使用关联对象的序列化器( 这里忘了请看例子 )
+ - 需求数据获取书籍以及书籍关联的人物
+ - 需要在主模型中写入 
+     - people = PeopleInfoSerializer(many=True)
+     - [people/键名]:[{子数据1}, {...}, {...}]
+     - 这里好似就不需要去加上 instance 了
+ - from book.serializers import BookInfoSerializer                                                                                  
+ - from book.models import BookInfo                                                                                                 
+ - book = BookInfo.objects.get(id=1)                                                                                                  
+ - s = BookInfoSerializer(book)                                                                                                     
+ - s.data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

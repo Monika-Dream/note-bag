@@ -617,20 +617,52 @@ class BookInfoSerializer(serializers.Serializer):
 -------------------------------------------------------------- Serializer 使用
 
  - 上方定义好之后, 导入 图书数据序列化器 进 view 文件后即可使用
+ - 默认情况下, 我们不能传递查询结果集, 只能单个传递, 也就是 get(id=1)
+     - 如果需要传递查询结果集, 需要在创建 Serializer 增加 many=True 参数
 
 from ... import BookInfo
 from ... import BookInfoSerializer
 
- - 查出数据时(打印字典数据)
+ - 查出单个数据时(打印字典数据)
 book = BookInfo.objects.get(id=1)
 Serializer = BookInfoSerializer(instance=book)
 print(Serializer.data)
 
+ - 查出多个数据时(打印带有顺序的字典数据)
+book = BookInfo.objects.all()
+Serializer = BookInfoSerializer(instance=book, many=True)
+print(Serializer.data)
+
+-------------------------------------------------------------- 使用关联对象的序列化器例子
+
+在BookInfoSerializer中添加关联字段：
+
+from rest_framework import serializers
+
+class PeopleInfoSerializer(serializers.Serializer):
+    """英雄数据序列化器"""
+    id = serializers.IntegerField(label='ID')
+    name = serializers.CharField(label='名字')
+    password=serializers.CharField(label='密码')
+    description = serializers.CharField(label='描述信息')
 
 
+class BookInfoSerializer(serializers.Serializer):
+    """图书数据序列化器"""
+    id = serializers.IntegerField(label='ID')
+    name = serializers.CharField(label='名称')
+    pub_date = serializers.DateField(label='发布日期')
+    readcount = serializers.IntegerField(label='阅读量')
+    commentcount = serializers.IntegerField(label='评论量')
+    #一本书籍关联多个人物
+    people=PeopleInfoSerializer(many=True)
 
-
-
+ - 使用效果
+     - from book.serializers import BookInfoSerializer                                                                                  
+     - from book.models import BookInfo                                                                                                 
+     - book=BookInfo.objects.get(id=1)                                                                                                  
+     - s = BookInfoSerializer(book)                                                                                                     
+     - s.data
 
 
 
