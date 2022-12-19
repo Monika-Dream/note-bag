@@ -678,17 +678,17 @@ class BookInfoSerializer(serializers.Serializer):
  - 前端传入 [{},{},{}] 数据的保存措施
      - 进行反序列化也可以保存字典列表，需要设置 many = True
 
- - 详细外键式数据
+ - 详细外键式数据 ( 一对多情况 )
         {
-            'name':'离离原上草',
-            'people':[
+            "name":"离离原上草",
+            "people":[
                 {
-                    'name': '靖妹妹111',
-                    'password': '123456abc'
+                    "name": "靖妹妹111",
+                    "password": "123456abc"
                 },
                 {
-                    'name': '靖表哥222',
-                    'password': '123456abc'
+                    "name": "靖表哥222",
+                    "password": "123456abc"
                 }
             ]
         }
@@ -725,6 +725,8 @@ class BookInfoSerializer(serializers.Serializer):
          - 默认情况下，嵌套串行器是只读的。如果要支持对嵌套序列化器字段的写操作，
              - 则需要创建 create() 或 update() 方法，以明确指定应如何保存数据。
          - 需要我们在新增数据时，实现create方法
+         - 注意 如果不设置外键匹配的话, 他不会去管的
+         - 在执行save时才会调用 create/update 方法
 
 
 

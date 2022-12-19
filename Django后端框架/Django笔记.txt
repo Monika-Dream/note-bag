@@ -2334,6 +2334,7 @@ print(Serializer.data)
 3.StringRelatedField(外键所关联的外键的信息, 也就是魔术方法 __str__ 返回值)
  - 这里会进行查找, 查找你这个关联到了哪里, 返回那里的 __str__ 数据, 关联的模型中 __str__ 里面的返回数据
  - 此字段将被序列化为关联对象的字符串表示方式（即 __str__ 方法的返回值）
+ - 这里的所谓查找 __str__ 仅仅只是为了指向这个模型
 
 4.使用关联对象的序列化器( 这里忘了请看例子 )
  - 需求: 数据获取书籍以及书籍关联的人物
@@ -2468,22 +2469,6 @@ serializers = BookInfoSerializer(data=data)
 serializers.is_valid(raise_exception=True)
 serializers.save()
 
--------------------------------------------------------------- 2022 年 12 月 18 号日记
-
- - 今天仍旧是疫情肆虐的日子, 我妈感染了? 谁知道呢......
- - 记录一下, 起码我现在的身体感觉没有异常
- - 但或许是心里作用? 感觉今天的头部有点沉?
- - RNA 病毒啊... 自我迭代? 这所谓的抗体真的顶事吗?
- - 不知道, 但以我现在的身体素质...
- - 恐怕是难受会居多
- - 啧, 心脏猛地跳了一下, 就像是即将沉睡前的惊醒一般
- - 我妈现在相比较与昨天增加了咳嗽
- - 我奶所在抖音上看到的防疫小技巧看起来是那么的可笑
- - 处非穿上防化服, 不然那么大一个污染源在那里, 这怎么防都没用吧?
- - 我一个认识的小学同学感染, 这也是让我感到原来病毒距离我是那么的近啊
- - 以旁观者的角度看待这一切时, 这是很有趣的事件, 但作为当事人, 恐怕心情就没那么愉悦了
- - 不管了, 在一切还未结束之前, 扮演好我自己的规则就行了
-
 -------------------------------------------------------------- 模型类序列化器 ModelSerializer
 
  - 如果我们想要使用序列化器对应的是Django的模型类，
@@ -2543,7 +2528,151 @@ class BookInfoModelSerializer(serializers.ModelSerializer):
  - 方式一与方式二必须择其一
  - 如果你在类中定义了字段, 必须添加进 fields 里面 - 注意()
 
--------------------------------------------------------------- 模型类序列化器 ModelSerializer
+-------------------------------------------------------------- APIView
+
+
+ - APIView 是 REST framework 提供的所有视图的基类，继承自 Django 的 View 父类。
+ - APIView与View的不同之处在于：
+     - 传入到视图方法中的是REST framework的Request对象，而不是Django的HttpRequeset对象；
+     - 视图方法可以返回REST framework的Response对象，视图会为响应数据设置（render）符合前端要求的格式；
+     - 任何APIException异常都会被捕获到，并且处理成合适的响应信息；
+     - 在进行 dispatch() 分发前，会对请求进行身份认证、权限检查、流量控制。
+ - 记得 settings 要注册 'rest_framework' 写在哪里都可以
+ - 这里路由一样是 .as_view()
+
+
+
+ - 请求获取数据方式改变
+    from rest_framework.views import APIView
+
+ - 返回响应改变
+    from rest_framework.response import Response
+
+
+
+class BookListAPIView(APIView):
+
+    def get(self,request):
+        #获取 query 参数方式改变, 然而实际上他就是改了一个名字...
+        #django -> request.GET
+        query_params = request.query_params
+        # return JsonResponse({'code':0,errmsg:"ok"})
+        return Response(可直接返回 JSON 与 列表数据)
+
+    def post(self,request):
+        #获取 query/body 方法改变, 这里比较明显, drf 框架直接 request.data 即可
+        # django -> request.POST/request.body.encode()
+        data = request.data
+        # return JsonResponse({'code':0,errmsg:"ok"})
+        return Response(可直接返回 JSON 与 列表数据)
+
+
+问题 1:
+ - Response 浏览器请求返回 HTML 页面
+     - 1.REST framework 提供了一个响应类 Response，
+         - 使用该类构造响应对象时，响应的具体数据内容会被转换（ render渲染 ）
+         - 符合前端需求的类型。
+     - 2.REST framework 提供了 Renderer 渲染器，
+         - 用来根据请求头中的 Accept（接收数据类型声明）来自动转换响应数据到对应格式。
+         - 如果前端请求中未进行 Accept 声明，则会采用默认方式处理响应数据，
+         - 我们可以通过配置来修改默认响应格式。
+     - 3.所以这里的原因在于浏览器的请求头 Accept 为 text/html
+ - 解决方案:
+     - settings 文件中写入
+        REST_FRAMEWORK = {
+            'DEFAULT_RENDERER_CLASSES': (  # 默认响应渲染类
+                'rest_framework.renderers.JSONRenderer',  # json渲染器
+                'rest_framework.renderers.BrowsableAPIRenderer',  # 浏览API渲染器
+            )
+        }     
+
+注意事项2:
+     - REST framework 提供了 Parser 解析器，
+         - 在接收到请求后会自动根据 Content-Type 指明的请求数据类型（如 JSON、表单 等）
+         - 将请求数据进行 parse 解析，解析为类字典对象保存到 Request 对象中。
+     - Request 对象的数据是自动根据 前端发送数据的格式() 进行解析之后的结果。
+     - 无论前端发送的哪种格式的数据，我们都可以以统一的方式读取数据。
+     - request.data / request.query_params
+     - 第一个是将 django 的 post 接受参数方式简化
+     - 第二个是将语义修正, 更加标准
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
