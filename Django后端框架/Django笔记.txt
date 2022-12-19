@@ -2436,6 +2436,7 @@ class BookInfoSerializer(serializers.Serializer):
 
      def update(self, instance, validated_data):
         """更新，instance为要更新的对象实例"""
+        # 如果 validated_data.get 没值, 则用 instance.name 的值 <- 第二个值的作用
         instance.name = validated_data.get('name', instance.name)
         ...
         instance.save()
@@ -2446,8 +2447,11 @@ book=BookInfo.objects.get(id=1)
 s = BookInfoSerializer(book)
 book = s.save()
 
- - 如果创建序列化器对象的时候，没有传递 instance 实例，则调用 save() 方法的时候，create()被调用。
- - 如果创建序列化器对象的时候，如果传递了instance实例，则调用 save() 方法的时候，update()被调用。
+ - 如果创建序列化器对象的时候，只传递了 data ，则调用 save() 方法的时候，create()被调用。
+
+ - 如果创建序列化器对象的时候，即创建了 instance 又传递了 data
+     - 则调用 save() 方法的时候，系统会认为我们在修改 ( 更新数据 )
+     - 所以调用 update() 方法
 
  - 在对序列化器进行 save() 保存时，可以额外传递数据，
      - 这些数据可以在 create() 和 update() 中的 validated_data 参数获取到
@@ -2464,7 +2468,99 @@ serializers = BookInfoSerializer(data=data)
 serializers.is_valid(raise_exception=True)
 serializers.save()
 
+-------------------------------------------------------------- 2022 年 12 月 18 号日记
+
+ - 今天仍旧是疫情肆虐的日子, 我妈感染了? 谁知道呢......
+ - 记录一下, 起码我现在的身体感觉没有异常
+ - 但或许是心里作用? 感觉今天的头部有点沉?
+ - RNA 病毒啊... 自我迭代? 这所谓的抗体真的顶事吗?
+ - 不知道, 但以我现在的身体素质...
+ - 恐怕是难受会居多
+ - 啧, 心脏猛地跳了一下, 就像是即将沉睡前的惊醒一般
+ - 我妈现在相比较与昨天增加了咳嗽
+ - 我奶所在抖音上看到的防疫小技巧看起来是那么的可笑
+ - 处非穿上防化服, 不然那么大一个污染源在那里, 这怎么防都没用吧?
+ - 我一个认识的小学同学感染, 这也是让我感到原来病毒距离我是那么的近啊
+ - 以旁观者的角度看待这一切时, 这是很有趣的事件, 但作为当事人, 恐怕心情就没那么愉悦了
+ - 不管了, 在一切还未结束之前, 扮演好我自己的规则就行了
+
 -------------------------------------------------------------- 模型类序列化器 ModelSerializer
+
+ - 如果我们想要使用序列化器对应的是Django的模型类，
+     - DRF为我们提供了ModelSerializer模型类序列化器来帮助我们快速创建一个Serializer类。
+ - ModelSerializer与常规的Serializer相同，但提供了：
+ - 基于模型类自动生成一系列字段
+ - 包含默认的 create() 和 update() 的实现
+ - 我们可以在python manage.py shell中查看自动生成的BookInfoModelSerializer的具体实现
+     - from book.serializers import BookInfoModelSerializer
+     - BookInfoModelSerializer()
+
+
+from rest_framework import serializers
+from book.models import BookInfo
+
+class BookInfoModelSerializer(serializers.ModelSerializer):
+#方式一
+    class Meta:
+        model = BookInfo
+        fields = '__all__'                                          
+#方式二
+    class Meta:
+        model = BookInfo
+        exclude = ('image',)
+#方式三
+    class Meta:
+        model = BookInfo
+        fields = ('id','name', 'readcount', 'commentcount') // 元组或者列表都可以 ['id','name']
+#方式四
+    class Meta:
+        model = BookInfo
+        fields = ('id','name', 'readcount', 'commentcount')
+        read_only_fields = ('id', 'readcount', 'commentcount')
+#方式五
+    class Meta:
+        model = BookInfo
+        fields = ('id','name', 'readcount', 'commentcount')
+        read_only_fields = ('id', 'readcount', 'commentcount')
+        extra_kwargs = {
+            'readcount': {'min_value': 0, 'required': True},
+            'commentcount': {'max_value': 0, 'required': True},
+        }
+--------------------------------------
+ - model 指明参照哪个模型类
+ - fields 指明为模型类的哪些字段生成
+--------------------------------------
+ - 使用 fields 来明确字段，__all__ 表名包含所有字段                             方式一
+--------------------------------------
+ - 使用 exclude 可以明确排除掉哪些字段                                         方式二
+--------------------------------------
+ - 显示指明字段                                                               方式三
+--------------------------------------
+ - 可以通过 read_only_fields 指明只读字段，即仅用于序列化输出的字段              方式四
+--------------------------------------
+ - 我们可以使用 extra_kwargs 参数为 ModelSerializer 添加或修改原有的选项参数     方式五
+--------------------------------------
+ - 方式一与方式二必须择其一
+ - 如果你在类中定义了字段, 必须添加进 fields 里面 - 注意()
+
+-------------------------------------------------------------- 模型类序列化器 ModelSerializer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

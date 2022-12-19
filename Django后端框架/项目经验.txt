@@ -664,6 +664,97 @@ class BookInfoSerializer(serializers.Serializer):
      - s = BookInfoSerializer(book)                                                                                                     
      - s.data
 
+-------------------------------------------------------------- 反序列化 进阶使用
+
+ - 隐藏一个字段于读取时, 使用 'write_only':True 即可
+     - 例如:
+         - extra_kwargs = { 'password': {'write_only':True} }
+
+ - 当前端传入的数据有 xxx_id 时, 请详细看看他这里是怎么生成的
+     - 当遇到外键数据时, 请查看生成方式
+
+ - 只想返回数据, 不想前端传入数据, 那么请用 read_only
+
+ - 前端传入 [{},{},{}] 数据的保存措施
+     - 进行反序列化也可以保存字典列表，需要设置 many = True
+
+ - 详细外键式数据
+        {
+            'name':'离离原上草',
+            'people':[
+                {
+                    'name': '靖妹妹111',
+                    'password': '123456abc'
+                },
+                {
+                    'name': '靖表哥222',
+                    'password': '123456abc'
+                }
+            ]
+        }
+
+     - 我们该定义什么样的序列化器？
+
+        from rest_framework import serializers
+        from book.models import PeopleInfo,BookInfo
+        class PeopleInfoModelSerializer(serializers.ModelSerializer):
+            book_id=serializers.IntegerField(required=False)
+            book=serializers.StringRelatedField()
+        
+            class Meta:
+                model = PeopleInfo
+                fields = ['id','book_id','book','name','password','is_delete']
+                extra_kwargs = {
+                    'password': {'write_only':True},
+                    'is_delete': {'read_only':True}
+                }
+        
+        class BookInfoModelSerializer(serializers.ModelSerializer):
+            people=PeopleInfoModelSerializer(many=True)
+            class Meta:
+                model = BookInfo
+                fields = '__all__'
+        
+            def create(self, validated_data):
+                people=validated_data.pop('people')
+                book=BookInfo.objects.create(**validated_data)
+                for person in people:#book = book 这里是外键
+                    PeopleInfo.objects.create(book=book,**person)
+                return book
+        
+         - 默认情况下，嵌套串行器是只读的。如果要支持对嵌套序列化器字段的写操作，
+             - 则需要创建 create() 或 update() 方法，以明确指定应如何保存数据。
+         - 需要我们在新增数据时，实现create方法
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
