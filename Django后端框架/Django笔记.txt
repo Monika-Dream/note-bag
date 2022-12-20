@@ -2597,85 +2597,387 @@ class BookListAPIView(APIView):
      - 第二个是将语义修正, 更加标准
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-------------------------------------------------------------- GenericAPIView + Mixin 使用
+
+ - 继承自 APIview，增加了对于列表视图和详情视图可能用到的通用支持方法。
+     - 通常使用时，可搭配一个或多个Mixin扩展类。
+ - 使用 GenericAPIView 类一般需要实现 queryset 属性或者重写 get_queryset 方法
+
+ - Minin 为列表视图扩展类，提供list(request, *args, **kwargs) 方法快速实现列表视图，返回200状态码。
+     - 该Mixin的list方法会对数据进行过滤和分页。
+
+
+from rest_framework.generics import GenericAPIView
+
+ - GenericAPIView 使用方式:
+     class Test2(GenericAPIView):
+        #查询结果集设置
+        queryset = BookInfo.objects.all()
+        #序列化器设置
+        serializer_class = BookInfoModelSerializer
+        def get(self, request):
+            #获取查询结果集, 底层核心实际是 books = self.queryset
+            books = self.get_queryset()
+            #将查询结果集进行序列化, 底层核心实际还是 BookInfoSerializer(data=book, many=True)
+            serializer = self.get_serializer(books, many=True)
+
+        def post(self, request):
+            data = request.data
+            serializer = self.get_serializer(data=data)
+            serializer.is_vaild()
+            serializer.save()
+
+ - GenericAPIView + Mixin 使用方式:
+     class Test2(ListModelMixin,CreateModelMixin,GenericAPIView):
+        #查询结果集设置
+        queryset = BookInfo.objects.all()
+        #序列化器设置
+        serializer_class = BookInfoModelSerializer
+        def get(self, request):
+            #详情请看源码, 这里已经帮助我们将那三步骤全写了
+            return self.list(request)
+
+        def post(self, request):
+            # 详情请看源码, 这里全写了...
+            return self.create(request)
+
+-------------------------------------------------------------- 几个可用子类视图
+
+ - 1.这里的使用可能会困难, 想使用只能去阅读一下源码
+#增加数据时使用
+ - CreateAPIView
+     from rest_framework.generics import CreateAPIView
+     提供 post 方法
+ 
+     继承自： GenericAPIView、CreateModelMixin
+ 
+     class CreateAPIView(mixins.CreateModelMixin,
+                        GenericAPIView):
+        """
+        Concrete view for creating a model instance.
+        """
+        def post(self, request, *args, **kwargs):
+            return self.create(request, *args, **kwargs)
+#查询所有时使用
+ - ListAPIView
+     from rest_framework.generics import ListAPIView
+     提供 get 方法
+     
+     继承自：GenericAPIView、ListModelMixin
+     
+     class ListAPIView(mixins.ListModelMixin,
+                      GenericAPIView):
+        """
+        Concrete view for listing a queryset.
+        """
+        def get(self, request, *args, **kwargs):
+            return self.list(request, *args, **kwargs)
+#查询指定时使用
+ - RetireveAPIView
+     from rest_framework.generics import RetrieveAPIView
+     提供 get 方法
+     
+     继承自: GenericAPIView、RetrieveModelMixin
+#删除指定时使用
+ - DestoryAPIView
+     from rest_framework.generics import DestroyAPIView
+     提供 delete 方法
+     
+     继承自：GenericAPIView、DestoryModelMixin
+#更新时使用
+ - UpdateAPIView
+     from rest_framework.generics import UpdateAPIView
+     提供 put 和 patch 方法
+     
+     继承自：GenericAPIView、UpdateModelMixin
+#指定更新时使用
+ - RetrieveUpdateAPIView
+     from rest_framework.generics import RetrieveUpdateAPIView
+     提供 get、put、patch方法
+     
+     继承自： GenericAPIView、RetrieveModelMixin、UpdateModelMixin
+#指定更新删除时使用
+ - RetrieveUpdateDestoryAPIView
+     from rest_framework.generics import RetrieveUpdateDestroyAPIView
+     提供 get、put、patch、delete方法
+     
+     继承自：GenericAPIView、RetrieveModelMixin、UpdateModelMixin、DestoryModelMixin
+
+-------------------------------------------------------------- GenericAPIView + Mixin 进一步学习
+
+ - 这里就是关于分页的, 或者说是查询准确的数据
+
+ - GenericAPIView
+     class Text4(GenericAPIView):
+        # 查询结果集设置( 这里是惰性, 要准确数据可以 filter, 实际上底层就是这么干的 )
+        queryset = BookInfo.objects.all()
+        # 序列化器设置
+        serializer_class = BookInfoModelSerializer
+        # 设置关键字 URL Query 参数名字
+        lookup_field = 'id'
+
+        def get(self, request, pk):
+            #详情看源码, 这里就是获取 query 然后 filter 操作
+            book = self.get_object()
+            serializer = self.get_serializer(isinstance=book)
+            return Response(serializer.data)
+
+        def put(self, request, pk):
+            pass
+
+        def delete(self, request, pk):
+            pass
+
+-------------------------------------------------------------- 视图集 ViewSet
+
+ - 一个ViewSet类只是一种基于类的View，它不提供任何方法处理程序（如get()orpost()），
+     - 而是提供诸如list()和create()之类的操作。
+ - 使用ViewSet类比使用View类有两个主要优点。
+     - 重复的逻辑可以合并成一个类。例如我们只需要指定queryset一次，它将用于多个视图。
+     - 通过使用路由器，我们不再需要处理自己的URL配置
+
+ - 一个ViewSet类只是一种基于类的 View ，继承自 APIView ，
+     - 作用也与 APIView 基本类似，提供了身份认证、权限校验、流量管理等。
+
+ - 在 ViewSet 中，它不提供任何方法处理程序，需要我们自己重写该类并明确实现 action 方法。
+
+ - 对于单个模型的 增删改查 放到一起去
+
+from rest_framework.viewsets import ViewSet
+
+class BookViewSet(ViewSet):
+    #查询所有
+    def list(self, request):
+        pass
+    #创建
+    def create(self, request):
+        pass
+    #查询指定
+    def retrieve(self, request, pk=None):
+        pass
+    #更新
+    def update(self, request, pk=None):
+        pass
+    #更新指定
+    def partial_update(self, request, pk=None):
+        pass
+    #删除
+    def destroy(self, request, pk=None):
+        pass
+
+
+ - 一个ViewSet类同时提供以下可用属性
+
+     - basename - 用于创建的URL名称的基础。
+     - action   - 当前动作的名称（例如list，create）。
+     - detail   - 布尔值，指示当前操作是否为列表或详细视图配置。
+     - suffix   - 视图类型的显示后缀 - 镜像detail属性。
+
+ - 视图集路由定义方式
+     path('bookviewset/',views.BookViewSet({'get':'list'})),
+     path('bookviewset/<pk>/',views.BookViewSet({'get':'retrieve'})),
+
+-------------------------------------------------------------- 视图集 GenericViewSet (这里被略过了)
+
+ - 继承自 GenericAPIView ，作用也与 GenericAPIVIew 类似 ，
+     - 提供了 get_object 、 get_queryset 等方法便于列表视图与详情信息视图的开发。
+     - 在 GenericAPIView 中，没有提供任何动作 action 方法，
+     - 需要我们自己覆盖该类并混合所需的混合类，或者明确定义操作实现 action 方法
+
+-------------------------------------------------------------- 视图集 ModelViewSet
+
+ - ModelViewSet 类所继承 GenericAPIView，包括用于各种动作实现方式中，
+     - 同时包括了 
+     ListModelMixin、
+     RetrieveModelMixin、
+     CreateModelMixin、
+     UpdateModelMixin、
+     DestoryModelMixin。
+
+ - 由提供的动作 ModelViewSet 类是
+     .list()，
+     .retrieve()，
+     .create()，
+     .update()，
+     .partial_update()，
+     .destroy()
+
+ - 使用：
+     - 因为 ModelViewSet 扩展 GenericAPIView，
+     - 我们通常需要提供至少 queryset 和 serializer_class 属性
+
+from rest_framework.viewsets import ModelViewSet
+from book.serializers import BookInfoModelSerializer
+from book.models import BookInfo
+
+class BookModelViewSet(ModelViewSet):
+
+    queryset = BookInfo.objects.all()
+    serializer_class = BookInfoModelSerializer
+
+ - 视图集的路由比较特殊
+
+     from book import views
+     urlpatterns = [
+     ]
+ 
+     from rest_framework.routers import DefaultRouter
+     # 可以处理视图的路由器, 创建 router 实例
+     router = DefaultRouter()
+     # 注册视图集 1.列表视图与详情视图的公共部分 2.视图集 3.给列表视图或详情视图起一个别名
+     # books/           公共为 books
+     # books/<pk>/
+     router.register('books', views.BookModelViewSet,basename='')
+     #追加路由
+     urlpatterns += router.urls
+
+-------------------------------------------------------------- 视图集 ReadOnlyModelViewSet
+
+ - 继承自GenericAPIVIew，同时包括了ListModelMixin、RetrieveModelMixin。
+ - 与ModelViewSet它一样，它还包括各种操作的实现，
+     - 但不同于ModelViewSet只提供“只读”操作，list()而且retrieve()
+
+ - 各有各的好, 就看具体业务在哪, 比如说只用读的就用这个
+
+-------------------------------------------------------------- 视图集路由生成
+
+ - 下面两种方式的共同点
+     - 都可以自动生成路由
+ - 不同点
+     - 只有 DefaultRouter 可以访问跟路由, 也就是不用加路径
+
+ - 使用方式
+
+ - 导入
+     - from rest_framework.routers import DefaultRouter / SimpleRouter
+
+ - 可以处理视图的路由器, 创建 router 实例
+     router = DefaultRouter()
+
+ - 使用 router 对象，并注册视图集, 注册语法为,( 这里会生成两个路由 prefix 与 prefix/pk/ )
+     register(prefix, viewset, basename)
+         - prefix    列表视图与详情视图的公共部分 ( 不用加/ )
+         - viewset   视图集
+         - basename  路由名称的前缀
+             - 列表视图起名规则 basename-list
+             - 详情试图        basename-detail
+             - 一般路由名与别名一致即可, 原因是要求不要重复
+
+ - 1.第一种方式 ( DefaultRouter )
+     from book import views
+     urlpatterns = []
+     
+     from rest_framework.routers import DefaultRouter
+     # 可以处理视图的路由器, 创建 router 实例
+     router = DefaultRouter()
+     # 注册视图集 1.列表视图与详情视图的公共部分 2.视图集 3.给列表视图或详情视图起一个别名
+     # books/           公共为 books
+     # books/<pk>/
+     router.register('books', views.BookModelViewSet,basename='')
+     #追加路由
+     urlpatterns += router.urls
+
+ - 2.第二种方式 ( SimpleRouter )
+     from book import views
+     urlpatterns = []
+     
+     from rest_framework.routers import SimpleRouter
+     # 可以处理视图的路由器, 创建 router 实例
+     router = SimpleRouter()
+     # 注册视图集 1.列表视图与详情视图的公共部分 2.视图集 3.给列表视图或详情视图起一个别名
+     # books/           公共为 books
+     # books/<pk>/
+     router.register('books', views.BookModelViewSet,basename='')
+     #追加路由
+     urlpatterns += router.urls
+
+ - 添加路由另一种写法
+     urlpatterns = [
+         ...
+         path('', include(router.urls))
+     ]
+
+
+-------------------------------------------------------------- DRF 框架 - 权限
+
+ - 权限控制可以限制用户对于视图的访问和对于具体数据对象的访问。
+ - 在执行视图的 dispatch() 方法前，会先进行视图访问权限的判断
+ - 在通过 get_object() 获取具体对象时，会进行对象访问权限的判断
+
+ - 1.提供的权限
+     - AllowAny 允许所有用户
+     - IsAuthenticated 仅通过认证(也就是登陆) 的用户
+     - IsAdminUser 仅管理员用户
+     - IsAuthenticatedOrReadOnly 认证的用户可以完全操作，否则只能get读取
+
+
+ - 可以在配置文件中设置默认的权限管理类，如
+
+     REST_FRAMEWORK = {
+         'DEFAULT_PERMISSION_CLASSES': (
+             'rest_framework.permissions.IsAuthenticated',
+         )
+     }
+
+ - 如果未指明，则采用如下默认配置, ( 默认 )
+
+     'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+     )
+
+
+ - 2.对指定视图设置权限
+
+     from rest_framework.permissions import AllowAny
+     - 类里面写入 
+         - permission_classes = [AllowAny]
+
+
+-------------------------------------------------------------- DRF 框架 - 认证
+
+ - 身份验证本身不会允许或不允许传入的请求，它只会标识发出请求的凭据。
+ - 认证管理一般和权限管理配合使用。
+
+ - 只有认证验证没权限验证将没有任何效果()
+# from rest_framework.authentication import TokenAuthentication
+ - 在 settings 文件中写入即可开启验证
+     - 验证可以是多个, Session 没有就验证 Token
+
+     REST_FRAMEWORK = {
+         # 默认的认证列表： session
+         'DEFAULT_AUTHENTICATION_CLASSES': [
+             'rest_framework.authentication.SessionAuthentication',  # session认证
+             'rest_framework.authentication.TokenAuthentication',  # session认证
+         ]
+     }
+
+-------------------------------------------------------------- DRF 框架 - 分页
+
+ - 系统为我们提供了两个分页类
+
+ - 只有 GenericAPIVIew 及其子类才能使用分页
+     - APIView ViewSet 无法使用系统的分页
+
+
+ - 我们可以在配置文件中设置全局的分页方式，如：
+     REST_FRAMEWORK = {
+         'DEFAULT_PAGINATION_CLASS':  'rest_framework.pagination.PageNumberPagination',
+         'PAGE_SIZE': 100  # 每页数目,这里可以不写, 直接 ?limit=100 即可
+     }
+
+ - 单独视图设置分页器
+     from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
+     - 这里点进去就可以看教程
+     - 类里面写入
+         - pagination_class = LimitOffsetPagination / PageNumberPagination / PageNum
+             - 注意 PageNumberPagination 不设置 page_size 会自动关闭
+                 - 1. 在配置文件中设置 page_size
+                 - 2. 区别在于这里的返回页数是这边定的
+                 - 3. 去继承 / 重写
+                     class PageNum(PageNumberPagination):
+                        page_size = 5                       #开启分页的开关
+                        page_size_query_param = 'page_size' #Url 中 query 参数的名词
+                        max_page_size = 20                  #最大多少条数据
 
 
 
