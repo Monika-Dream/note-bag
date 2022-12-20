@@ -1,0 +1,978 @@
+<!DOCTYPE HTML>
+<html lang="zh-tw" >
+    <!-- Start book django项目 -->
+    <head>
+        <!-- head:start -->
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Request | django项目</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 2.6.7">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../../gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="../../../gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="../../../gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="../../../gitbook/plugins/gitbook-plugin-toggle-chapters/toggle.css">
+        
+    
+        
+        <link rel="stylesheet" href="../../../gitbook/plugins/gitbook-plugin-splitter/splitter.css">
+        
+    
+        
+        <link rel="stylesheet" href="../../../gitbook/plugins/gitbook-plugin-emphasize/plugin.css">
+        
+    
+        
+        <link rel="stylesheet" href="../../../gitbook/plugins/gitbook-plugin-fontsettings/website.css">
+        
+    
+        
+        <link rel="stylesheet" href="../../../gitbook/plugins/gitbook-plugin-highlight/website.css">
+        
+    
+    
+
+        
+    
+    
+    <link rel="next" href="../../../03-day/view/requestresponse/response.html" />
+    
+    
+    <link rel="prev" href="../../../03-day/view/requestresponse.html" />
+    
+
+        <!-- head:end -->
+    </head>
+    <body>
+        <!-- body:start -->
+        
+    <div class="book"
+        data-level="3.1.1"
+        data-chapter-title="Request"
+        data-filepath="03-day/view/requestresponse/request.md"
+        data-basepath="../../.."
+        data-revision="Tue Jul 14 2020 00:19:00 GMT+0800 (CST)"
+        data-innerlanguage="">
+    
+
+<div class="book-summary">
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter " data-level="0" data-path="index.html">
+            
+                
+                    <a href="../../../index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Django REST framework
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="01-day.html">
+            
+                
+                    <a href="../../../01-day.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Django REST framework流程
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1" data-path="01-day/restful.html">
+            
+                
+                    <a href="../../../01-day/restful.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.</b>
+                        
+                        RESTfull
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1.1" data-path="01-day/restful/mode.html">
+            
+                
+                    <a href="../../../01-day/restful/mode.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.1.</b>
+                        
+                        Web应用模式
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.1.2" data-path="01-day/restful/restful.html">
+            
+                
+                    <a href="../../../01-day/restful/restful.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.2.</b>
+                        
+                        认识RESTful
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.1.3" data-path="01-day/restful/method.html">
+            
+                
+                    <a href="../../../01-day/restful/method.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.3.</b>
+                        
+                        RESTful设计思想
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1.3.1" data-path="01-day/restful/method/request.html">
+            
+                
+                    <a href="../../../01-day/restful/method/request.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.3.1.</b>
+                        
+                        请求相关
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.1.3.2" data-path="01-day/restful/method/response.html">
+            
+                
+                    <a href="../../../01-day/restful/method/response.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.3.2.</b>
+                        
+                        响应相关
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.1.4" data-path="01-day/restful/prepare.html">
+            
+                
+                    <a href="../../../01-day/restful/prepare.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.4.</b>
+                        
+                        项目准备
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.1.5" data-path="01-day/restful/django.html">
+            
+                
+                    <a href="../../../01-day/restful/django.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.5.</b>
+                        
+                        使用Django开发REST 接口
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.1.6" data-path="01-day/restful/task.html">
+            
+                
+                    <a href="../../../01-day/restful/task.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.6.</b>
+                        
+                        明确REST接口开发的核心任务
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="01-day/restful/djangorestful-framework.html">
+            
+                
+                    <a href="../../../01-day/restful/djangorestful-framework.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.2.</b>
+                        
+                        Django REST framework
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="01-day/restful/djangorestful-framework/config.html">
+            
+                
+                    <a href="../../../01-day/restful/djangorestful-framework/config.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.2.1.</b>
+                        
+                        环境安装与配置
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="02-day.html">
+            
+                
+                    <a href="../../../02-day.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.</b>
+                        
+                        序列化和反序列化
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1" data-path="02-day/modify.html">
+            
+                
+                    <a href="../../../02-day/modify.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.</b>
+                        
+                        Serializer字段和选项
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="02-day/serializer.html">
+            
+                
+                    <a href="../../../02-day/serializer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.2.</b>
+                        
+                        序列化使用
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.2.1" data-path="02-day/serializer/base.html">
+            
+                
+                    <a href="../../../02-day/serializer/base.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.2.1.</b>
+                        
+                        基本使用
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2.2" data-path="02-day/serializer/assoc.html">
+            
+                
+                    <a href="../../../02-day/serializer/assoc.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.2.2.</b>
+                        
+                        关联对象嵌套序列化
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3" data-path="02-day/un-serializer.html">
+            
+                
+                    <a href="../../../02-day/un-serializer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.</b>
+                        
+                        反序列化使用
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.3.1" data-path="02-day/un-serializer/validate.html">
+            
+                
+                    <a href="../../../02-day/un-serializer/validate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.1.</b>
+                        
+                        验证
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.3.1.1" data-path="02-day/un-serializer/validate/type.html">
+            
+                
+                    <a href="../../../02-day/un-serializer/validate/type.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.1.1.</b>
+                        
+                        字段类型
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3.1.2" data-path="02-day/un-serializer/validate/field.html">
+            
+                
+                    <a href="../../../02-day/un-serializer/validate/field.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.1.2.</b>
+                        
+                        字段选项
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3.1.3" data-path="02-day/un-serializer/validate/validatefieldname.html">
+            
+                
+                    <a href="../../../02-day/un-serializer/validate/validatefieldname.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.1.3.</b>
+                        
+                        validate\_fieldname
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3.1.4" data-path="02-day/un-serializer/validate/validate.html">
+            
+                
+                    <a href="../../../02-day/un-serializer/validate/validate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.1.4.</b>
+                        
+                        validate
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3.2" data-path="02-day/un-serializer/save.html">
+            
+                
+                    <a href="../../../02-day/un-serializer/save.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.2.</b>
+                        
+                        保存
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.4" data-path="02-day/modelserializer.html">
+            
+                
+                    <a href="../../../02-day/modelserializer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.4.</b>
+                        
+                        模型类序列化器ModelSerializer
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.5" data-path="02-day/un-serializer/highlevel.html">
+            
+                
+                    <a href="../../../02-day/un-serializer/highlevel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.5.</b>
+                        
+                        进阶使用
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="3" data-path="03-day/view.html">
+            
+                
+                    <a href="../../../03-day/view.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        视图
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="3.1" data-path="03-day/view/requestresponse.html">
+            
+                
+                    <a href="../../../03-day/view/requestresponse.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.</b>
+                        
+                        Request 与 Response
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="3.1.1" data-path="03-day/view/requestresponse/request.html">
+            
+                
+                    <a href="../../../03-day/view/requestresponse/request.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.1.</b>
+                        
+                        Request
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.2" data-path="03-day/view/requestresponse/response.html">
+            
+                
+                    <a href="../../../03-day/view/requestresponse/response.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.2.</b>
+                        
+                        Response
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2" data-path="03-day/view/view.html">
+            
+                
+                    <a href="../../../03-day/view/view.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.</b>
+                        
+                        视图
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="3.2.1" data-path="03-day/view/view/apiview.html">
+            
+                
+                    <a href="../../../03-day/view/view/apiview.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.1.</b>
+                        
+                        APIView\(一级\)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.2" data-path="03-day/view/view/genericapiview.html">
+            
+                
+                    <a href="../../../03-day/view/view/genericapiview.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.2.</b>
+                        
+                        GenericAPIView\(二级\)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.3" data-path="03-day/view/view/mixin.html">
+            
+                
+                    <a href="../../../03-day/view/view/mixin.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.3.</b>
+                        
+                        Mixin
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.4" data-path="03-day/view/view/subclass.html">
+            
+                
+                    <a href="../../../03-day/view/view/subclass.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.4.</b>
+                        
+                        子类视图\(三级\)
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3" data-path="03-day/view/viewset.html">
+            
+                
+                    <a href="../../../03-day/view/viewset.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.3.</b>
+                        
+                        视图集ViewSet
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="3.3.1" data-path="03-day/view/viewset/viewset.html">
+            
+                
+                    <a href="../../../03-day/view/viewset/viewset.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.3.1.</b>
+                        
+                        ViewSet
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3.2" data-path="03-day/view/viewset/genericviewset.html">
+            
+                
+                    <a href="../../../03-day/view/viewset/genericviewset.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.3.2.</b>
+                        
+                        GenericViewSet
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3.3" data-path="03-day/view/viewset/modelviewset.html">
+            
+                
+                    <a href="../../../03-day/view/viewset/modelviewset.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.3.3.</b>
+                        
+                        ModelViewSet
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3.4" data-path="03-day/view/viewset/readonlymodelviewset.html">
+            
+                
+                    <a href="../../../03-day/view/viewset/readonlymodelviewset.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.3.4.</b>
+                        
+                        ReadOnlyModelViewSet
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="3.4" data-path="03-day/view/router.html">
+            
+                
+                    <a href="../../../03-day/view/router.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.4.</b>
+                        
+                        路由Router
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="4" data-path="03-day/other.html">
+            
+                
+                    <a href="../../../03-day/other.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.</b>
+                        
+                        高级功能
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="4.1" data-path="03-day/other/authentication.html">
+            
+                
+                    <a href="../../../03-day/other/authentication.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.1.</b>
+                        
+                        认证Authentication
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4.2" data-path="03-day/other/quan-xian-permissions.html">
+            
+                
+                    <a href="../../../03-day/other/quan-xian-permissions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.2.</b>
+                        
+                        权限Permissions
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4.3" data-path="03-day/other/pagination.html">
+            
+                
+                    <a href="../../../03-day/other/pagination.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.3.</b>
+                        
+                        分页Pagination
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    本書使用 GitBook 釋出
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../../../" >django项目</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <h2 id="1--request">Request </h2>
+<p><a href="https://www.django-rest-framework.org/api-guide/requests/" target="_blank">&#x6587;&#x6863;</a></p>
+<pre><code>from rest_framework.request import Request
+</code></pre><p>REST framework &#x4F20;&#x5165;&#x89C6;&#x56FE;&#x7684;request&#x5BF9;&#x8C61;&#x4E0D;&#x518D;&#x662F;Django&#x9ED8;&#x8BA4;&#x7684;HttpRequest&#x5BF9;&#x8C61;&#xFF0C;&#x800C;&#x662F;REST framework&#x63D0;&#x4F9B;&#x7684;&#x6269;&#x5C55;&#x4E86;HttpRequest&#x7C7B;&#x7684;<strong>Request</strong>&#x7C7B;&#x7684;&#x5BF9;&#x8C61;&#x3002;</p>
+<p>REST framework &#x63D0;&#x4F9B;&#x4E86;<strong>Parser</strong>&#x89E3;&#x6790;&#x5668;&#xFF0C;&#x5728;&#x63A5;&#x6536;&#x5230;&#x8BF7;&#x6C42;&#x540E;&#x4F1A;<strong>&#x81EA;&#x52A8;&#x6839;&#x636E;Content-Type&#x6307;&#x660E;&#x7684;&#x8BF7;&#x6C42;&#x6570;&#x636E;&#x7C7B;&#x578B;&#xFF08;&#x5982;JSON&#x3001;&#x8868;&#x5355;&#x7B49;&#xFF09;&#x5C06;&#x8BF7;&#x6C42;&#x6570;&#x636E;&#x8FDB;&#x884C;parse&#x89E3;&#x6790;</strong>&#xFF0C;&#x89E3;&#x6790;&#x4E3A;&#x7C7B;&#x5B57;&#x5178;&#x5BF9;&#x8C61;&#x4FDD;&#x5B58;&#x5230;<strong>Request</strong>&#x5BF9;&#x8C61;&#x4E2D;&#x3002;</p>
+<p><strong>Request&#x5BF9;&#x8C61;&#x7684;&#x6570;&#x636E;&#x662F;&#x81EA;&#x52A8;&#x6839;&#x636E;&#x524D;&#x7AEF;&#x53D1;&#x9001;&#x6570;&#x636E;&#x7684;&#x683C;&#x5F0F;&#x8FDB;&#x884C;&#x89E3;&#x6790;&#x4E4B;&#x540E;&#x7684;&#x7ED3;&#x679C;&#x3002;</strong></p>
+<p>&#x65E0;&#x8BBA;&#x524D;&#x7AEF;&#x53D1;&#x9001;&#x7684;&#x54EA;&#x79CD;&#x683C;&#x5F0F;&#x7684;&#x6570;&#x636E;&#xFF0C;&#x6211;&#x4EEC;&#x90FD;&#x53EF;&#x4EE5;&#x4EE5;&#x7EDF;&#x4E00;&#x7684;&#x65B9;&#x5F0F;&#x8BFB;&#x53D6;&#x6570;&#x636E;&#x3002;</p>
+<h2 id="&#x5E38;&#x7528;&#x5C5E;&#x6027;">&#x5E38;&#x7528;&#x5C5E;&#x6027;</h2>
+<h3 id="1&#xFF09;data">1&#xFF09;data</h3>
+<p><code>request.data</code>&#x8FD4;&#x56DE;&#x89E3;&#x6790;&#x4E4B;&#x540E;&#x7684;&#x8BF7;&#x6C42;&#x4F53;&#x6570;&#x636E;&#x3002;&#x7C7B;&#x4F3C;&#x4E8E;Django&#x4E2D;&#x6807;&#x51C6;&#x7684;<code>request.POST</code>&#x5C5E;&#x6027;&#xFF0C;&#x4F46;&#x63D0;&#x4F9B;&#x5982;&#x4E0B;&#x7279;&#x6027;&#xFF1A;</p>
+<ul>
+<li>&#x5305;&#x542B;&#x4E86;&#x5BF9;POST&#x3001;PUT&#x3001;PATCH&#x8BF7;&#x6C42;&#x65B9;&#x5F0F;&#x89E3;&#x6790;&#x540E;&#x7684;&#x6570;&#x636E;</li>
+<li><p>&#x5229;&#x7528;&#x4E86;REST framework&#x7684;parsers&#x89E3;&#x6790;&#x5668;&#xFF0C;&#x4E0D;&#x4EC5;&#x652F;&#x6301;&#x8868;&#x5355;&#x7C7B;&#x578B;&#x6570;&#x636E;&#xFF0C;&#x4E5F;&#x652F;&#x6301;JSON&#x6570;&#x636E;</p>
+<pre><code>from rest_framework.request import Request
+class Request:
+
+  @property
+  def data(self):
+      if not _hasattr(self, &apos;_full_data&apos;):
+          self._load_data_and_files()
+      return self._full_data
+
+  def _load_data_and_files(self):
+      &quot;&quot;&quot;
+      Parses the request content into `self.data`.
+      &quot;&quot;&quot;
+      if not _hasattr(self, &apos;_data&apos;):
+          self._data, self._files = self._parse()
+          if self._files:
+              self._full_data = self._data.copy()
+              self._full_data.update(self._files)
+          else:
+              self._full_data = self._data
+
+          # if a form media type, copy data &amp; files refs to the underlying
+          # http request so that closable objects are handled appropriately.
+          if is_form_media_type(self.content_type):
+              self._request._post = self.POST
+              self._request._files = self.FILES
+</code></pre></li>
+</ul>
+<h3 id="2&#xFF09;queryparams">2&#xFF09;query_params</h3>
+<p><code>request.query_params</code>&#x4E0E;Django&#x6807;&#x51C6;&#x7684;<code>request.GET</code>&#x76F8;&#x540C;&#xFF0C;&#x53EA;&#x662F;&#x66F4;&#x6362;&#x4E86;&#x66F4;&#x6B63;&#x786E;&#x7684;&#x540D;&#x79F0;&#x800C;&#x5DF2;&#x3002;</p>
+<pre><code>from rest_framework.request import Request
+
+class Request:
+    @property
+    def query_params(self):
+        &quot;&quot;&quot;
+        More semantically correct name for request.GET.
+        &quot;&quot;&quot;
+        return self._request.GET
+</code></pre>
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        <a href="../../../03-day/view/requestresponse.html" class="navigation navigation-prev " aria-label="Previous page: Request 与 Response"><i class="fa fa-angle-left"></i></a>
+        
+        
+        <a href="../../../03-day/view/requestresponse/response.html" class="navigation navigation-next " aria-label="Next page: Response"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="../../../gitbook/app.js"></script>
+
+    
+    <script src="../../../gitbook/plugins/gitbook-plugin-toggle-chapters/toggle.js"></script>
+    
+
+    
+    <script src="../../../gitbook/plugins/gitbook-plugin-splitter/splitter.js"></script>
+    
+
+    
+    <script src="../../../gitbook/plugins/gitbook-plugin-fontsettings/fontsettings.js"></script>
+    
+
+    
+    <script src="../../../gitbook/plugins/gitbook-plugin-sharing/buttons.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"fontsettings":{"family":"sans","size":2,"theme":"white"},"toggle-chapters":{},"splitter":{},"emphasize":{},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]}};
+    gitbook.start(config);
+});
+</script>
+
+        <!-- body:end -->
+    </body>
+    <!-- End of book django项目 -->
+</html>

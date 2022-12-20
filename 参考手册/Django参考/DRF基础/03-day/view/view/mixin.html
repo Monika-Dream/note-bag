@@ -1,0 +1,1117 @@
+<!DOCTYPE HTML>
+<html lang="zh-tw" >
+    <!-- Start book django项目 -->
+    <head>
+        <!-- head:start -->
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Mixin | django项目</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 2.6.7">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../../gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="../../../gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="../../../gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="../../../gitbook/plugins/gitbook-plugin-toggle-chapters/toggle.css">
+        
+    
+        
+        <link rel="stylesheet" href="../../../gitbook/plugins/gitbook-plugin-splitter/splitter.css">
+        
+    
+        
+        <link rel="stylesheet" href="../../../gitbook/plugins/gitbook-plugin-emphasize/plugin.css">
+        
+    
+        
+        <link rel="stylesheet" href="../../../gitbook/plugins/gitbook-plugin-fontsettings/website.css">
+        
+    
+        
+        <link rel="stylesheet" href="../../../gitbook/plugins/gitbook-plugin-highlight/website.css">
+        
+    
+    
+
+        
+    
+    
+    <link rel="next" href="../../../03-day/view/view/subclass.html" />
+    
+    
+    <link rel="prev" href="../../../03-day/view/view/genericapiview.html" />
+    
+
+        <!-- head:end -->
+    </head>
+    <body>
+        <!-- body:start -->
+        
+    <div class="book"
+        data-level="3.2.3"
+        data-chapter-title="Mixin"
+        data-filepath="03-day/view/view/mixin.md"
+        data-basepath="../../.."
+        data-revision="Tue Jul 14 2020 00:19:00 GMT+0800 (CST)"
+        data-innerlanguage="">
+    
+
+<div class="book-summary">
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter " data-level="0" data-path="index.html">
+            
+                
+                    <a href="../../../index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Django REST framework
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="01-day.html">
+            
+                
+                    <a href="../../../01-day.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Django REST framework流程
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1" data-path="01-day/restful.html">
+            
+                
+                    <a href="../../../01-day/restful.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.</b>
+                        
+                        RESTfull
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1.1" data-path="01-day/restful/mode.html">
+            
+                
+                    <a href="../../../01-day/restful/mode.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.1.</b>
+                        
+                        Web应用模式
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.1.2" data-path="01-day/restful/restful.html">
+            
+                
+                    <a href="../../../01-day/restful/restful.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.2.</b>
+                        
+                        认识RESTful
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.1.3" data-path="01-day/restful/method.html">
+            
+                
+                    <a href="../../../01-day/restful/method.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.3.</b>
+                        
+                        RESTful设计思想
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1.3.1" data-path="01-day/restful/method/request.html">
+            
+                
+                    <a href="../../../01-day/restful/method/request.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.3.1.</b>
+                        
+                        请求相关
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.1.3.2" data-path="01-day/restful/method/response.html">
+            
+                
+                    <a href="../../../01-day/restful/method/response.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.3.2.</b>
+                        
+                        响应相关
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.1.4" data-path="01-day/restful/prepare.html">
+            
+                
+                    <a href="../../../01-day/restful/prepare.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.4.</b>
+                        
+                        项目准备
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.1.5" data-path="01-day/restful/django.html">
+            
+                
+                    <a href="../../../01-day/restful/django.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.5.</b>
+                        
+                        使用Django开发REST 接口
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.1.6" data-path="01-day/restful/task.html">
+            
+                
+                    <a href="../../../01-day/restful/task.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.6.</b>
+                        
+                        明确REST接口开发的核心任务
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="01-day/restful/djangorestful-framework.html">
+            
+                
+                    <a href="../../../01-day/restful/djangorestful-framework.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.2.</b>
+                        
+                        Django REST framework
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="01-day/restful/djangorestful-framework/config.html">
+            
+                
+                    <a href="../../../01-day/restful/djangorestful-framework/config.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.2.1.</b>
+                        
+                        环境安装与配置
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="02-day.html">
+            
+                
+                    <a href="../../../02-day.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.</b>
+                        
+                        序列化和反序列化
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1" data-path="02-day/modify.html">
+            
+                
+                    <a href="../../../02-day/modify.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.</b>
+                        
+                        Serializer字段和选项
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="02-day/serializer.html">
+            
+                
+                    <a href="../../../02-day/serializer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.2.</b>
+                        
+                        序列化使用
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.2.1" data-path="02-day/serializer/base.html">
+            
+                
+                    <a href="../../../02-day/serializer/base.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.2.1.</b>
+                        
+                        基本使用
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2.2" data-path="02-day/serializer/assoc.html">
+            
+                
+                    <a href="../../../02-day/serializer/assoc.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.2.2.</b>
+                        
+                        关联对象嵌套序列化
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3" data-path="02-day/un-serializer.html">
+            
+                
+                    <a href="../../../02-day/un-serializer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.</b>
+                        
+                        反序列化使用
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.3.1" data-path="02-day/un-serializer/validate.html">
+            
+                
+                    <a href="../../../02-day/un-serializer/validate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.1.</b>
+                        
+                        验证
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.3.1.1" data-path="02-day/un-serializer/validate/type.html">
+            
+                
+                    <a href="../../../02-day/un-serializer/validate/type.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.1.1.</b>
+                        
+                        字段类型
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3.1.2" data-path="02-day/un-serializer/validate/field.html">
+            
+                
+                    <a href="../../../02-day/un-serializer/validate/field.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.1.2.</b>
+                        
+                        字段选项
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3.1.3" data-path="02-day/un-serializer/validate/validatefieldname.html">
+            
+                
+                    <a href="../../../02-day/un-serializer/validate/validatefieldname.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.1.3.</b>
+                        
+                        validate\_fieldname
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3.1.4" data-path="02-day/un-serializer/validate/validate.html">
+            
+                
+                    <a href="../../../02-day/un-serializer/validate/validate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.1.4.</b>
+                        
+                        validate
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3.2" data-path="02-day/un-serializer/save.html">
+            
+                
+                    <a href="../../../02-day/un-serializer/save.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.2.</b>
+                        
+                        保存
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.4" data-path="02-day/modelserializer.html">
+            
+                
+                    <a href="../../../02-day/modelserializer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.4.</b>
+                        
+                        模型类序列化器ModelSerializer
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.5" data-path="02-day/un-serializer/highlevel.html">
+            
+                
+                    <a href="../../../02-day/un-serializer/highlevel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.5.</b>
+                        
+                        进阶使用
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="3" data-path="03-day/view.html">
+            
+                
+                    <a href="../../../03-day/view.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        视图
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="3.1" data-path="03-day/view/requestresponse.html">
+            
+                
+                    <a href="../../../03-day/view/requestresponse.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.</b>
+                        
+                        Request 与 Response
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="3.1.1" data-path="03-day/view/requestresponse/request.html">
+            
+                
+                    <a href="../../../03-day/view/requestresponse/request.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.1.</b>
+                        
+                        Request
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.2" data-path="03-day/view/requestresponse/response.html">
+            
+                
+                    <a href="../../../03-day/view/requestresponse/response.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.2.</b>
+                        
+                        Response
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2" data-path="03-day/view/view.html">
+            
+                
+                    <a href="../../../03-day/view/view.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.</b>
+                        
+                        视图
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="3.2.1" data-path="03-day/view/view/apiview.html">
+            
+                
+                    <a href="../../../03-day/view/view/apiview.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.1.</b>
+                        
+                        APIView\(一级\)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.2" data-path="03-day/view/view/genericapiview.html">
+            
+                
+                    <a href="../../../03-day/view/view/genericapiview.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.2.</b>
+                        
+                        GenericAPIView\(二级\)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter active" data-level="3.2.3" data-path="03-day/view/view/mixin.html">
+            
+                
+                    <a href="../../../03-day/view/view/mixin.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.3.</b>
+                        
+                        Mixin
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.4" data-path="03-day/view/view/subclass.html">
+            
+                
+                    <a href="../../../03-day/view/view/subclass.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.4.</b>
+                        
+                        子类视图\(三级\)
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3" data-path="03-day/view/viewset.html">
+            
+                
+                    <a href="../../../03-day/view/viewset.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.3.</b>
+                        
+                        视图集ViewSet
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="3.3.1" data-path="03-day/view/viewset/viewset.html">
+            
+                
+                    <a href="../../../03-day/view/viewset/viewset.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.3.1.</b>
+                        
+                        ViewSet
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3.2" data-path="03-day/view/viewset/genericviewset.html">
+            
+                
+                    <a href="../../../03-day/view/viewset/genericviewset.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.3.2.</b>
+                        
+                        GenericViewSet
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3.3" data-path="03-day/view/viewset/modelviewset.html">
+            
+                
+                    <a href="../../../03-day/view/viewset/modelviewset.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.3.3.</b>
+                        
+                        ModelViewSet
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3.4" data-path="03-day/view/viewset/readonlymodelviewset.html">
+            
+                
+                    <a href="../../../03-day/view/viewset/readonlymodelviewset.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.3.4.</b>
+                        
+                        ReadOnlyModelViewSet
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="3.4" data-path="03-day/view/router.html">
+            
+                
+                    <a href="../../../03-day/view/router.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.4.</b>
+                        
+                        路由Router
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="4" data-path="03-day/other.html">
+            
+                
+                    <a href="../../../03-day/other.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.</b>
+                        
+                        高级功能
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="4.1" data-path="03-day/other/authentication.html">
+            
+                
+                    <a href="../../../03-day/other/authentication.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.1.</b>
+                        
+                        认证Authentication
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4.2" data-path="03-day/other/quan-xian-permissions.html">
+            
+                
+                    <a href="../../../03-day/other/quan-xian-permissions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.2.</b>
+                        
+                        权限Permissions
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4.3" data-path="03-day/other/pagination.html">
+            
+                
+                    <a href="../../../03-day/other/pagination.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.3.</b>
+                        
+                        分页Pagination
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    本書使用 GitBook 釋出
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../../../" >django项目</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <h1 id="mixin">Mixin</h1>
+<p><a href="http://www.django-rest-framework.org/api-guide/generic-views/#mixins" target="_blank">&#x6587;&#x6863;</a></p>
+<h3 id="1&#xFF09;listmodelmixin">1&#xFF09;ListModelMixin </h3>
+<p>&#x5217;&#x8868;&#x89C6;&#x56FE;&#x6269;&#x5C55;&#x7C7B;&#xFF0C;&#x63D0;&#x4F9B;<code>list(request, *args, **kwargs)</code>&#x65B9;&#x6CD5;&#x5FEB;&#x901F;&#x5B9E;&#x73B0;&#x5217;&#x8868;&#x89C6;&#x56FE;&#xFF0C;&#x8FD4;&#x56DE;200&#x72B6;&#x6001;&#x7801;&#x3002;</p>
+<p>&#x8BE5;Mixin&#x7684;list&#x65B9;&#x6CD5;&#x4F1A;&#x5BF9;&#x6570;&#x636E;&#x8FDB;&#x884C;&#x8FC7;&#x6EE4;&#x548C;&#x5206;&#x9875;&#x3002;</p>
+<p>&#x6E90;&#x4EE3;&#x7801;&#xFF1A;</p>
+<pre><code class="lang-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ListModelMixin</span><span class="hljs-params">(object)</span>:</span>
+    <span class="hljs-string">&quot;&quot;&quot;
+    List a queryset.
+    &quot;&quot;&quot;</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">list</span><span class="hljs-params">(self, request, *args, **kwargs)</span>:</span>
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        <span class="hljs-keyword">if</span> page <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">None</span>:
+            serializer = self.get_serializer(page, many=<span class="hljs-keyword">True</span>)
+            <span class="hljs-keyword">return</span> self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=<span class="hljs-keyword">True</span>)
+        <span class="hljs-keyword">return</span> Response(serializer.data)
+</code></pre>
+<p>&#x4E3E;&#x4F8B;&#xFF1A;</p>
+<pre><code class="lang-py"><span class="hljs-keyword">from</span> rest_framework.generics <span class="hljs-keyword">import</span> GenericAPIView
+<span class="hljs-keyword">from</span> rest_framework.mixins <span class="hljs-keyword">import</span> ListModelMixin
+<span class="hljs-keyword">from</span> book.models <span class="hljs-keyword">import</span> BookInfo
+<span class="hljs-keyword">from</span> book.serializers <span class="hljs-keyword">import</span> BookInfoModelSerializer
+
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BookListGenericMixinView</span><span class="hljs-params">(ListModelMixin,GenericAPIView)</span>:</span>
+    <span class="hljs-comment"># &#x8BBE;&#x7F6E;&#x67E5;&#x8BE2;&#x7ED3;&#x679C;&#x96C6;&#x5C5E;&#x6027;</span>
+    queryset = BookInfo.objects.all()
+    <span class="hljs-comment"># &#x8BBE;&#x7F6E;&#x5E8F;&#x5217;&#x5316;&#x5668;&#x5C5E;&#x6027;</span>
+    serializer_class = BookInfoModelSerializer
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get</span><span class="hljs-params">(self,request)</span>:</span>
+        <span class="hljs-comment">#&#x8C03;&#x7528;Mixin&#x62BD;&#x53D6;&#x597D;&#x7684;list&#x65B9;&#x6CD5;</span>
+        <span class="hljs-keyword">return</span> self.list(request)
+</code></pre>
+<h3 id="2&#xFF09;createmodelmixin">2&#xFF09;CreateModelMixin </h3>
+<p>&#x521B;&#x5EFA;&#x89C6;&#x56FE;&#x6269;&#x5C55;&#x7C7B;&#xFF0C;&#x63D0;&#x4F9B;<code>create(request, *args, **kwargs)</code>&#x65B9;&#x6CD5;&#x5FEB;&#x901F;&#x5B9E;&#x73B0;&#x521B;&#x5EFA;&#x8D44;&#x6E90;&#x7684;&#x89C6;&#x56FE;&#xFF0C;&#x6210;&#x529F;&#x8FD4;&#x56DE;201&#x72B6;&#x6001;&#x7801;&#x3002;</p>
+<p>&#x5982;&#x679C;&#x5E8F;&#x5217;&#x5316;&#x5668;&#x5BF9;&#x524D;&#x7AEF;&#x53D1;&#x9001;&#x7684;&#x6570;&#x636E;&#x9A8C;&#x8BC1;&#x5931;&#x8D25;&#xFF0C;&#x8FD4;&#x56DE;400&#x9519;&#x8BEF;&#x3002;</p>
+<p>&#x6E90;&#x4EE3;&#x7801;&#xFF1A;</p>
+<pre><code class="lang-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CreateModelMixin</span><span class="hljs-params">(object)</span>:</span>
+    <span class="hljs-string">&quot;&quot;&quot;
+    Create a model instance.
+    &quot;&quot;&quot;</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">create</span><span class="hljs-params">(self, request, *args, **kwargs)</span>:</span>
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=<span class="hljs-keyword">True</span>)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        <span class="hljs-keyword">return</span> Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">perform_create</span><span class="hljs-params">(self, serializer)</span>:</span>
+        serializer.save()
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_success_headers</span><span class="hljs-params">(self, data)</span>:</span>
+        <span class="hljs-keyword">try</span>:
+            <span class="hljs-keyword">return</span> {<span class="hljs-string">&apos;Location&apos;</span>: str(data[api_settings.URL_FIELD_NAME])}
+        <span class="hljs-keyword">except</span> (TypeError, KeyError):
+            <span class="hljs-keyword">return</span> {}
+</code></pre>
+<p>&#x4E3E;&#x4F8B;&#xFF1A;</p>
+<pre><code class="lang-py"><span class="hljs-keyword">from</span> rest_framework.generics <span class="hljs-keyword">import</span> GenericAPIView
+<span class="hljs-keyword">from</span> rest_framework.mixins <span class="hljs-keyword">import</span> CreateModelMixin
+<span class="hljs-keyword">from</span> book.models <span class="hljs-keyword">import</span> BookInfo
+<span class="hljs-keyword">from</span> book.serializers <span class="hljs-keyword">import</span> BookInfoModelSerializer
+
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BookListGenericMixinView</span><span class="hljs-params">(CreateModelMixin,GenericAPIView)</span>:</span>
+    <span class="hljs-comment"># &#x8BBE;&#x7F6E;&#x67E5;&#x8BE2;&#x7ED3;&#x679C;&#x96C6;&#x5C5E;&#x6027;</span>
+    queryset = BookInfo.objects.all()
+    <span class="hljs-comment"># &#x8BBE;&#x7F6E;&#x5E8F;&#x5217;&#x5316;&#x5668;&#x5C5E;&#x6027;</span>
+    serializer_class = BookInfoModelSerializer
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">post</span><span class="hljs-params">(self,request)</span>:</span>
+        <span class="hljs-comment"># &#x8C03;&#x7528;Mixin&#x62BD;&#x53D6;&#x597D;create&#x7684;&#x65B9;&#x6CD5;</span>
+        <span class="hljs-keyword">return</span> self.create(request)
+</code></pre>
+<h3 id="3&#xFF09;-retrievemodelmixin"><img src="../../../assets/GenericAPIView&#x548C;Mixin&#x914D;&#x5408;&#x4F7F;&#x7528;.png" alt=""> </h3>
+<h3 id="3&#xFF09;-retrievemodelmixin">3&#xFF09; RetrieveModelMixin </h3>
+<p>&#x8BE6;&#x60C5;&#x89C6;&#x56FE;&#x6269;&#x5C55;&#x7C7B;&#xFF0C;&#x63D0;&#x4F9B;<code>retrieve(request, *args, **kwargs)</code>&#x65B9;&#x6CD5;&#xFF0C;&#x53EF;&#x4EE5;&#x5FEB;&#x901F;&#x5B9E;&#x73B0;&#x8FD4;&#x56DE;&#x4E00;&#x4E2A;&#x5B58;&#x5728;&#x7684;&#x6570;&#x636E;&#x5BF9;&#x8C61;&#x3002;</p>
+<p>&#x5982;&#x679C;&#x5B58;&#x5728;&#xFF0C;&#x8FD4;&#x56DE;200&#xFF0C; &#x5426;&#x5219;&#x8FD4;&#x56DE;404&#x3002;</p>
+<p>&#x6E90;&#x4EE3;&#x7801;&#xFF1A;</p>
+<pre><code class="lang-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RetrieveModelMixin</span><span class="hljs-params">(object)</span>:</span>
+    <span class="hljs-string">&quot;&quot;&quot;
+    Retrieve a model instance.
+    &quot;&quot;&quot;</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">retrieve</span><span class="hljs-params">(self, request, *args, **kwargs)</span>:</span>
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        <span class="hljs-keyword">return</span> Response(serializer.data)
+</code></pre>
+<p>&#x4F8B;&#x5982;&#xFF1A;</p>
+<pre><code class="lang-py"><span class="hljs-keyword">from</span> rest_framework.generics <span class="hljs-keyword">import</span> GenericAPIView
+<span class="hljs-keyword">from</span> rest_framework.mixins <span class="hljs-keyword">import</span> RetrieveModelMixin,UpdateModelMixin,DestroyModelMixin
+<span class="hljs-keyword">from</span> book.models <span class="hljs-keyword">import</span> BookInfo
+<span class="hljs-keyword">from</span> book.serializers <span class="hljs-keyword">import</span> BookInfoModelSerializer
+
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BookDetailGenericMixinView</span><span class="hljs-params">(RetrieveModelMixin, GenericAPIView)</span>:</span>
+    <span class="hljs-comment"># &#x8BBE;&#x7F6E;&#x67E5;&#x8BE2;&#x7ED3;&#x679C;&#x96C6;&#x5C5E;&#x6027;</span>
+    queryset = BookInfo.objects.all()
+    <span class="hljs-comment"># &#x8BBE;&#x7F6E;&#x5E8F;&#x5217;&#x5316;&#x5668;&#x5C5E;&#x6027;</span>
+    serializer_class = BookInfoModelSerializer
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get</span><span class="hljs-params">(self, request,pk)</span>:</span>
+        <span class="hljs-comment"># &#x8C03;&#x7528;Mixin&#x62BD;&#x53D6;&#x597D;&#x7684;retrieve&#x65B9;&#x6CD5;</span>
+        <span class="hljs-keyword">return</span> self.retrieve(request)
+</code></pre>
+<h3 id="4&#xFF09;updatemodelmixin">4&#xFF09;UpdateModelMixin </h3>
+<p>&#x66F4;&#x65B0;&#x89C6;&#x56FE;&#x6269;&#x5C55;&#x7C7B;&#xFF0C;&#x63D0;&#x4F9B;<code>update(request, *args, **kwargs)</code>&#x65B9;&#x6CD5;&#xFF0C;&#x53EF;&#x4EE5;&#x5FEB;&#x901F;&#x5B9E;&#x73B0;&#x66F4;&#x65B0;&#x4E00;&#x4E2A;&#x5B58;&#x5728;&#x7684;&#x6570;&#x636E;&#x5BF9;&#x8C61;&#x3002;</p>
+<p>&#x540C;&#x65F6;&#x4E5F;&#x63D0;&#x4F9B;<code>partial_update(request, *args, **kwargs)</code>&#x65B9;&#x6CD5;&#xFF0C;&#x53EF;&#x4EE5;&#x5B9E;&#x73B0;&#x5C40;&#x90E8;&#x66F4;&#x65B0;&#x3002;</p>
+<p>&#x6210;&#x529F;&#x8FD4;&#x56DE;200&#xFF0C;&#x5E8F;&#x5217;&#x5316;&#x5668;&#x6821;&#x9A8C;&#x6570;&#x636E;&#x5931;&#x8D25;&#x65F6;&#xFF0C;&#x8FD4;&#x56DE;400&#x9519;&#x8BEF;&#x3002;</p>
+<p>&#x6E90;&#x4EE3;&#x7801;&#xFF1A;</p>
+<pre><code class="lang-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UpdateModelMixin</span><span class="hljs-params">(object)</span>:</span>
+    <span class="hljs-string">&quot;&quot;&quot;
+    Update a model instance.
+    &quot;&quot;&quot;</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">update</span><span class="hljs-params">(self, request, *args, **kwargs)</span>:</span>
+        partial = kwargs.pop(<span class="hljs-string">&apos;partial&apos;</span>, <span class="hljs-keyword">False</span>)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=<span class="hljs-keyword">True</span>)
+        self.perform_update(serializer)
+
+        <span class="hljs-keyword">if</span> getattr(instance, <span class="hljs-string">&apos;_prefetched_objects_cache&apos;</span>, <span class="hljs-keyword">None</span>):
+            <span class="hljs-comment"># If &apos;prefetch_related&apos; has been applied to a queryset, we need to</span>
+            <span class="hljs-comment"># forcibly invalidate the prefetch cache on the instance.</span>
+            instance._prefetched_objects_cache = {}
+
+        <span class="hljs-keyword">return</span> Response(serializer.data)
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">perform_update</span><span class="hljs-params">(self, serializer)</span>:</span>
+        serializer.save()
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">partial_update</span><span class="hljs-params">(self, request, *args, **kwargs)</span>:</span>
+        kwargs[<span class="hljs-string">&apos;partial&apos;</span>] = <span class="hljs-keyword">True</span>
+        <span class="hljs-keyword">return</span> self.update(request, *args, **kwargs)
+</code></pre>
+<p>&#x4E3E;&#x4F8B;&#xFF1A;</p>
+<pre><code class="lang-py"><span class="hljs-keyword">from</span> rest_framework.generics <span class="hljs-keyword">import</span> GenericAPIView
+<span class="hljs-keyword">from</span> rest_framework.mixins <span class="hljs-keyword">import</span> UpdateModelMixin
+<span class="hljs-keyword">from</span> book.models <span class="hljs-keyword">import</span> BookInfo
+<span class="hljs-keyword">from</span> book.serializers <span class="hljs-keyword">import</span> BookInfoModelSerializer
+
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BookDetailGenericMixinView</span><span class="hljs-params">(UpdateModelMixin, GenericAPIView)</span>:</span>
+    <span class="hljs-comment"># &#x8BBE;&#x7F6E;&#x67E5;&#x8BE2;&#x7ED3;&#x679C;&#x96C6;&#x5C5E;&#x6027;</span>
+    queryset = BookInfo.objects.all()
+    <span class="hljs-comment"># &#x8BBE;&#x7F6E;&#x5E8F;&#x5217;&#x5316;&#x5668;&#x5C5E;&#x6027;</span>
+    serializer_class = BookInfoModelSerializer
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">put</span><span class="hljs-params">(self, request,pk)</span>:</span>
+        <span class="hljs-comment"># &#x8C03;&#x7528;Mixin&#x62BD;&#x53D6;&#x597D;update&#x7684;&#x65B9;&#x6CD5;</span>
+        <span class="hljs-keyword">return</span> self.update(request)
+</code></pre>
+<h3 id="5&#xFF09;destroymodelmixin">5&#xFF09;DestroyModelMixin </h3>
+<p>&#x5220;&#x9664;&#x89C6;&#x56FE;&#x6269;&#x5C55;&#x7C7B;&#xFF0C;&#x63D0;&#x4F9B;<code>destroy(request, *args, **kwargs)</code>&#x65B9;&#x6CD5;&#xFF0C;&#x53EF;&#x4EE5;&#x5FEB;&#x901F;&#x5B9E;&#x73B0;&#x5220;&#x9664;&#x4E00;&#x4E2A;&#x5B58;&#x5728;&#x7684;&#x6570;&#x636E;&#x5BF9;&#x8C61;&#x3002;</p>
+<p>&#x6210;&#x529F;&#x8FD4;&#x56DE;204&#xFF0C;&#x4E0D;&#x5B58;&#x5728;&#x8FD4;&#x56DE;404&#x3002;</p>
+<p>&#x6E90;&#x4EE3;&#x7801;&#xFF1A;</p>
+<pre><code class="lang-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DestroyModelMixin</span><span class="hljs-params">(object)</span>:</span>
+    <span class="hljs-string">&quot;&quot;&quot;
+    Destroy a model instance.
+    &quot;&quot;&quot;</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">destroy</span><span class="hljs-params">(self, request, *args, **kwargs)</span>:</span>
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        <span class="hljs-keyword">return</span> Response(status=status.HTTP_204_NO_CONTENT)
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">perform_destroy</span><span class="hljs-params">(self, instance)</span>:</span>
+        instance.delete()
+</code></pre>
+<p>&#x4E3E;&#x4F8B;&#xFF1A;</p>
+<pre><code class="lang-py"><span class="hljs-keyword">from</span> rest_framework.generics <span class="hljs-keyword">import</span> GenericAPIView
+<span class="hljs-keyword">from</span> rest_framework.mixins <span class="hljs-keyword">import</span> DestroyModelMixin
+<span class="hljs-keyword">from</span> book.models <span class="hljs-keyword">import</span> BookInfo
+<span class="hljs-keyword">from</span> book.serializers <span class="hljs-keyword">import</span> BookInfoModelSerializer
+
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BookDetailGenericMixinView</span><span class="hljs-params">(DestroyModelMixin, GenericAPIView)</span>:</span>
+    <span class="hljs-comment"># &#x8BBE;&#x7F6E;&#x67E5;&#x8BE2;&#x7ED3;&#x679C;&#x96C6;&#x5C5E;&#x6027;</span>
+    queryset = BookInfo.objects.all()
+    <span class="hljs-comment"># &#x8BBE;&#x7F6E;&#x5E8F;&#x5217;&#x5316;&#x5668;&#x5C5E;&#x6027;</span>
+    serializer_class = BookInfoModelSerializer
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">delete</span><span class="hljs-params">(self,request,pk)</span>:</span>
+        &#x8C03;&#x7528;Mixin&#x62BD;&#x53D6;&#x597D;destory&#x7684;&#x65B9;&#x6CD5;
+        <span class="hljs-keyword">return</span> self.destroy(request)
+</code></pre>
+<h2 id="3--&#x51E0;&#x4E2A;&#x53EF;&#x7528;&#x5B50;&#x7C7B;&#x89C6;&#x56FE;"></h2>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        <a href="../../../03-day/view/view/genericapiview.html" class="navigation navigation-prev " aria-label="Previous page: GenericAPIView\(二级\)"><i class="fa fa-angle-left"></i></a>
+        
+        
+        <a href="../../../03-day/view/view/subclass.html" class="navigation navigation-next " aria-label="Next page: 子类视图\(三级\)"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="../../../gitbook/app.js"></script>
+
+    
+    <script src="../../../gitbook/plugins/gitbook-plugin-toggle-chapters/toggle.js"></script>
+    
+
+    
+    <script src="../../../gitbook/plugins/gitbook-plugin-splitter/splitter.js"></script>
+    
+
+    
+    <script src="../../../gitbook/plugins/gitbook-plugin-fontsettings/fontsettings.js"></script>
+    
+
+    
+    <script src="../../../gitbook/plugins/gitbook-plugin-sharing/buttons.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"fontsettings":{"family":"sans","size":2,"theme":"white"},"toggle-chapters":{},"splitter":{},"emphasize":{},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]}};
+    gitbook.start(config);
+});
+</script>
+
+        <!-- body:end -->
+    </body>
+    <!-- End of book django项目 -->
+</html>
