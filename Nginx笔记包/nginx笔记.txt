@@ -1,0 +1,67 @@
+ - 开启方式
+docker run -p 80:80 --name nginx ^
+-v C:\Users\Lenovo\Desktop\nginx\nginx.conf:/etc/nginx/nginx.conf ^
+-v C:\Users\Lenovo\Desktop\nginx\conf.d:/etc/nginx/conf.d ^
+-v C:\Users\Lenovo\Desktop\nginx\nginx:/var/log/nginx ^
+-v C:\Users\Lenovo\Desktop\nginx\html:/usr/share/nginx/html ^
+-d nginx 
+
+配置详解
+ - worker_processes
+     - worker_processes 1; 默认为1，表示开启一个业务进程
+
+ - worker_connections
+     - worker_connections 1024; 单个业务进程可接受连接数
+
+ - include mime.types;
+     - include mime.types; 引入http mime类型
+
+ - default_type application/octet-stream;
+     - default_type application/octet-stream; 如果mime类型没匹配上，默认使用二进制流的方式传输。
+
+ - sendfile on;
+     - sendfile on; 使用linux的 sendfile(socket, file, len) 高效网络传输，也就是数据0拷贝。
+     
+ - 未开启sendfile
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
