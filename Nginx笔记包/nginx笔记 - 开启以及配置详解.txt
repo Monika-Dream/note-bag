@@ -1,0 +1,92 @@
+ - 开启方式
+docker run -p 80:80 --name nginx ^
+-v C:\Users\Lenovo\Desktop\nginx\nginx.conf:/etc/nginx/nginx.conf ^
+-v C:\Users\Lenovo\Desktop\nginx\conf.d:/etc/nginx/conf.d ^
+-v C:\Users\Lenovo\Desktop\nginx\nginx:/var/log/nginx ^
+-v C:\Users\Lenovo\Desktop\nginx\html:/usr/share/nginx/html ^
+-d nginx 
+
+配置详解
+ - 注意修改完配置文件后需要重启
+ - worker_processes
+     - 工作进程数量, 默认一个, 并不是越多越好 ( 根据内核数量选择 )
+
+ - events {}
+     - 事件驱动模块
+
+ - worker_connections
+     - 单个业务进程可接受连接数
+
+ - include
+     - 可以将另一个配置文件引入到当前文件中
+
+ - default_type application/octet-stream;
+     - 如果 mime 类型没匹配上，默认使用二进制流的方式传输。
+
+ - sendfile on;
+     - 使用linux的 sendfile(socket, file, len) 高效网络传输，也就是 数据0拷贝 。
+     - 减少一次内核数据的拷贝
+
+ - keepalive_timeout  65;
+     - 保持连接, 超时的时间
+
+ - server {}
+     - 这里代表虚拟主机( vhost ), 一个 nginx 可以运行多个主机
+     - 主机代表它有自己的站点, 它有自己的根目录
+     - 每个主机之间互相不干扰
+     - 优先精确, 然后头通配, 再然后尾通配, 最后正则
+
+ - listen: 80
+     - 监听的端口号, 这里内容在 /etc/nginx/conf.d/default.conf 文件中
+
+ - server_name  localhost;
+     - 主机名字, 能解析的
+     - 一个 server_name 里面可以配多个 名字
+     - 这里名字可以是正则 *.mmban.com
+
+ - location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+     - / 代表访问根时的重定向
+     - URL
+     - root 是相对路径, 目前指向的是默认页存储位置
+     - index 当前访问这个 location 下生效
+
+ - error_page   500 502 503 504  /50x.html;
+     - 发生服务器端错误时出现
+     - 注意这个配置下面紧跟的就是重定向配置 location = /50x.html {root   /usr/share/nginx/html;}
+     - 也就是说一旦跳到这个页面是, nginx 会由重定向配置找到错误显示页面
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
