@@ -58,9 +58,11 @@ docker run -p 80:80 --name nginx ^
      - 注意这个配置下面紧跟的就是重定向配置 location = /50x.html {root   /usr/share/nginx/html;}
      - 也就是说一旦跳到这个页面是, nginx 会由重定向配置找到错误显示页面
 
+ - proxy_pass 网址
+     - 反向代理的基础
 
-
-
+ - upstream 名称
+     - 多台服务器时使用, 用于负载均衡
 
 
 

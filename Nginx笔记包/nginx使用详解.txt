@@ -19,6 +19,67 @@
         proxy_pass http://www.4399.com
        }
 
+ - 反向代理 + 负载均衡使用
+  	 - proxy_pass 后面可以跟一个自定义的名字 http://名字;
+  	 	 - proxy_pass http://httpds;
+  	 - 然后与 server 平级的地方写入, 注意要写在 server 上面 ( 默认轮询 )
+  	 	 - upstream httpds {
+  	 	 	server 192.168.1.8:8080;
+  	 	 	server 192.168.44.103:80;
+  	 	 }
+
+  	 - 权重:
+  	 	 - weight 表示权重 
+  	 	 - down 表示不参与负载均衡
+  	 	 - backup 最后的时候被迫使用
+  	 	 - upstream httpds {
+  	 	 	server 192.168.1.8:8080 weight=8 down;
+  	 	 	server 192.168.44.103:80 weight=2;
+  	 	 	server 192.168.44.102:80 backup;
+  	 	 }
+	
+ - 轮询问题 
+ 	 - 无法保持状态, session 无法立即同步, 导致用户重复操作 token 由来以及 JWT 认证
+
+ - 动静分离
+ 	 - 中小型网站使用
+ 	 - 就是说, 如果静态文件( 如图片 )全部都放置在了后端服务器上, 那么会导致许多请求直接打到服务器上
+ 	 	 - 说白就是 杀鸡焉用牛刀?
+ 	 - 将 静态 js, css, img 直接放到 nginx 里面
+ 	 - 将动态请求放到 服务器上 
+
+
+
+
+
+ - 开启第二个 nginx 以测试负载均衡
+		 docker run -p 800:80 --name nginx2 ^
+		 -v C:\Users\Lenovo\Desktop\nginx2\nginx.conf:/etc/nginx/nginx.conf ^
+		 -v C:\Users\Lenovo\Desktop\nginx2\conf.d:/etc/nginx/conf.d ^
+		 -v C:\Users\Lenovo\Desktop\nginx2\html:/usr/share/nginx/html ^
+		 -d nginx 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
