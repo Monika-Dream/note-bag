@@ -47,6 +47,87 @@
  	 	 - 说白就是 杀鸡焉用牛刀?
  	 - 将 静态 js, css, img 直接放到 nginx 里面
  	 - 将动态请求放到 服务器上 
+ 	 	 - 多复制几个 location 出来, 将文件放到 html 文件夹中,
+ 	 	 - 这里会自动拼接路径会在 /html 后面 拼接 /css 
+ 	 		 location /css {
+   			     root   /usr/share/nginx/html;
+   			     index  index.html index.htm;
+   			 }
+   			 
+   			 location /js {
+   			     root   /usr/share/nginx/html;
+   			     index  index.html index.htm;
+   			 }
+	 
+   			 location /img {
+   			     root   /usr/share/nginx/html;
+   			     index  index.html index.htm;
+   			 }
+
+ - location 匹配规则
+ 	 - /js 要比 / 优先级高, 就是精确匹配优先
+ 	 - ~*/(js|img|css)
+ 	 	~ 开始正则
+ 	 	* 不区分大小写
+ 	 	() 元组
+
+ - URLRewrite
+ 	 - 隐藏后端真实的地址
+ 	 - rewrite ^/匹配的网址$      真实转发的请求   break;
+ 	 - () 表示要入参, $1 表示跟随第一个正则
+ 	 - location 中
+ 	 - location / {
+    	      rewrite ^/([0-9]+).html$      /index?pageName=$1   break; 
+    	      proxy_pass http://192.168.1.8:8080;
+    	  }
+
+ - 在使用 URLRewrite + 负载均衡的时候, 我们的后端服务器应当无法被外网访问
+ 	 - Nginx 向外提供服务, 服务器应当处于内网
+ 	 - 请查看 Nginx 基础使用, 有配置的
+
+ - 防盗链
+ 	 - 在 localtion 下面配置
+ 	 - 具体哪里不让访问就配到哪里
+ 	 - localhost 这里是站点, 你 nginx 怎么访问的这里怎么填
+ 	 - 注意 if空格()
+		 location ~*/(js|css|img) {
+
+			valid_referers none localhost;
+		        if ($invalid_referer) {
+		            return 403; 这里直接返回 403 无权限太不友好力
+		        }
+		
+		        root   /usr/share/nginx/html;
+		        index  index.html index.htm;
+		 }
+	 - 友好的返回指定图片
+	 	 location /img {
+    
+        		valid_referers 127.0.0.1;
+        		if ($invalid_referer) {
+            			rewrite ^/  /stop.jpg  break;
+        		}
+
+        		root   /usr/share/nginx/html;
+        		index  index.html index.htm;
+    		 }
+
+ - Keepalived 检测可用状态 ( 心跳检测 )
+ 	 - 我们一直都说后端服务器怎么样怎么样的, 那么万一 nginx 挂掉了怎么办?
+ 	 - 我们将部署多台 nginx 服务器, 使用 Keepalived 来确保相互之间的存活
+ 	 - 两台同时工作, 上游虚拟化 ip ,一台死亡另一台就可以快速顶替了 
+		 - 在Keepalived + Nginx高可用负载均衡架构中，
+		 	 - keepalived负责实现 High-availability (HA) 功能控制前端机VIP（虚拟网络地址），
+		 	 - 当有设备发生故障时，热备服务器可以瞬间将VIP自动切换过来，
+		 	 - 实际运行中体验只有2秒钟切换时间，DNS服务可以负责前端VIP的负载均衡。
+		 - MASTER、BACKUP 两台服务器均通过 keepalived 软件把 ens33 网卡绑上一个
+		 	 - 虚拟IP（VIP）地址192.168.32.88，此VIP当前由谁承载着服务就绑定在谁的ens33上，
+		 	 - 当MASTER发生故障时，BACKUP会通过/etc/keepalived/keepalived.conf
+		 	 - 文件中设置的心跳时间 advert_int 1 检查，无法获取MASTER正常状态的话，
+		 	 - BACKUP会瞬间绑定 VIP 来接替 MASTER 的工作，
+		 	 - 当 MASTER 恢复后 keepalived 会通过 priority（权重参数：值越大优先使用）
+		 	 - 参数判断优先权将虚拟VIP地址192.168.32.88重新绑定给 MASTER 的 ens33 网卡。
+	 - 这里我没实现
 
 
 
