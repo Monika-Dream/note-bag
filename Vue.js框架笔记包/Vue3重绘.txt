@@ -170,6 +170,17 @@ _____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 
  - beforeUnmount		 -  在组件卸载之前		 - 销毁	onBeforeUnmount()
  - unmounted		 - 在组件卸载之时		 - 销毁	onUnmounted()
 
+
+beforeCreate ->                     use setup()
+created ->                          use setup()
+beforeMount ->                      onBeforeMount
+mounted ->                          onMounted
+beforeUpdate ->                     onBeforeUpdate
+updated ->                          onUpdated
+beforeDestroy ->                    onBeforeUnmount
+destroyed ->                        onUnmounted
+errorCaptured ->                    onErrorCaptured
+
 _____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 十 ] Setup 生命周期函数使用
  - import { onBeforeMount, onMounted......} from 'vue'
 setup(){
