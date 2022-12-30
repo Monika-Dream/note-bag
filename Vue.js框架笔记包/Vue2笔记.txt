@@ -699,10 +699,10 @@ export default {
  - 指的是动态切换组件的显示与隐藏
  - < components > 组件, 专门用来实现动态组件的渲染
 显示组件方式 ( 基本使用 )
-	<components is="Left"></components>
+	<component is="Left"></component>
 		 - 如果想 v-bind 则必须在 data 中有此值
 
-<components :is="comName"></components>
+<component :is="comName"></component>
 <script>
 import Left from "@/components/Left.vue"
 import Right from "@/components/Right.vue"
@@ -1239,12 +1239,12 @@ pubsub.publish('订阅的消息',数据)
 	 - mode="out-in/in-out"	确保同一位置动画不会重叠
  - 包裹在 需要动画效果的组件/显示与隐藏的标签上
  - 可以只选择两个 active 然后去写 Css3 动画样式
-v-enter-from	：定义进入过渡的开始状态。
-v-enter-active	：定义进入过渡时，这个过程生效的状态。定义一些曲线、延迟等。
-v-enter-to		：定义进入过渡的结束状态。
-v-leave-from	：定义离开过渡的开始状态。
-v-leave-active	：定义离开过渡时，这个过程生效的状态。
-v-leave-to		：离开过渡的结束状态。
+.v-enter-from	：定义进入过渡的开始状态。
+.v-enter-active	：定义进入过渡时，这个过程生效的状态。定义一些曲线、延迟等。
+.v-enter-to		：定义进入过渡的结束状态。
+.v-leave-from	：定义离开过渡的开始状态。
+.v-leave-active	：定义离开过渡时，这个过程生效的状态。
+.v-leave-to		：离开过渡的结束状态。
 ——————————————————————————————————————
 ——————>补充					vite 配置 代理服务器
  - 暂时解决前端跨域问题

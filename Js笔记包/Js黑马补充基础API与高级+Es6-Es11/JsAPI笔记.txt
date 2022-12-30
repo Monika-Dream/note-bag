@@ -404,3 +404,48 @@ function Element_Change(entries:Array){
 
 
 
+
+function lazy_img() {
+    const img_div = document.querySelectorAll('.active .img')
+    let img_path
+    return () => {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((target) => {
+          img_path = target.target.nextElementSibling.innerText
+          target.isIntersecting ? ((target.target.style.background = ` url(${img_path}) no-repeat center`), (entries[0].target.style.backgroundSize = ' cover '), io.unobserve(entries[0].target)) : null
+        })
+      })
+      img_div.forEach((element) => io.observe(element))
+    }
+  }
+
+
+.disconnect() 停止监听工作
+
+————————————————————————————————————————————
+52.js 往 html 上面添加属性
+
+element.style.setProperty('background', `url(${imgUrl})`)
+
+
+npm uninstall animate.css
+npm install animate@3.5.2
+
+————————————————————————————————————————————
+53.js 条件 try catch
+
+try {
+  myRoutine();
+} catch (e) {
+  if (e instanceof RangeError) {
+    // statements to handle this very common expected error
+  } else {
+    throw e;  // re-throw the error unchanged
+  }
+}
+
+
+
+
+
+

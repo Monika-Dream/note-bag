@@ -164,11 +164,49 @@ directives:{
     }
 }
 
+——————————————————————————————————————
+                        第十四课 动态组件
 
+<template>
+    <component :is="page.UsePage" @changePage="change"></component>
+</template>
 
+<script setup lang="ts">
+import {defineAsyncComponent,reactive} from 'vue'
+const Home = defineAsyncComponent(() => import('@/views/首页与新闻页面切换/首页/index.vue'))
+const Index = defineAsyncComponent(() => import('@/views/首页与新闻页面切换/新闻页面/index.vue'))
 
+const page = reactive({
+  "UsePage":Home
+})                     
 
+——————————————————————————————————————
+                        第十五课 之前的 this 
+ - 在 Hook 中如何使用 this. ?
 
+import { getCurrentInstance } from 'vue';
+// 获取当前组件实例
+const instance = getCurrentInstance();
+
+// 获取当前组件的上下文，下面两种方式都能获取到组件的上下文。
+import { ComponentInternalInstance, getCurrentInstance } from 'vue';
+// 添加断言
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
+proxy?.$axios('')
+// ctx 中包含了组件中由ref和reactive创建的响应式数据对象,以及以下对象及方法;
+proxy.$attrs
+proxy.$data
+proxy.$el
+proxy.$emit
+proxy.$forceUpdate
+proxy.$nextTick
+proxy.$options
+proxy.$parent
+proxy.$props
+proxy.$refs
+proxy.$root
+proxy.$slots
+proxy.$watch
 
 
 
