@@ -1,3 +1,6 @@
+图片懒加载 $ npm install vue3-lazy -S    v-lazy="" 即可
+
+
 ------------------------------------------ /--- Vue 3 ---\ ------------------------------------------
 _____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 一 ] 初识 setup 函数
  - Vue3 中一个新的配置项, 值为一个函数
@@ -318,14 +321,45 @@ const Child = defineAsyncComponent(()=> import(''))	//动态引入组件
     </template>
 
 </Suspence>
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 二十一 ] setup语法糖中使用 vue-router
+
+ - 下载 vue-router
+ ......
+ - import { useRouter } from "vue-router"
+ - //获取 router
+ - const router = useRouter()
+ - router.push("/articles/1")
+
+ - 组件内路由守卫
+import { useRouter,onBeforeRouteLeave,onBeforeRouteLeave } from "vue-router"
+onBeforeRouteLeave((to,from,next)=>{
+  console.log(to,from,next)
+})
+
+onBeforeRouteLeave - 在离开当前组件时奏效
+onBeforeRouteLeave - 在当前组件路由改变时奏效
+
+router.currentRoute.value.params - 获取当前路由参数
+
+
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 二十二 ] setup语法糖中使用 局部自定义指令
+
+1. mounted：
+     - el 被新创建的 vm.$el 替换，并挂载到实例上去之后调用该钩子。
+         - 如果 root 实例挂载了一个文档内元素，当 mounted 被调用时 vm.$el 也在文档内。
+2. updated：
+     - 由于数据更改导致的虚拟 DOM 重新渲染和打补丁，在这之后会调用该钩子。
 
 
 
+<input v-focus />
 
-
-
-
-
+// 注册一个局部的自定义指令，需要以小写v开头
+const vFocus = {
+  mounted(el) {
+    // 获取input，并调用其focus()方法
+    el.focus()
+}
 
 
 

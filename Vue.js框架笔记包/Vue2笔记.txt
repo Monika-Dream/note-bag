@@ -739,6 +739,25 @@ export default {
       <router-view></router-view>
       <components :is="comName"></components>
 </keep-alive>
+
+
+
+在Vue3中，也可以使用include属性来使用keep-alive标签，如下所示：
+
+<keep-alive include="component1, component2">
+  <component :is="currentComponent"></component>
+</keep-alive>
+
+其中，include属性接受一个字符串，用逗号分隔，表示要缓存的组件名称。
+
+vue3 setup 语法糖中需要写两个script解决,但如果使用的构建工具是 vite 那么请从新查找
+ - 注意 <script> and <script setup> must have the same language type.
+<script>
+export default {
+  name: 'NewsPage'
+}
+</script>
+
 ——————————————————————————————————————
 ——————>第五十课				keep - alive 的 exclude 属性
  - 排除项
@@ -1066,7 +1085,8 @@ const router = new VueRouter({
     }}">
 </router-link>
 
-
+可传可不传写法
+:id?
 
 children: [
    { path: '', component: Tab1 },
@@ -1230,8 +1250,8 @@ pubsub.unsubscribe( this.pubId )				取消订阅
 pubsub.publish('订阅的消息',数据)
 ——————————————————————————————————————
 ——————>补充					动画效果
- - <transition> <transition/> 标签, 只能控制一个组件 / 节点
- - <transition-group> <transition-group/>标签, 可以控制多个组件 / 节点
+ - <transition> </transition> 标签, 只能控制一个组件 / 节点
+ - <transition-group> </transition-group>标签, 可以控制多个组件 / 节点
 	 - 里面节点的标签属性需要有 :key="number"
  - 内置可选标签属性:
 	 - name = "hello" 		给标签起名字
@@ -1245,6 +1265,27 @@ pubsub.publish('订阅的消息',数据)
 .v-leave-from	：定义离开过渡的开始状态。
 .v-leave-active	：定义离开过渡时，这个过程生效的状态。
 .v-leave-to		：离开过渡的结束状态。
+
+——————————————————————————————————————
+——————>补充                   路由使用动画效果
+
+ - router-view提供给我们一一个插槽，
+     - 可以用于<transition>和<keep-alive>组件来包裹你的路由组件
+      - Component :要渲染的组件;
+      - route :解析出的标准化路由对象;
+
+ - 由于Vue机制的原因，为了性能会使用同一个元素。
+     - 也就是说你切换时并不会更换掉整个元素，而是替换掉该元素中的内容的值，以此来切换，所以在这里需要添加key
+ - 我们为了保证key的唯一性，可以使用route的path来作为key
+
+<router-view v-slot="{ Component,route  }">
+    <transition name="fade" mode="out-in">
+        <keep-alive>
+            <component :is="Component" :key="route.path"/>
+        </keep-alive>
+    </transition>
+</router-view>
+
 ——————————————————————————————————————
 ——————>补充					vite 配置 代理服务器
  - 暂时解决前端跨域问题

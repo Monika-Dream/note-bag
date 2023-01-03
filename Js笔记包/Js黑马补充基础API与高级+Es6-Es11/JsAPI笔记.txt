@@ -373,7 +373,7 @@ localStorage.setltem(key,value)		- 存储数据于浏览器
 - 可以多窗口共享( 同一浏览器可以共享 )
 - 以键值对形式存储使用
 
-localStorage.getltem(key)			- 获取数据于浏览器
+localStorage.getItem(key)			- 获取数据于浏览器
 localStorage.removeltem(key)			- 删除数据于浏览器
 localStorage.clear()				- 删除所有数据于浏览器
 ————————————————————————————————————————————
@@ -428,9 +428,6 @@ function lazy_img() {
 element.style.setProperty('background', `url(${imgUrl})`)
 
 
-npm uninstall animate.css
-npm install animate@3.5.2
-
 ————————————————————————————————————————————
 53.js 条件 try catch
 
@@ -444,7 +441,132 @@ try {
   }
 }
 
+————————————————————————————————————————————
+54.正则表达式
 
+ - 支持中英文及常用符号,并且限制最大长度为六个字,最小为三个字
+     - /^[\u4e00-\u9fa5A-Za-z0-9_\-\@\#\$\&\*\~\·\!]{3,6}$/
+
+ - 支持中文英文日文及常用符号,并且限制最大长度为六个字,最小为三个字
+     - /^[\u4e00-\u9fa5a-zA-Z0-9\u3040-\u309F\u30A0-\u30FF\u3000-\u303F\uFF00-\uFFEF\u0020-\u007E]{3,6}$/
+
+ - 图片格式的正则表达式
+     - /\.(jpg|jpeg|png|gif|svg)$/i;
+
+ - 最小六位,最大二十位,是由字母及数字组成
+     - /^[.A-z0-9]{6,20}$/
+
+ - 中文-英文与常见符号
+     - ^[\u4e00-\u9fa5a-zA-Z0-9_\s\~\!\@\#\^\&\*\(\)\-\_\+\=\{\}\[\]\|\:\,\.\/\?]{3,20}$
+
+ - 检测网络图片的合法性
+     - /^http(s?):\/\/(.*?)\.(jpg|png|gif)$/i;
+
+————————————————————————————————————————————
+56.图片检测
+const dangerousCode = [
+    '<script>',
+    'eval(',
+    'document.write',
+    'document.writeln',
+    'document.cookie',
+    'document.location',
+    'window.location',
+    'window.open',
+    'alert('
+  ];
+// 检测图片中是否含有危险代码
+let file = document.querySelector('input[type="file"]').files[0];
+
+let reader = new FileReader();
+reader.onload = function() {
+  let image = new Image();
+  image.onload = function() {
+    let canvas = document.createElement('canvas');
+    let context = canvas.getContext('2d');
+    context.drawImage(image, 0, 0);
+    let dataURL = canvas.toDataURL();
+    let base64Data = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+    let data = window.atob(base64Data);
+    let code = '';
+    for (let i = 0; i < data.length; i++) {
+      code += data.charCodeAt(i);
+    }
+    // 判断 code 是否含有危险代码
+    if (code.indexOf('<script>') > -1) {
+      // 含有危险代码
+    } else {
+      // 无危险代码
+    }
+  };
+  image.src = reader.result;
+};
+reader.readAsDataURL(file);
+```
+
+————————————————————————————————————————————
+56.图片检测 + Worker线程
+<script>
+    function checkDangerousCode(file) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            let worker = new Worker('worker.js');
+            worker.onmessage = function (e) {
+                if (e.data) {
+                    console.log('Found dangerous code!');
+                } else {
+                    console.log('No dangerous code found.');
+                }
+            };
+            worker.postMessage(e.target.result);
+        };
+        reader.readAsText(file);
+    }
+</script>
+
+// worker.js
+
+self.onmessage = function(e) {
+    let data = e.data;
+    let result = false;
+
+    // Check for dangerous code here
+    if (data.indexOf('dangerous code') !== -1) {
+        result = true;
+    }
+
+    self.postMessage(result);
+};
+————————————————————————————————————————————
+56.判断用户为手机还是电脑
+
+// 获取浏览器的userAgent
+var userAgent = navigator.userAgent;
+
+// 判断是否是移动端
+function isMobile() {
+    if (userAgent.indexOf('Android') > -1 || userAgent.indexOf('webOS') > -1 || userAgent.indexOf('iPhone') > -1 || userAgent.indexOf('iPad') > -1 || userAgent.indexOf('iPod') > -1 || userAgent.indexOf('BlackBerry') > -1 || userAgent.indexOf('Windows Phone') > -1) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// 根据结果输出
+if (isMobile()) {
+    console.log('使用的是手机');
+} else {
+    console.log('使用的是电脑');
+}
+————————————————————————————————————————————
+57.检测浏览器刷新事件
+
+if (window.performance) {
+  console.info("如果你看到这句话,说明你的浏览器支持 Navigation Timing API");
+}
+if (performance.navigation.type == 1) {
+  //刷新了
+}
 
 
 
