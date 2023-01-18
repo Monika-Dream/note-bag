@@ -1,10 +1,15 @@
 ------------------------- Pinia -------------------------  基础使用
+
  - npm install pinia
- - import { createPinia } from 'pinia'
+ - npm install pinia-plugin-persist
+
+ - import { createPinia } from "pinia"
+ - import piniaPersist from 'pinia-plugin-persist'
  - const pinia = createPinia()
- - const app = createApp(App)
+ - pinia.use(piniaPersist)
+
  - app.use(pinia)
- - app.mount('#app')
+
  - 创建 store 文件夹, 表示容器
  - 创建 index.ts
  - import { defineStore } from 'pinia'
@@ -19,11 +24,7 @@ export const useStore = defineStore('你想给容器起的名字', {	//定义并
     actions:{}		//封装业务逻辑类似于 methods , 修改 state
 })
 
- - 组件使用
- - import {你想给容器起的名字} form "store"
-const 名字 = 你想给容器起的名字()		调用返回的函数获得容器的实例
-名字.count
-
+路径导入即可
 
 ------------------------- Pinia -------------------------  使用解构赋值导致未响应式问题
  - 使用 pinia 官方的 import { storeToRefs } from "pinia"

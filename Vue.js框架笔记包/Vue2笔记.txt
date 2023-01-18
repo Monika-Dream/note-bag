@@ -1311,10 +1311,11 @@ export default defineConfig({
   }
 })
 
-
-
-
-
+——————————————————————————————————————
+——————>补充                   vue2/3 类名活用
+<div v-bind:class="{ 'class-name': condition }">...</div>
+<div :class="[ 'normal-class' ]"></div>
+<div :class="{'wall-top': true, 'd-sm-none': true}" >
 
 
 

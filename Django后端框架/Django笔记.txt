@@ -1262,10 +1262,10 @@ if send_flag is not None:
 
  # 设置 broker 也就是队列的指定
  # 通过加载配置文件设置        路径
- app.config_from_object('celery_tasks.config')
+ celery_app.config_from_object('celery_tasks.config')
 
  # 开始执行,添加生产者       路径, 自动检测 tasks 文件
- app.autodiscover_tasks(['celery_tasks.sms'])
+ celery_app.autodiscover_tasks(['celery_tasks.sms'])
 
 
  - 在 config 文件中写入
@@ -1492,7 +1492,7 @@ class EmailView(LoginRequiredJSONMixin,View):
  - 发送邮件
 from django.core.mail import send_mail
 subject = "美多商城激活邮件"                            # 标题
-message = "永远爱 Monika"                              # 与 html_message 二选一, 后者会将这里覆盖
+message = "永远爱 Monika"                              # 与 html_message 二选一, 后者会将这里覆盖, 但仍需写入
 from_email = "我永远爱Monika<monika_dream@163.com>"    # 发件人
 recipient_list = ['1109827629@qq.com']                # 给谁发
 html_message = "<h1>扣你吉瓦</h1>"                     # 可以写 html/css 
@@ -2624,7 +2624,7 @@ from rest_framework.generics import GenericAPIView
         def post(self, request):
             data = request.data
             serializer = self.get_serializer(data=data)
-            serializer.is_vaild()
+            serializer.is_valid()
             serializer.save()
 
  - GenericAPIView + Mixin 使用方式:
@@ -2951,6 +2951,14 @@ class BookModelViewSet(ModelViewSet):
          ]
      }
 
+ - DRF提供如下几种常见认证方式：
+     - 1、BasicAuthentication，基于用户名密码认证方式
+     - 2、SessionAuthentication，基于Session认证方式
+     - 3、TokenAuthentication，基于令牌认证方式（一个用户绑定一个令牌，每次请求在请求头中加上
+
+
+
+
 -------------------------------------------------------------- DRF 框架 - 分页
 
  - 系统为我们提供了两个分页类
@@ -2980,8 +2988,9 @@ class BookModelViewSet(ModelViewSet):
                         max_page_size = 20                  #最大多少条数据
 
 
-
-
+-------------------------------------------------------------- DRF 框架 - 补充
+ - 前端传来的字段大写, 序列化器如何忽略
+    - 忽略不了, 自己修改继承吧
 
 
 

@@ -130,11 +130,11 @@ name	名称		指定表单的名称,区分同一个页面中的多个表单域
 一个输入框?
 属性值：
 button		按钮
-checkbox		复选框 - 打对勾的框
+checkbox	复选框 - 打对勾的框
 file		输入字段与浏览按钮，供文件上传(上传文件的)
 hidden		隐藏的输入字段   ？
 image		图像形式的提交按钮
-password		写密码的，会遮盖，可视
+password	写密码的，会遮盖，可视
 radio		定义单选按钮 - 就像单选题
 reset		重置按钮
 submit		提交按钮，把表单数据发送到服务器 value 修改字符

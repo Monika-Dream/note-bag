@@ -96,6 +96,47 @@ return {
     }
 }
 
+
+例子：
+    1、Vue3中的计算属性可以使用computed函数定义，例如：
+
+    <script>
+      import { computed } from 'vue'
+      export default {
+        setup() {
+          const fullName = computed(() => `${this.firstName} ${this.lastName}`)
+          return { fullName }
+        }
+      }
+    </script>
+
+    2、计算属性可以使用ref函数返回一个可变的值，例如：
+
+    <script>
+      import { ref, computed } from 'vue'
+      export default {
+        setup() {
+          const count = ref(0)
+          const doubleCount = computed(() => count.value * 2)
+          return { count, doubleCount }
+        }
+      }
+    </script>
+
+    3、计算属性可以使用computed函数定义多个依赖属性，例如：
+
+    <script>
+      import { ref, computed } from 'vue'
+      export default {
+        setup() {
+          const firstName = ref('')
+          const lastName = ref('')
+          const fullName = computed(() => `${firstName.value} ${lastName.value}`)
+          return { firstName, lastName, fullName }
+        }
+      }
+    </script>
+
 _____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 六 ] Watch 侦听属性
  - 1. watch(侦听对象, ()=>{}, { 侦听配置 })
  - import { ref, reactive, watch } from 'vue'
@@ -112,7 +153,8 @@ setup(){
             }
         }
     })
-
+    //侦听一个普通的值,因为Vue3使用了Proxy，它不能检测对象内部属性的改变。因此，watch函数无法检测到对象值的改变。
+    watch(() => value, (newValue, oldValue) => {})
     //侦听 ref 所绑定的单个数据
     watch(count,(newSum,oldSum)=> console.log( '数值变化了' ), {immediate:true, deep:true})
 
@@ -305,12 +347,12 @@ _____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 
 <teleport to="body/也可以些 css 选择器">
     这里面写 html 元素, 会自动 to 到指定的位置
 </teleport>
-_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 二十 ] Suspence 等待渲染 [ 实验 ]
+_____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 二十 ] Suspense 等待渲染 [ 实验 ]
  - 等待组件渲染时先渲染一些内容, 让用户有更好的体验
 import { defineAsyncComponent } from 'vue'
 const Child = defineAsyncComponent(()=> import(''))	//动态引入组件
 
-<Suspence>
+<Suspense>
 
     <template #default>
         异步加载的组件
@@ -320,7 +362,7 @@ const Child = defineAsyncComponent(()=> import(''))	//动态引入组件
         组件没回来时加载的内容
     </template>
 
-</Suspence>
+</Suspense>
 _____________/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - [ 二十一 ] setup语法糖中使用 vue-router
 
  - 下载 vue-router

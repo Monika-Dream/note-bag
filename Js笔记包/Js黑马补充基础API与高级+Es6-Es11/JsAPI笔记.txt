@@ -150,7 +150,7 @@ function fn(event){
     Event.removeEventListener('click',fn)		 - 移除
 }
 ————————————————————————————————————————————
-26.事件对象常见属性与方法( 我去你妈的IE,兼容你妈 )
+26.事件对象常见属性与方法( 我去汝母的IE,兼容汝母 )
 - event.target				 - 返回触发事件对象
 - event.type				 - 返回事件类型
 - event.preventDefault( )			 - 阻止事件默认行为

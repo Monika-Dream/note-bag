@@ -1,0 +1,22 @@
+1.在前端如何将后端的 content_type='image/jpeg' 展示到页面上?
+  - vue3 setup中使用 (所给予的必须是 img 标签才行)
+  	 - import {Buffer} from "buffer"
+  	 - async function get_captcha(e){
+  	 -   let resultValue = await axios.get(`/image_codes/${use_UserStore.UUID}`,{
+  	 -     responseType:'arraybuffer'
+  	 -   })
+  	 -   e.target.nextElementSibling.src='data:image/png;base64,'+ Buffer.from(resultValue).toString('base64');
+  	 - }
+
+2.Vue3 setup 语法糖中使用 await 导致页面不渲染问题
+   - 使用 <Suspense> 标签包裹你的组件, 原理为等待 await 返回结果后再渲染 
+
+
+
+
+
+
+
+
+
+

@@ -718,7 +718,7 @@ div{
 animation: 动画名称 持续时间 运动曲线 何时开始 播放次数 是否反方向 动画起始或者结束的状态
 动，时，曲，何，次，反，状
 例子：
-animation: name         5s     linear(平均) 2s     infinite  alternate       forwards
+animation: name     5s     linear(平均) 2s     infinite  alternate       forwards
 
 想要动画走回来: animation-direction : alternate	默认跳转
 停在动画结束的位置: animation-fill-mode : forwards	默认跳转至初始
@@ -1016,4 +1016,35 @@ d-none d-md-block
  - 获取焦点
      -  input:focus{ } 
 
+————————————————————————
+[*补充*] - 文字纵向排列
+ - writing-mode: tb-rl;
 
+————————————————————————
+[*补充*] - 文字间距
+ - letter-spacing: 2px;
+
+————————————————————————
+[*补充*] - 移动端设置 vh 获取到的是隐藏了地址栏和状态栏的窗口高度
+
+html,body{
+    height:-webkit-fill-available;
+}
+————————————————————————
+[*补充*] - 禁止手机用户放大网站
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+————————————————————————
+[*补充*] - 移动端 硬件加速
+transform: translate3d(0, 0, 0); //可以触发硬件加速,从而让浏览器在渲染动画时从CPU转向GPU
+CSS中可以通过添加
+transform、
+translateZ、
+perspective、
+filter
+等属性来触发GPU渲染，这些属性会被浏览器识别出来，并且自动将渲染任务分配到GPU上处理。
+————————————————————————
+[*补充*] - 防止长按页面元素被选中
+user-select:none; 
+input {      
+     -webkit-user-select:auto; //webkit浏览器    
+}
