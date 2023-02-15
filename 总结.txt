@@ -10,9 +10,26 @@
 
 2.Vue3 setup 语法糖中使用 await 导致页面不渲染问题
    - 使用 <Suspense> 标签包裹你的组件, 原理为等待 await 返回结果后再渲染 
+   - 可以尝试使用 pinia 分离
 
 
+3.Vue3  
+  const UserInput = ref(Data())
+  let UserInputInfo = UserInput.value
+  function Data(){
+    return {
+      UserName: '',
+      PassWord: '',
+      Email: '',
+      Captcha: '',
+      Prepping:[null,null,null,null]
+    }
+  }
 
+  function ReData(){
+    UserInput.value = Data()
+    UserInputInfo = UserInput.value
+  }
 
 
 

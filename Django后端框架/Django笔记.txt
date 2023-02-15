@@ -1659,6 +1659,7 @@ from collections import OrderedDict
  - 我们在Django中可以通过使用 Haystack 来调用 Elasticsearch 搜索引擎。
  - Haystack 可以在不修改代码的情况下使用不同的搜索后端（比如Elasticsearch、Whoosh、Solr等等）。
 
+pip install django-haystack
 pip install "django-haystack[elasticsearch]"
 
 与大多数 Django 应用程序一样，您应该将 Haystack 添加到您的设置文件中（通常）。
@@ -1673,7 +1674,7 @@ INSTALLED_APPS = [
     # Added.
     'haystack',
 
-    # Then your usual apps...
+    # 其他的 Apps...
     'blog',
 ]
 
@@ -2928,10 +2929,12 @@ class BookModelViewSet(ModelViewSet):
 
  - 2.对指定视图设置权限
 
-     from rest_framework.permissions import AllowAny
+     from rest_framework.permissions import AllowAny,IsAuthenticated
      - 类里面写入 
          - permission_classes = [AllowAny]
 
+        class FormulaApiViews(APIView):
+            permission_classes = [IsAuthenticated]
 
 -------------------------------------------------------------- DRF 框架 - 认证
 
@@ -2992,15 +2995,46 @@ class BookModelViewSet(ModelViewSet):
  - 前端传来的字段大写, 序列化器如何忽略
     - 忽略不了, 自己修改继承吧
 
+-------------------------------------------------------------- DRF 框架 - 补充模型
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
+
+class ArticlePost(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    #TextField 也就是 Mysql 中的 longtext
+    body = models.TextField() 
+    # 文章创建时间。参数 default=timezone.now 指定其在创建数据时将默认写入当前的时间
+    created = models.DateTimeField(default=timezone.now)
+    # 文章更新时间。参数 auto_now=True 指定每次数据更新时自动写入当前时间
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        # ordering 指定模型返回的数据的排列顺序
+        # '-created' 表明数据应该以倒序排列
+        ordering = ('-created',)
+
+    def __str__(self):
+        return self.title
+
+-------------------------------------------------------------- DRF 框架 - 补充模型序列化器
+
+ - 如何在序列化的时候加工一下数据
+
+ 1.继承自 serializers.Serializer
+     - 模型序列化器中写入 
+         def get_字段名(cls, user):
+            return cls.token_class.for_user(user)
 
 
-
-
-
-
-
-
-
+ 2.继承自 serializers.ModelSerializer
+     - 模型序列化器中写入 
+        def to_representation(self, instance):
+            data = super(Article_Serializer, self).to_representation(instance)
+            if data.get('firstimage'):
+                data['firstimage'] = f"{MINIO_DEFAULT_IP}/{data.get('firstimage')}"
+            return data
 
 
 
