@@ -1048,3 +1048,81 @@ user-select:none;
 input {      
      -webkit-user-select:auto; //webkit浏览器    
 }
+————————————————————————
+[*补充*] - CSS grid 布局
+- grid 布局
+
+- 父元素设置 grid, 子元素均匀竖排
+
+- grid-template-rows: 10px 10px ...;  用于单独设置内部每个子元素的高
+
+- grid-template-columns: 10px ...;    利用子元素除以所设置的来设置子元素宽
+    - 例如 8 个子元素, 但是你这里只写了一个属性, 那么就 8/1 = 8 , 就是全部设置
+
+- repeat():第一个参数是重复的次数，第二个参数是所要重复的值
+    - 例如 grid-template-rows: 10px 10px 10px 10px 10px; === grid-template-rows:repeat(5,10px)
+
+- auto-fill：有时单元格的大小是固定的，但是容器的大小不确定，这个属性就会自动填充
+    - 例如: repeat(auto-fill,50px); 就是父容器宽度固定, 子元素不固定的情况下使用 
+
+- fr：为了方便表示比例关系，网格布局提供了fr关键字（fraction的缩写，意为片段）
+    - repeat(auto-fill,4fr); 跟 flex 布局的 flex:1 一样
+
+- minmax(): 函数产生一个长度范围，表示长度就在这个范围之中，它接受两个参数，分别为最小值和最大值
+    -  grid-template-columns: minmax(20px, 100px); 表示最小 20px 最大 100px
+
+- auto选项: 表示浏览器自己决定
+    - grid-template-columns: repeat(2,100px) auto minmax(50px,100px);
+
+- gap -> grid-column-gap, grid-row-gap 两个元素的缩写
+    - gap: 10px 20px;
+    - gap:10px 表示上下两个子元素之间的距离
+    - gap:20px 表示左右连个子元素之间的距离
+    - 注意是 之间
+
+- grid-template-areas
+    - 一个区域由单个或多个单元格组成，由自己决定（具体使用，需要在项目属性中设置）
+    - 区域不需要利用时，则使用“.”表示
+    - 区域的命名会影响到网络线，会自动命名为区域名-start，终止网格线自动命名为-end
+
+- grid-auto-flow
+    - 划分网格以后，容器的子元素会按照顺序，自动放置在每一个网格。
+    - 默认的放置顺序是“先行后列”，即先填满第一行，再开始放入第二行（就是子元素的排放顺序）
+
+- grid-auto-flow：row;(先行后列)
+ 123
+ 456
+ 789
+
+- grid-auto-flow:column;(先列后行）
+ 147
+ 258
+ 369
+
+- 利用dense属性可提高空间利用率。grid-auto-flow:row dense; 
+justify-items（水平方向）/ align-items（垂直方向）
+设置单元格内容的水平和垂直对齐方式。
+
+水平方向上：
+justify-items:start|end|center|stretch;
+justify-items:start; 起始方向对齐
+
+justify-items:center; 居中对齐
+
+justify-items:end; 末尾对齐
+
+justify-items：stretch; 延伸，以填满整个单元格
+
+竖直方向上：
+align-items:start|center|end|stretch;
+align-items:start; 起始对齐
+
+align-items:center; 竖直方向居中对齐
+
+align-items:end; 末尾对齐
+
+align-items:stretch; 延伸，以填满整个单元格
+
+place-items属性是align-items和justify-items属性的合并简写形式。
+place-items：justify-items align-items;
+先水平再竖直，中间用空格隔开。
