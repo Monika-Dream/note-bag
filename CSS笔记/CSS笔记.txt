@@ -1084,6 +1084,31 @@ input {
     - 一个区域由单个或多个单元格组成，由自己决定（具体使用，需要在项目属性中设置）
     - 区域不需要利用时，则使用“.”表示
     - 区域的命名会影响到网络线，会自动命名为区域名-start，终止网格线自动命名为-end
+    - 父元素开启 grid 布局	
+	grid-template-areas:	
+	"header header"
+	"body_one body_two"
+	"footer footer"
+    - 子元素命名	grid-area: header;
+
+    例如：
+    .container {
+        display: grid;
+        grid-template-areas: 
+        "header header"
+        "body_one body_two"
+        "footer footer";
+        &>li {
+            &:nth-child(1){grid-area: header;}
+            &:nth-child(2){grid-area: body_one;}
+            &:nth-child(3){grid-area: body_two;}
+            &:nth-child(4){grid-area: footer;}
+        }
+    }
+
+
+ - grid-auto-rows:100px
+    - 对于没指定的 行， 默认为？ 优先级为最低  
 
 - grid-auto-flow
     - 划分网格以后，容器的子元素会按照顺序，自动放置在每一个网格。
