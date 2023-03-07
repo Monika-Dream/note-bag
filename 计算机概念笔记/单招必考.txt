@@ -414,7 +414,7 @@
  - 网页文件     htm, html
  - 可执行文件   EXE, COM, BAT
 
- - 测试 TXT, htm, MPG/MPEG, RM, RTF, COM, BAT, RAR, mid, wav, MOV, WMV, xisx, pptx, SWF, BMP
+ - 测试 TXT, PDF, htm, MPG/MPEG, RM, FLA, RTF, COM, BAT, RAR, mid, wav, MOV, WMV, xisx, pptx, SWF, BMP
 ----------------------------------------------------------------------------- Windows 7 操作系统
 
 1.操作系统, 是管理计算机硬件与软件资源的计算机程序
