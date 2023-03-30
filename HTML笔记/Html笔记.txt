@@ -177,7 +177,7 @@ textarea 也算表单域之一，可以用 form 包裹起来
 
 ———————————————————————————————
  - 第十五课 - （更新）
-<progress value="10" max="100"></progress>
+ 1.进度条 <progress value="10" max="100"></progress>
 
 
 
