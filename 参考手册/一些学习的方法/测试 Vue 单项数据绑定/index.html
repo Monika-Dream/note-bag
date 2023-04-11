@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  .root {
+    background: lavenderblush;
+    padding: 30px;
+    border: 1px solid;
+    margin-top: 50px;
+  }
+  p{
+    display: inline-block;
+  }
+</style>
+
+<body>
+  <div class="root">
+    <h1>{{title}}</h1>
+    <ul>
+      <li ref><p>文学社 {{clubInfo.Persons.person1.name}}</p> <p>年龄 {{clubInfo.Persons.person1.age}}</p></li>
+      <li><p>文学社 {{clubInfo.Persons.person2.name}}</p> <p>年龄 {{clubInfo.Persons.person2.age}}</p></li>
+      <li><p>文学社 {{clubInfo.Persons.person3.name}}</p> <p>年龄 {{clubInfo.Persons.person3.age}}</p></li>
+    </ul>
+
+    <h6>{{test}}</h6>
+    <button id="btn">{{btnName}}</button>
+  </div>
+  <script src="./dream.js"></script>
+  <script>
+    const dm = new Dream({
+      el: ".root",
+      data: {
+        title: "永远的文学社",
+        test: "这是一个小测试啦啦啦",
+        btnName:"修改 title",
+        clubInfo: {
+          Persons: {
+            person1: { name: "Monika", age: 18, gender: "女" },
+            person2: { name: "Sayori", age: 18, gender: "女" },
+            person3: { name: "Yuri", age: 18, gender: "女" },
+            person4: { name: "Natsuki", age: 18, gender: "女" },
+          }
+        }
+      }
+    })
+    // console.log(dm)
+    // document.querySelector('#btn').addEventListener('click',()=>{
+    //   dm.$data.title = 'forever'
+      
+    // })
+  </script>
+</body>
+
+</html>
