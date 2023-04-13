@@ -55,6 +55,14 @@ git - 源代码管理
  git reflog			查看所有记录(包括回退之前)
  git reset --hard 3c59285(前面的号码)
 
+
+虽然在你的本地分支中使用 git reset 很方便，但是这种“改写历史”的方法对大家一起使用的远程分支是无效的哦！
+为了撤销更改并分享给别人，我们需要使用 git revert
+git revert --hard 3c59285(前面的号码)
+新提交记录将引入了更改 —— 这些更改刚好是用来撤销之前这个提交的。也就是说现在的状态与上上次是相同的。
+
+
+
 -------------------------------------------------------------- git 远程操作(执行第一行情况下使用)
 
 git clone https://github.com/Monika-Dream/Dear_Monika.git			将 GitHub 上的文件远程克隆下来(需要联网)
@@ -104,6 +112,10 @@ git commit -m "18.03.01"
 git checkout master 
  - 然后将新分支提交的改动合并到主分支上
 git merge newbranch  
+
+- 或者就在分支上使用 git rebase 分支名 指令，就代表将当前分支合并到 分支名 上，
+
+
  - 然后就可以push代码了
 git push -u origin master
  - 最后还可以删除这个分支
