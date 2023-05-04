@@ -1,5 +1,5 @@
-async function sleep(n, name = "test") {                      //缺省参数，并无实际作用
-  return new Promise((resolve,reject) => {                           //当前只设定为了成功
+async function sleep(n, name = "test") {                             //缺省参数，并无实际作用
+  return new Promise(resolve => {                           //当前只设定为了成功
     console.log(n, name, "start");
     setTimeout(() => {
       console.log(n, name, "end", "---------------------");
@@ -9,33 +9,26 @@ async function sleep(n, name = "test") {                      //缺省参数，�
 }
 
 
-
-
-
-
-
-async function asyncPool({ limit, items }) {//这里进行了 ES6 的结构赋值
+async function asyncPool({ limit, items }) {                        //这里进行了 ES6 的结构赋值
   const promises = [];
-  const pool = new Set();                       //这里的 pool 只是为了限制并发量而诞生的
-  for (const item of items) {                   //遍历下面items的每一个函数
-    const fn = async (item) => await item();    //一个异步函数，作用是内部同步执行 item 参数，
-    const promise = fn(item);                   //返回的是一个成功的 Promise 或者等待中的 Promise[最终都会成功]
-    promises.push(promise);                     //将 Promise 放入数组中
-    pool.add(promise);                          //将等待/成功的 Promise 放入 Set 集合中
-    console.log(`之前${pool.keys}`)
-    const clean = () => pool.delete(promise);   //添加删除的方法
-    console.log(`之后${pool.keys}`)
-    promise.then(clean, clean);                 //无论成功还是失败都调用 Clean 函数
-    if (pool.size >= limit) {                   //限制( 如果未超过最大并发量就选择不等待，也就是 for 会进入下一次循环, 相反则会进行等待 )
-      await Promise.race(pool);                 //竞赛机制，返回最先成功/失败的结果
-    }
-  }
-  return Promise.all(promises);                 //一错全错(一个由 Promise 组成的数组)
+  const pool = new Set();                                           //这里的 pool 只是为了限制并发量而诞生的, 注意 Set 集合会自动排除相同状态的 Promise
+  for (const item of items) {                                       //遍历下面items的每一个函数
+    const fn = async (item) => await item();                        //一个异步函数，作用是内部同步执行 item 参数，
+    const promise = fn(item);                                       //返回的是一个成功的 Promise 或者等待中的 Promise[最终都会成功]
+    promises.push(promise);                                         //将 Promise 放入数组中
+    pool.add(promise);                                              //将等待/成功的 Promise 放入 Set 集合中                
+    const clean = () => pool.delete(promise);                       //添加删除的方法               
+    promise.then(clean, clean);                                     //无论成功还是失败都调用 Clean 函数
+    if (pool.size >= limit) {                                       //限制( 如果未超过最大并发量就选择不等待，也就是 for 会进入下一次循环, 相反则会进行等待 )
+      await Promise.race(pool);                                     //竞赛机制，返回最先成功/失败的结果
+    }                   
+  }                   
+  return Promise.all(promises);                                     //一错全错(一个由 Promise 组成的数组)
 }
 
 
 
-async function start() {                //异步启用start，里面调用并等待 asyncPool 返回结果,在调用结束后打印结束了
+async function start() {                                            //异步启用start，里面调用并等待 asyncPool 返回结果,在调用结束后打印结束了
    await asyncPool({
     limit: 2,
     items: [
